@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X - Admin Command Center</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --secondary-purple: #9d00ff;
+            --accent-pink: #ff00ff;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #000814 0%, #001d3d 50%, #000814 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        /* Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .neon-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--primary-cyan) 1px, transparent 1px),
+                linear-gradient(90deg, var(--primary-cyan) 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.08;
+            animation: linesMove 30s linear infinite;
+        }
+
+        @keyframes linesMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(80px, 80px); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 8, 20, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1.2rem 3%;
+        }
+
+        .header-content {
+            max-width: 1900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-tab {
+            padding: 0.7rem 1.3rem;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .header-btn {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 243, 255, 0.4);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            margin-top: 90px;
+            padding: 2rem 3%;
+            max-width: 1900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px var(--primary-cyan));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px var(--primary-cyan);
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Staff Grid */
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .staff-card {
+            background: rgba(26, 31, 58, 0.7);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.8rem;
+            transition: all 0.3s;
+        }
+
+        .staff-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 45px rgba(0, 243, 255, 0.35);
+        }
+
+        .staff-header {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .staff-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .staff-info {
+            flex: 1;
+        }
+
+        .staff-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
+        }
+
+        .staff-role {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .staff-qualification {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .staff-contact {
+            background: rgba(37, 43, 74, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .availability-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .available {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .busy {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .offline {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .staff-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .staff-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .btn-message {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+        }
+
+        .btn-video {
+            background: transparent;
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .btn-task {
+            background: transparent;
+            border: 2px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .btn-message:hover {
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-video:hover {
+            background: var(--success);
+            color: var(--bg-dark);
+        }
+
+        .btn-task:hover {
+            background: var(--warning);
+            color: var(--bg-dark);
+        }
+
+        /* Student Cards */
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .student-card.selected {
+            border-left: 5px solid var(--success);
+        }
+
+        .student-card.not-selected {
+            border-left: 5px solid var(--error);
+        }
+
+        .student-card:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 10px 35px rgba(0, 243, 255, 0.3);
+        }
+
+        .student-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.3rem;
+        }
+
+        .student-branch {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .placement-info {
+            background: rgba(0, 243, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .placement-company {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .placement-package {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .issue-analysis {
+            background: rgba(255, 68, 68, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--error);
+            margin-bottom: 1rem;
+        }
+
+        .issue-title {
+            color: var(--error);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-list {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .student-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-badge {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border: 1px solid var(--secondary-purple);
+        }
+
+        /* Groups */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .group-card {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .group-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .group-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .group-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .group-members {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .group-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .group-btn {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .btn-chat {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            border: none;
+            color: white;
+        }
+
+        .btn-call {
+            background: transparent;
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        /* Notice Board */
+        .notice-board {
+            background: rgba(26, 31, 58, 0.7);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .notice-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .notice-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .notice-list::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .notice-item {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .notice-item:hover {
+            border-color: var(--primary-cyan);
+        }
+
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .notice-title {
+            font-weight: bold;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .notice-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .pending-approval {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .approved {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .notice-content {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+
+        .notice-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .notice-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .chart-card {
+            background: rgba(26, 31, 58, 0.7);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            color: var(--primary-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 1.2rem;
+            height: 280px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            filter: brightness(1.4);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--primary-cyan);
+            font-weight: bold;
+        }
+
+        .pie-chart {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .pie-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .pie-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .pie-label-text {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-cyan);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 110px;
+            right: 3rem;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            padding: 1.2rem 1.8rem;
+            transform: translateX(500px);
+            transition: transform 0.4s;
+            z-index: 5000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-tabs {
+                display: none;
+            }
+
+            .staff-grid, .student-grid, .groups-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-background">
+        <div class="neon-lines"></div>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🎯 ADMIN COMMAND CENTER</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="switchTab('staff')">Staff (20)</button>
+                <button class="nav-tab" onclick="switchTab('students')">Students (25)</button>
+                <button class="nav-tab" onclick="switchTab('communication')">Groups (12)</button>
+                <button class="nav-tab" onclick="switchTab('notices')">Notices (15)</button>
+                <button class="nav-tab" onclick="switchTab('analytics')">Analytics</button>
+            </div>
+            <button class="header-btn" onclick="exportReport()">📊 Export</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Dashboard -->
+        <div class="page active" id="dashboardPage">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Placed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">Need Improvement</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-value">48</div>
+                    <div class="stat-label">Companies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👨‍🏫</div>
+                    <div class="stat-value">20</div>
+                    <div class="stat-label">Staff Members</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">📊 Placement Trend (2020-2024)</h3>
+                    <div class="bar-chart" id="placementChart"></div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">📈 Branch Performance</h3>
+                    <div class="bar-chart" id="branchChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Page -->
+        <div class="page" id="staffPage">
+            <div style="background: rgba(26, 31, 58, 0.7); border: 2px solid var(--border-glow); border-radius: 15px; padding: 2rem; margin-bottom: 2.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>👨‍💼</span> Staff & Administration (20 Members)
+                    </h2>
+                    <button class="header-btn" onclick="addStaff()">+ Add Staff</button>
+                </div>
+
+                <div class="staff-grid" id="staffGrid"></div>
+            </div>
+        </div>
+
+        <!-- Students Page -->
+        <div class="page" id="studentsPage">
+            <div style="background: rgba(26, 31, 58, 0.7); border: 2px solid var(--border-glow); border-radius: 15px; padding: 2rem; margin-bottom: 2.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>🎓</span> Placed Students (15)
+                    </h2>
+                </div>
+
+                <div class="student-grid" id="placedGrid"></div>
+            </div>
+
+            <div style="background: rgba(26, 31, 58, 0.7); border: 2px solid var(--border-glow); border-radius: 15px; padding: 2rem; margin-bottom: 2.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>📊</span> Students Needing Improvement (10)
+                    </h2>
+                </div>
+
+                <div class="student-grid" id="notPlacedGrid"></div>
+            </div>
+        </div>
+
+        <!-- Communication Page -->
+        <div class="page" id="communicationPage">
+            <div style="background: rgba(26, 31, 58, 0.7); border: 2px solid var(--border-glow); border-radius: 15px; padding: 2rem;">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>💬</span> Student Groups & Collaboration (12 Groups)
+                    </h2>
+                    <button class="header-btn" onclick="createGroup()">+ Create Group</button>
+                </div>
+
+                <div class="groups-grid" id="groupsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Notices Page -->
+        <div class="page" id="noticesPage">
+            <div class="notice-board">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>📢</span> Notice Management (15 Notices)
+                    </h2>
+                    <button class="header-btn" onclick="createNotice()">+ Create Notice</button>
+                </div>
+
+                <div class="notice-list" id="noticeList"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div class="page" id="analyticsPage">
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">📊 Gender Distribution</h3>
+                    <div class="pie-chart" style="background: conic-gradient(
+                        var(--primary-cyan) 0deg 216deg,
+                        var(--secondary-purple) 216deg 360deg
+                    );">
+                        <div class="pie-center">
+                            <div class="pie-value">60/40</div>
+                            <div class="pie-label-text">Male/Female</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">📊 Placement Status</h3>
+                    <div class="pie-chart" style="background: conic-gradient(
+                        var(--success) 0deg 216deg,
+                        var(--warning) 216deg 288deg,
+                        var(--error) 288deg 360deg
+                    );">
+                        <div class="pie-center">
+                            <div class="pie-value">15</div>
+                            <div class="pie-label-text">Placed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">📈 Skills Distribution</h3>
+                    <div class="bar-chart" id="skillChart"></div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">💰 Package Distribution</h3>
+                    <div class="bar-chart" id="packageChart"></div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">🎓 University Batch Analysis</h3>
+                    <div class="bar-chart" id="batchChart"></div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">🏆 Top Companies by Hiring</h3>
+                    <div class="bar-chart" id="companyChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const staff = [
+            { id: 1, name: 'Dr. Sarah Johnson', role: 'Training & Placement Head', qualification: 'Ph.D. in Computer Science', email: 'sarah.johnson@campusx.edu', phone: '+91 98765 43210', availability: 'available' },
+            { id: 2, name: 'Prof. Michael Chen', role: 'President - Placement Cell', qualification: 'M.Tech, MBA', email: 'michael.chen@campusx.edu', phone: '+91 98765 43211', availability: 'busy' },
+            { id: 3, name: 'Dr. Emily Brown', role: 'DCPD Department Head', qualification: 'Ph.D. in Management', email: 'emily.brown@campusx.edu', phone: '+91 98765 43212', availability: 'available' },
+            { id: 4, name: 'Mr. Rajesh Kumar', role: 'Senior Placement Officer', qualification: 'M.Sc. CS', email: 'rajesh.kumar@campusx.edu', phone: '+91 98765 43213', availability: 'available' },
+            { id: 5, name: 'Ms. Priya Singh', role: 'Placement Coordinator', qualification: 'M.Tech', email: 'priya.singh@campusx.edu', phone: '+91 98765 43214', availability: 'offline' },
+            { id: 6, name: 'Dr. David Williams', role: 'Career Counselor', qualification: 'Ph.D. Psychology', email: 'david.williams@campusx.edu', phone: '+91 98765 43215', availability: 'available' },
+            { id: 7, name: 'Ms. Ananya Patel', role: 'Training Coordinator', qualification: 'MBA', email: 'ananya.patel@campusx.edu', phone: '+91 98765 43216', availability: 'available' },
+            { id: 8, name: 'Mr. Amit Sharma', role: 'Aptitude Trainer', qualification: 'M.Sc. Mathematics', email: 'amit.sharma@campusx.edu', phone: '+91 98765 43217', availability: 'busy' },
+            { id: 9, name: 'Dr. Lisa Wang', role: 'Technical Skills Trainer', qualification: 'Ph.D. CS', email: 'lisa.wang@campusx.edu', phone: '+91 98765 43218', availability: 'available' },
+            { id: 10, name: 'Mr. Ravi Verma', role: 'Soft Skills Trainer', qualification: 'M.A. English', email: 'ravi.verma@campusx.edu', phone: '+91 98765 43219', availability: 'available' },
+            { id: 11, name: 'Ms. Kavita Desai', role: 'Resume Building Expert', qualification: 'MBA HR', email: 'kavita.desai@campusx.edu', phone: '+91 98765 43220', availability: 'busy' },
+            { id: 12, name: 'Dr. John Smith', role: 'Interview Coach', qualification: 'Ph.D. Communication', email: 'john.smith@campusx.edu', phone: '+91 98765 43221', availability: 'available' },
+            { id: 13, name: 'Ms. Neha Gupta', role: 'Placement Assistant', qualification: 'M.Com', email: 'neha.gupta@campusx.edu', phone: '+91 98765 43222', availability: 'available' },
+            { id: 14, name: 'Mr. Vikram Singh', role: 'Data Analyst', qualification: 'M.Sc. Statistics', email: 'vikram.singh@campusx.edu', phone: '+91 98765 43223', availability: 'offline' },
+            { id: 15, name: 'Dr. Meera Reddy', role: 'Industry Relations Manager', qualification: 'Ph.D. MBA', email: 'meera.reddy@campusx.edu', phone: '+91 98765 43224', availability: 'available' },
+            { id: 16, name: 'Mr. Arjun Nair', role: 'Technical Trainer (DSA)', qualification: 'M.Tech CS', email: 'arjun.nair@campusx.edu', phone: '+91 98765 43225', availability: 'available' },
+            { id: 17, name: 'Ms. Sneha Kapoor', role: 'Placement Documentation Officer', qualification: 'MBA', email: 'sneha.kapoor@campusx.edu', phone: '+91 98765 43226', availability: 'busy' },
+            { id: 18, name: 'Dr. Rahul Mehta', role: 'AI/ML Trainer', qualification: 'Ph.D. AI', email: 'rahul.mehta@campusx.edu', phone: '+91 98765 43227', availability: 'available' },
+            { id: 19, name: 'Ms. Pooja Rao', role: 'Company Liaison Officer', qualification: 'MBA', email: 'pooja.rao@campusx.edu', phone: '+91 98765 43228', availability: 'available' },
+            { id: 20, name: 'Mr. Sanjay Iyer', role: 'Placement Admin', qualification: 'M.Com', email: 'sanjay.iyer@campusx.edu', phone: '+91 98765 43229', availability: 'offline' }
+        ];
+
+        const placedStudents = [
+            { id: 1, name: 'Alex Kumar', branch: 'CSE', cgpa: 9.2, company: 'Google', package: '₹42 LPA', skills: ['Java', 'System Design', 'Algorithms'], review: 'Excellent placement process!' },
+            { id: 2, name: 'Priya Sharma', branch: 'IT', cgpa: 8.8, company: 'Microsoft', package: '₹38 LPA', skills: ['React', 'Node.js', 'Cloud'], review: 'Great support from placement team' },
+            { id: 3, name: 'Rahul Singh', branch: 'CSE', cgpa: 9.5, company: 'Amazon', package: '₹35 LPA', skills: ['Python', 'AWS', 'Microservices'], review: 'Smooth process, helpful mentors' },
+            { id: 4, name: 'Sneha Patel', branch: 'IT', cgpa: 9.0, company: 'Meta', package: '₹45 LPA', skills: ['React', 'GraphQL', 'System Design'], review: 'Best placement experience!' },
+            { id: 5, name: 'Arjun Reddy', branch: 'CSE', cgpa: 8.7, company: 'Adobe', package: '₹28 LPA', skills: ['JavaScript', 'UI/UX', 'React'], review: 'Very professional process' },
+            { id: 6, name: 'Kavya Iyer', branch: 'IT', cgpa: 8.9, company: 'Infosys', package: '₹12 LPA', skills: ['Java', 'Spring Boot', 'SQL'], review: 'Great training provided' },
+            { id: 7, name: 'Vikram Joshi', branch: 'CSE', cgpa: 9.3, company: 'TCS Digital', package: '₹11 LPA', skills: ['Python', 'Django', 'PostgreSQL'], review: 'Well organized drive' },
+            { id: 8, name: 'Meera Nair', branch: 'IT', cgpa: 8.5, company: 'Wipro', package: '₹9.5 LPA', skills: ['Java', 'Cloud', 'DevOps'], review: 'Good placement support' },
+            { id: 9, name: 'Karthik Rao', branch: 'CSE', cgpa: 9.1, company: 'Oracle', package: '₹18 LPA', skills: ['Database', 'Java', 'PL/SQL'], review: 'Excellent mentorship' },
+            { id: 10, name: 'Divya Menon', branch: 'IT', cgpa: 8.6, company: 'Accenture', package: '₹10 LPA', skills: ['Full Stack', 'React', 'Node.js'], review: 'Very supportive team' },
+            { id: 11, name: 'Rohan Gupta', branch: 'CSE', cgpa: 9.4, company: 'Samsung', package: '₹22 LPA', skills: ['Android', 'Kotlin', 'Java'], review: 'Great opportunity!' },
+            { id: 12, name: 'Aisha Khan', branch: 'IT', cgpa: 8.8, company: 'IBM', package: '₹15 LPA', skills: ['Java', 'AI/ML', 'Python'], review: 'Professional process' },
+            { id: 13, name: 'Siddharth Jain', branch: 'CSE', cgpa: 9.0, company: 'Flipkart', package: '₹25 LPA', skills: ['Java', 'Microservices', 'Kafka'], review: 'Amazing experience' },
+            { id: 14, name: 'Nisha Agarwal', branch: 'IT', cgpa: 8.7, company: 'Cognizant', package: '₹11 LPA', skills: ['React', 'Angular', 'TypeScript'], review: 'Very helpful staff' },
+            { id: 15, name: 'Aarav Malhotra', branch: 'CSE', cgpa: 9.2, company: 'Deloitte', package: '₹13 LPA', skills: ['Analytics', 'Python', 'Tableau'], review: 'Well guided process' }
+        ];
+
+        const notPlacedStudents = [
+            { id: 16, name: 'Tanvi Kapoor', branch: 'CSE', cgpa: 7.5, lackedSkills: ['System Design', 'Advanced DSA'], mockScore: 65, reason: 'Weak in system design', suggestions: 'Complete System Design course, Practice DSA' },
+            { id: 17, name: 'Harsh Bhardwaj', branch: 'IT', cgpa: 7.8, lackedSkills: ['React', 'Cloud'], mockScore: 70, reason: 'Limited project experience', suggestions: 'Build full-stack projects, Get AWS cert' },
+            { id: 18, name: 'Riya Saxena', branch: 'CSE', cgpa: 7.2, lackedSkills: ['Algorithms', 'Problem Solving'], mockScore: 62, reason: 'Poor DSA performance', suggestions: 'Solve 100+ DSA problems, Join coding bootcamp' },
+            { id: 19, name: 'Yash Chopra', branch: 'IT', cgpa: 7.6, lackedSkills: ['Database', 'Backend'], mockScore: 68, reason: 'Weak backend knowledge', suggestions: 'Learn Node.js, Complete SQL course' },
+            { id: 20, name: 'Ishita Bansal', branch: 'CSE', cgpa: 7.4, lackedSkills: ['Communication', 'Aptitude'], mockScore: 64, reason: 'Poor aptitude scores', suggestions: 'Join communication workshop, Practice aptitude' },
+            { id: 21, name: 'Aditya Verma', branch: 'IT', cgpa: 7.7, lackedSkills: ['JavaScript', 'Frontend'], mockScore: 69, reason: 'Limited frontend skills', suggestions: 'Master React, Build portfolio projects' },
+            { id: 22, name: 'Simran Gill', branch: 'CSE', cgpa: 7.3, lackedSkills: ['Data Structures', 'Java'], mockScore: 63, reason: 'Java proficiency lacking', suggestions: 'Complete Java certification, Practice OOP' },
+            { id: 23, name: 'Nikhil Pandey', branch: 'IT', cgpa: 7.5, lackedSkills: ['DevOps', 'CI/CD'], mockScore: 66, reason: 'No DevOps knowledge', suggestions: 'Learn Docker/Kubernetes, Get DevOps cert' },
+            { id: 24, name: 'Anushka Sinha', branch: 'CSE', cgpa: 7.6, lackedSkills: ['Machine Learning', 'Python'], mockScore: 67, reason: 'Weak ML fundamentals', suggestions: 'Complete ML course, Build ML projects' },
+            { id: 25, name: 'Varun Malhotra', branch: 'IT', cgpa: 7.8, lackedSkills: ['System Design', 'Scalability'], mockScore: 71, reason: 'No system design practice', suggestions: 'Study design patterns, Mock system design interviews' }
+        ];
+
+        const groups = [
+            { id: 1, name: 'CSE Batch 2024', members: 245, type: 'Batch' },
+            { id: 2, name: 'IT Batch 2024', members: 198, type: 'Batch' },
+            { id: 3, name: 'ECE Batch 2024', members: 167, type: 'Batch' },
+            { id: 4, name: 'Coding Champions', members: 87, type: 'Skill Group' },
+            { id: 5, name: 'Web Development Squad', members: 112, type: 'Skill Group' },
+            { id: 6, name: 'Data Science Enthusiasts', members: 68, type: 'Skill Group' },
+            { id: 7, name: 'Placement Mentors', members: 32, type: 'Mentorship' },
+            { id: 8, name: 'Interview Prep Group', members: 156, type: 'Preparation' },
+            { id: 9, name: 'Resume Building Team', members: 94, type: 'Career Services' },
+            { id: 10, name: 'AI/ML Research Group', members: 45, type: 'Research' },
+            { id: 11, name: 'Hackathon Warriors', members: 73, type: 'Competitions' },
+            { id: 12, name: 'Alumni Networking', members: 189, type: 'Networking' }
+        ];
+
+        const notices = [
+            { id: 1, title: 'Google Campus Drive - March 25', content: 'All eligible students must register by March 20. Eligibility: CSE/IT with 7.5+ CGPA', status: 'approved', company: 'Google', date: '2024-03-15' },
+            { id: 2, title: 'Resume Workshop Announcement', content: 'Mandatory workshop on March 18 at 10 AM in Main Auditorium', status: 'pending', company: 'Admin', date: '2024-03-14' },
+            { id: 3, title: 'Amazon Pre-Placement Talk', content: 'Join us for insights into Amazon culture and roles on March 22', status: 'approved', company: 'Amazon', date: '2024-03-13' },
+            { id: 4, name: 'TCS Digital Hiring Drive', content: 'Online test scheduled for March 28. Prepare for aptitude and coding rounds', status: 'approved', company: 'TCS', date: '2024-03-12' },
+            { id: 5, title: 'Microsoft Interview Tips Session', content: 'Former Microsoft employees sharing interview experiences - March 20', status: 'approved', company: 'Microsoft', date: '2024-03-11' },
+            { id: 6, title: 'Wipro Elite Program Registration', content: 'Last date to register: March 19. Check eligibility criteria on portal', status: 'pending', company: 'Wipro', date: '2024-03-10' },
+            { id: 7, title: 'Infosys Hackathon Announcement', content: '24-hour hackathon with cash prizes. Registration open till March 17', status: 'approved', company: 'Infosys', date: '2024-03-09' },
+            { id: 8, title: 'Aptitude Mock Test - All Students', content: 'Mandatory mock test on March 16 at 2 PM for all final year students', status: 'approved', company: 'Admin', date: '2024-03-08' },
+            { id: 9, title: 'Adobe Design Challenge', content: 'Showcase your design skills for Adobe recruitment. Deadline: March 21', status: 'pending', company: 'Adobe', date: '2024-03-07' },
+            { id: 10, title: 'Accenture Virtual Drive Update', content: 'Interview schedule released. Check your email for slot details', status: 'approved', company: 'Accenture', date: '2024-03-06' },
+            { id: 11, title: 'LinkedIn Profile Optimization Workshop', content: 'Learn to create impactful LinkedIn profiles - March 19 at 4 PM', status: 'approved', company: 'Admin', date: '2024-03-05' },
+            { id: 12, title: 'Capgemini Pool Campus Drive', content: 'Multi-university drive. Register by March 23. Package: ₹7.2 LPA', status: 'pending', company: 'Capgemini', date: '2024-03-04' },
+            { id: 13, title: 'Mock Group Discussion Session', content: 'Practice GD rounds with industry experts - March 17 at 11 AM', status: 'approved', company: 'Admin', date: '2024-03-03' },
+            { id: 14, title: 'Oracle Database Certification Drive', content: 'Free Oracle certification for selected students. Apply by March 18', status: 'approved', company: 'Oracle', date: '2024-03-02' },
+            { id: 15, title: 'Final Year Project Showcase', content: 'Present your projects to recruiters on March 24. Registration mandatory', status: 'pending', company: 'Admin', date: '2024-03-01' }
+        ];
+
+        function switchTab(tab) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(tab + 'Page').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function loadStaff() {
+            const grid = document.getElementById('staffGrid');
+            grid.innerHTML = staff.map(s => `
+                <div class="staff-card">
+                    <div class="staff-header">
+                        <div class="staff-avatar">👤</div>
+                        <div class="staff-info">
+                            <div class="staff-name">${s.name}</div>
+                            <div class="staff-role">${s.role}</div>
+                            <div class="staff-qualification">${s.qualification}</div>
+                        </div>
+                    </div>
+                    <div class="availability-badge ${s.availability}">
+                        ${s.availability === 'available' ? '🟢 Available' : s.availability === 'busy' ? '🟡 Busy' : '🔴 Offline'}
+                    </div>
+                    <div class="staff-contact">
+                        <div class="contact-item">📧 ${s.email}</div>
+                        <div class="contact-item">📱 ${s.phone}</div>
+                    </div>
+                    <div class="staff-actions">
+                        <button class="staff-btn btn-message" onclick="messageStaff(${s.id})">💬</button>
+                        <button class="staff-btn btn-video" onclick="videoCall(${s.id})">🎥</button>
+                        <button class="staff-btn btn-task" onclick="assignTask(${s.id})">📋</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadPlacedStudents() {
+            const grid = document.getElementById('placedGrid');
+            grid.innerHTML = placedStudents.map(s => `
+                <div class="student-card selected">
+                    <div class="student-header">
+                        <div class="student-avatar">🎓</div>
+                        <div class="student-info">
+                            <div class="student-name">${s.name}</div>
+                            <div class="student-branch">${s.branch} • CGPA: ${s.cgpa}</div>
+                        </div>
+                    </div>
+                    <div class="placement-info">
+                        <div class="placement-company">🏢 ${s.company}</div>
+                        <div class="placement-package">💰 ${s.package}</div>
+                    </div>
+                    <div class="student-skills">
+                        ${s.skills.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}
+                    </div>
+                    <div style="color: var(--text-gray); font-style: italic; margin-top: 1rem; font-size: 0.9rem;">
+                        "${s.review}"
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadNotPlacedStudents() {
+            const grid = document.getElementById('notPlacedGrid');
+            grid.innerHTML = notPlacedStudents.map(s => `
+                <div class="student-card not-selected">
+                    <div class="student-header">
+                        <div class="student-avatar">📚</div>
+                        <div class="student-info">
+                            <div class="student-name">${s.name}</div>
+                            <div class="student-branch">${s.branch} • CGPA: ${s.cgpa}</div>
+                        </div>
+                    </div>
+                    <div class="issue-analysis">
+                        <div class="issue-title">❌ Areas for Improvement</div>
+                        <div class="issue-list">
+                            • Missing Skills: ${s.lackedSkills.join(', ')}<br>
+                            • Mock Interview Score: ${s.mockScore}%<br>
+                            • Primary Issue: ${s.reason}
+                        </div>
+                    </div>
+                    <div style="background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--success); margin-top: 1rem;">
+                        <div style="color: var(--success); font-weight: bold; margin-bottom: 0.5rem;">💡 AI Recommendations</div>
+                        <div style="color: var(--text-gray); font-size: 0.9rem; line-height: 1.6;">${s.suggestions}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadGroups() {
+            const grid = document.getElementById('groupsGrid');
+            grid.innerHTML = groups.map(g => `
+                <div class="group-card">
+                    <div class="group-icon">👥</div>
+                    <div class="group-name">${g.name}</div>
+                    <div class="group-members">${g.members} members • ${g.type}</div>
+                    <div class="group-actions">
+                        <button class="group-btn btn-chat" onclick="openGroupChat(${g.id})">💬 Chat</button>
+                        <button class="group-btn btn-call" onclick="groupCall(${g.id})">🎥 Call</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadNotices() {
+            const list = document.getElementById('noticeList');
+            list.innerHTML = notices.map(n => `
+                <div class="notice-item">
+                    <div class="notice-header">
+                        <div class="notice-title">${n.title}</div>
+                        <div class="notice-status ${n.status === 'approved' ? 'approved' : 'pending-approval'}">
+                            ${n.status === 'approved' ? '✅ Approved' : '⏳ Pending'}
+                        </div>
+                    </div>
+                    <div class="notice-content">${n.content}</div>
+                    <div class="notice-meta">
+                        <span>🏢 ${n.company}</span>
+                        <span>📅 ${n.date}</span>
+                    </div>
+                    <div class="notice-actions">
+                        ${n.status === 'pending' ? `<button class="staff-btn btn-message" onclick="approveNotice(${n.id})">✅ Approve</button>` : ''}
+                        <button class="staff-btn btn-task" onclick="editNotice(${n.id})">✏️ Edit</button>
+                        <button class="staff-btn btn-video" onclick="deleteNotice(${n.id})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createBarChart(id, data) {
+            const container = document.getElementById(id);
+            if (!container) return;
+            const max = Math.max(...data.map(d => d.value));
+            container.innerHTML = '';
+            data.forEach(item => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = (item.value / max * 100) + '%';
+                bar.innerHTML = `
+                    <div class="bar-label">${item.label}</div>
+                    <div class="bar-value">${item.value}</div>
+                `;
+                container.appendChild(bar);
+            });
+        }
+
+        function messageStaff(id) {
+            showToast(`Opening chat with ${staff.find(s => s.id === id).name}...`, 'success');
+        }
+
+        function videoCall(id) {
+            showToast('Initiating video call...', 'success');
+        }
+
+        function assignTask(id) {
+            showToast('Opening task assignment...', 'success');
+        }
+
+        function addStaff() {
+            showToast('Opening staff registration form...', 'success');
+        }
+
+        function openGroupChat(id) {
+            showToast(`Opening ${groups.find(g => g.id === id).name} chat...`, 'success');
+        }
+
+        function groupCall(id) {
+            showToast('Starting group video call...', 'success');
+        }
+
+        function createGroup() {
+            showToast('Opening group creation form...', 'success');
+        }
+
+        function createNotice() {
+            showToast('Opening notice creation form...', 'success');
+        }
+
+        function approveNotice(id) {
+            notices.find(n => n.id === id).status = 'approved';
+            showToast('Notice approved and published!', 'success');
+            setTimeout(() => loadNotices(), 500);
+        }
+
+        function editNotice(id) {
+            showToast('Opening notice editor...', 'success');
+        }
+
+        function deleteNotice(id) {
+            if (confirm('Delete this notice?')) {
+                showToast('Notice deleted', 'success');
+                const index = notices.findIndex(n => n.id === id);
+                if (index > -1) notices.splice(index, 1);
+                setTimeout(() => loadNotices(), 500);
+            }
+        }
+
+        function exportReport() {
+            showToast('Generating comprehensive admin report...', 'success');
+            setTimeout(() => {
+                showToast('Report exported as PDF successfully!', 'success');
+            }, 2000);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStaff();
+            loadPlacedStudents();
+            loadNotPlacedStudents();
+            loadGroups();
+            loadNotices();
+            
+            createBarChart('placementChart', [
+                { label: '2020', value: 245 },
+                { label: '2021', value: 298 },
+                { label: '2022', value: 325 },
+                { label: '2023', value: 342 },
+                { label: '2024', value: 15 }
+            ]);
+
+            createBarChart('branchChart', [
+                { label: 'CSE', value: 8 },
+                { label: 'IT', value: 7 },
+                { label: 'ECE', value: 0 }
+            ]);
+
+            createBarChart('skillChart', [
+                { label: 'Java', value: 12 },
+                { label: 'Python', value: 10 },
+                { label: 'React', value: 8 },
+                { label: 'SQL', value: 11 },
+                { label: 'DSA', value: 13 }
+            ]);
+
+            createBarChart('packageChart', [
+                { label: '5-10L', value: 4 },
+                { label: '10-15L', value: 5 },
+                { label: '15-25L', value: 3 },
+                { label: '25-40L', value: 2 },
+                { label: '40L+', value: 1 }
+            ]);
+
+            createBarChart('batchChart', [
+                { label: '2020', value: 245 },
+                { label: '2021', value: 298 },
+                { label: '2022', value: 325 },
+                { label: '2023', value: 342 },
+                { label: '2024', value: 127 }
+            ]);
+
+            createBarChart('companyChart', [
+                { label: 'Google', value: 1 },
+                { label: 'Microsoft', value: 1 },
+                { label: 'Amazon', value: 1 },
+                { label: 'TCS', value: 1 },
+                { label: 'Infosys', value: 1 }
+            ]);
+
+            setTimeout(() => {
+                showToast('🎯 Admin Command Center loaded! 20 staff, 25 students, 12 groups, 15 notices.', 'success');
+            }, 1000);
+        });
+
+        window.onclick = (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>

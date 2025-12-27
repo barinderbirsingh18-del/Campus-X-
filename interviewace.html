@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X  - Interview Prep Arena | AI-Powered Mock Interviews</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --primary-cyan-dark: #00d9ff;
+            --secondary-purple: #9d00ff;
+            --secondary-purple-dark: #7b00ff;
+            --accent-pink: #ff00ff;
+            --accent-magenta: #ff0080;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-tab {
+            padding: 0.7rem 1.5rem;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Dashboard Overview */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--primary-cyan));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Section Container */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Mock Interview Interface */
+        .interview-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 200px);
+        }
+
+        .question-sidebar {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .question-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .question-sidebar::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .question-sidebar::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .question-item {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .question-item:hover {
+            border-color: var(--primary-cyan);
+            transform: translateX(5px);
+        }
+
+        .question-item.active {
+            border-color: var(--secondary-purple);
+            background: rgba(157, 0, 255, 0.1);
+        }
+
+        .question-item.completed {
+            border-color: var(--success);
+            opacity: 0.7;
+        }
+
+        .question-number {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .question-category {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .interview-main {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .interview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-glow);
+        }
+
+        .timer-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--warning);
+        }
+
+        .timer-icon {
+            font-size: 2rem;
+        }
+
+        .question-display {
+            flex: 1;
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .answer-area {
+            margin-bottom: 2rem;
+        }
+
+        .answer-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            padding: 1rem;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .answer-textarea:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .recording-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .record-btn {
+            flex: 1;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--error), var(--accent-magenta));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .record-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00cc70);
+            color: var(--bg-dark);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        /* AI Feedback Panel */
+        .feedback-panel {
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--secondary-purple);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feedback-header {
+            color: var(--secondary-purple);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feedback-score {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2rem;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid var(--border-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .score-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .feedback-details {
+            background: rgba(26, 31, 58, 0.6);
+            border-left: 4px solid var(--primary-cyan);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-details h4 {
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback-details ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .feedback-details li {
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .feedback-details li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+        }
+
+        .feedback-details li.weakness::before {
+            content: '!';
+            color: var(--warning);
+        }
+
+        /* Question Bank */
+        .question-bank-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.7rem 1.2rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.7rem 1.2rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-light);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .question-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .question-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .question-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .category-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .category-hr {
+            background: rgba(0, 243, 255, 0.2);
+            color: var(--primary-cyan);
+        }
+
+        .category-technical {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+        }
+
+        .category-behavioral {
+            background: rgba(255, 0, 128, 0.2);
+            color: var(--accent-magenta);
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .bookmark-btn:hover, .bookmark-btn.bookmarked {
+            color: var(--warning);
+        }
+
+        .question-title {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Analytics Dashboard */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            color: var(--primary-cyan);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: var(--text-gray);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 10px;
+            transition: width 1s ease-out;
+        }
+
+        .radar-chart {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .radar-polygon {
+            stroke: var(--primary-cyan);
+            stroke-width: 2;
+            fill: rgba(0, 243, 255, 0.2);
+        }
+
+        /* Resume Analyzer */
+        .upload-area {
+            background: rgba(26, 31, 58, 0.8);
+            border: 3px dashed var(--border-glow);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--primary-cyan);
+        }
+
+        .upload-text {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .resume-score-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .score-gauge {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .gauge-circle {
+            transform: rotate(-90deg);
+        }
+
+        .gauge-background {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 15;
+        }
+
+        .gauge-progress {
+            fill: none;
+            stroke: url(#gaugeGradient);
+            stroke-width: 15;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .gauge-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .suggestions-list {
+            background: rgba(37, 43, 74, 0.6);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .suggestions-list h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+        }
+
+        .suggestions-list ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .suggestions-list li {
+            color: var(--text-gray);
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .suggestions-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--warning);
+        }
+
+        /* Badges Grid */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .badge-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .badge-card.unlocked {
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .badge-card.locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-name {
+            color: var(--text-light);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-description {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* AI Mentor Chat */
+        .mentor-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            height: calc(100vh - 200px);
+        }
+
+        .chat-area {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: rgba(37, 43, 74, 0.8);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            max-width: 70%;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+        }
+
+        .message-text {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .message-time {
+            color: var(--text-gray);
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .chat-input-area {
+            padding: 1.5rem;
+            border-top: 2px solid var(--border-glow);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+        }
+
+        .send-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .suggestions-panel {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .suggestions-panel h3 {
+            color: var(--secondary-purple);
+            margin-bottom: 1.5rem;
+        }
+
+        .suggestion-card {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suggestion-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateX(5px);
+        }
+
+        .suggestion-title {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .suggestion-desc {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-dark-secondary);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal h2 {
+            color: var(--primary-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--error);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-glow);
+            border-radius: 50%;
+            border-top-color: var(--primary-cyan);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .interview-container, .mentor-container {
+                grid-template-columns: 1fr;
+            }
+
+            .question-sidebar, .suggestions-panel {
+                max-height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-grid, .questions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-background"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">CAMPUS X  | INTERVIEW PREP</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchSection('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="switchSection('mock-interview')">Mock Interview</button>
+                <button class="nav-tab" onclick="switchSection('question-bank')">Question Bank</button>
+                <button class="nav-tab" onclick="switchSection('analytics')">Analytics</button>
+                <button class="nav-tab" onclick="switchSection('resume-analyzer')">Resume Analyzer</button>
+                <button class="nav-tab" onclick="switchSection('ai-mentor')">AI Mentor</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="section-header">
+                <h2>Interview Preparation Dashboard</h2>
+                <p>Track your progress, practice interviews, and get AI-powered feedback</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Interviews Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">78%</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Badges Earned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Recent Performance</h3>
+                    <canvas id="performanceChart" width="400" height="200"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Skills Assessment</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Technical Skills</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Communication</span>
+                            <span>72%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 72%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Problem Solving</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Behavioral</span>
+                            <span>68%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 68%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h2>Your Achievements</h2>
+                <p>Unlock badges by completing challenges and milestones</p>
+            </div>
+
+            <div class="badges-grid">
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-name">First Interview</div>
+                    <div class="badge-description">Complete your first mock interview</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">⚡</div>
+                    <div class="badge-name">Speed Demon</div>
+                    <div class="badge-description">Answer 10 questions under 2 minutes</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">🎯</div>
+                    <div class="badge-name">Perfect Score</div>
+                    <div class="badge-description">Get 100% on an interview</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">💯</div>
+                    <div class="badge-name">Century Club</div>
+                    <div class="badge-description">Complete 100 mock interviews</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">🔥</div>
+                    <div class="badge-name">30 Day Streak</div>
+                    <div class="badge-description">Practice for 30 consecutive days</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">👑</div>
+                    <div class="badge-name">Interview Master</div>
+                    <div class="badge-description">Maintain 90%+ average for 20 interviews</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mock Interview Section -->
+        <section class="section" id="mock-interview">
+            <div class="section-header">
+                <h2>AI-Powered Mock Interview</h2>
+                <p>Practice with AI interviewer and get real-time feedback</p>
+            </div>
+
+            <div class="interview-container">
+                <div class="question-sidebar">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem;">Interview Questions</h3>
+                    <div id="questionsList">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="interview-main">
+                    <div class="interview-header">
+                        <h3 style="color: var(--primary-cyan);">Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">10</span></h3>
+                        <div class="timer-display">
+                            <span class="timer-icon">⏱️</span>
+                            <span id="questionTimer">00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="question-display">
+                        <div class="question-text" id="questionText">
+                            Tell me about yourself and why you're interested in this role.
+                        </div>
+                    </div>
+
+                    <div class="answer-area">
+                        <textarea 
+                            class="answer-textarea" 
+                            id="answerInput" 
+                            placeholder="Type your answer here..."
+                        ></textarea>
+                    </div>
+
+                    <div class="recording-controls">
+                        <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+                            <span id="recordIcon">🎤</span>
+                            <span id="recordText">Start Recording</span>
+                        </button>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">← Previous</button>
+                        <button class="btn btn-primary" onclick="submitAnswer()">Submit Answer</button>
+                        <button class="btn btn-success" onclick="nextQuestion()">Next →</button>
+                    </div>
+
+                    <div class="feedback-panel" id="feedbackPanel" style="display: none;">
+                        <div class="feedback-header">
+                            🤖 AI Feedback
+                        </div>
+                        <div class="feedback-score">
+                            <div class="score-item">
+                                <div class="score-circle">
+                                    <div class="score-value" id="clarityScore">85</div>
+                                </div>
+                                <div class="score-label">Clarity</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-circle">
+                                    <div class="score-value" id="relevanceScore">92</div>
+                                </div>
+                                <div class="score-label">Relevance</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-circle">
+                                    <div class="score-value" id="confidenceScore">78</div>
+                                </div>
+                                <div class="score-label">Confidence</div>
+                            </div>
+                        </div>
+                        <div class="feedback-details">
+                            <h4>Strengths</h4>
+                            <ul id="strengthsList">
+                                <li>Clear and structured response</li>
+                                <li>Good use of specific examples</li>
+                                <li>Confident tone throughout</li>
+                            </ul>
+                        </div>
+                        <div class="feedback-details">
+                            <h4>Areas for Improvement</h4>
+                            <ul id="weaknessesList">
+                                <li class="weakness">Could elaborate more on technical skills</li>
+                                <li class="weakness">Reduce filler words</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Question Bank Section -->
+        <section class="section" id="question-bank">
+            <div class="section-header">
+                <h2>Interview Question Bank</h2>
+                <p>500+ curated questions across all interview categories</p>
+            </div>
+
+            <div class="question-bank-filters">
+                <select class="filter-select" onchange="filterQuestions()">
+                    <option value="all">All Categories</option>
+                    <option value="hr">HR / Behavioral</option>
+                    <option value="technical">Technical</option>
+                    <option value="situational">Situational</option>
+                </select>
+                <select class="filter-select" onchange="filterQuestions()">
+                    <option value="all">All Levels</option>
+                    <option value="entry">Entry Level</option>
+                    <option value="mid">Mid Level</option>
+                    <option value="senior">Senior Level</option>
+                </select>
+                <select class="filter-select" onchange="filterQuestions()">
+                    <option value="all">All Companies</option>
+                    <option value="google">Google</option>
+                    <option value="microsoft">Microsoft</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="meta">Meta</option>
+                </select>
+                <input type="text" class="search-input" placeholder="🔍 Search questions..." oninput="searchQuestions()">
+            </div>
+
+            <div class="questions-grid" id="questionsGrid">
+                <!-- Questions will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="section" id="analytics">
+            <div class="section-header">
+                <h2>Performance Analytics</h2>
+                <p>Detailed insights into your interview preparation progress</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">+15%</div>
+                    <div class="stat-label">Score Improvement</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-value">3.2m</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💪</div>
+                    <div class="stat-value">Technical</div>
+                    <div class="stat-label">Strongest Area</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">Behavioral</div>
+                    <div class="stat-label">Focus Area</div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Score Trend (Last 30 Days)</h3>
+                    <canvas id="trendChart" width="400" height="250"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Category Performance</h3>
+                    <div class="radar-chart">
+                        <svg width="300" height="300" id="radarChart"></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card" style="margin-top: 2rem;">
+                <h3 class="chart-title">Detailed Performance Breakdown</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>HR Questions</span>
+                        <span>76 / 100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 76%"></div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>Technical Questions</span>
+                        <span>88 / 100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 88%"></div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>Behavioral Questions</span>
+                        <span>65 / 100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>Situational Questions</span>
+                        <span>82 / 100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 82%"></div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>Coding Challenges</span>
+                        <span>91 / 100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 91%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resume Analyzer Section -->
+        <section class="section" id="resume-analyzer">
+            <div class="section-header">
+                <h2>AI Resume Analyzer</h2>
+                <p>Get instant feedback on your resume with AI-powered insights</p>
+            </div>
+
+            <div class="upload-area" onclick="document.getElementById('resumeUpload').click()">
+                <input type="file" id="resumeUpload" style="display: none;" accept=".pdf,.doc,.docx" onchange="analyzeResume()">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">Click to upload your resume</div>
+                <div style="color: var(--text-gray); font-size: 0.9rem;">Supported formats: PDF, DOC, DOCX</div>
+            </div>
+
+            <div class="resume-score-card" id="resumeScore" style="display: none;">
+                <h3 style="color: var(--primary-cyan); text-align: center; margin-bottom: 2rem;">Resume Analysis</h3>
+                
+                <div class="score-gauge">
+                    <svg width="200" height="200" class="gauge-circle">
+                        <defs>
+                            <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color: var(--primary-cyan)" />
+                                <stop offset="100%" style="stop-color: var(--secondary-purple)" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                        <circle class="gauge-progress" cx="100" cy="100" r="85" 
+                                stroke-dasharray="534" stroke-dashoffset="133"></circle>
+                    </svg>
+                    <div class="gauge-text">82</div>
+                </div>
+
+                <div class="feedback-details">
+                    <h4>✓ Strengths</h4>
+                    <ul>
+                        <li>Well-structured format with clear sections</li>
+                        <li>Strong quantifiable achievements</li>
+                        <li>Relevant technical skills highlighted</li>
+                        <li>Good use of action verbs</li>
+                    </ul>
+                </div>
+
+                <div class="suggestions-list">
+                    <h4>💡 Suggestions for Improvement</h4>
+                    <ul>
+                        <li>Add more industry-specific keywords</li>
+                        <li>Include measurable results in project descriptions</li>
+                        <li>Expand on leadership experience</li>
+                        <li>Add certifications section</li>
+                        <li>Optimize for ATS (Applicant Tracking System)</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="downloadReport()">📥 Download Report</button>
+                    <button class="btn btn-secondary" onclick="uploadNew()">🔄 Upload New</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Mentor Section -->
+        <section class="section" id="ai-mentor">
+            <div class="section-header">
+                <h2>AI Career Mentor</h2>
+                <p>Get personalized career guidance and interview tips</p>
+            </div>
+
+            <div class="mentor-container">
+                <div class="chat-area">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    Hello! I'm your AI Career Mentor. I'm here to help you prepare for interviews, improve your skills, and guide your career journey. What would you like to discuss today?
+                                </div>
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="mentorInput" placeholder="Ask me anything about interviews, career paths, or skills..." onkeypress="handleMentorEnter(event)">
+                        <button class="send-btn" onclick="sendMentorMessage()">Send</button>
+                    </div>
+                </div>
+
+                <div class="suggestions-panel">
+                    <h3>Quick Suggestions</h3>
+                    <div class="suggestion-card" onclick="askMentor('How do I prepare for technical interviews?')">
+                        <div class="suggestion-title">Technical Interview Prep</div>
+                        <div class="suggestion-desc">Get tips for coding and system design interviews</div>
+                    </div>
+                    <div class="suggestion-card" onclick="askMentor('What are common behavioral questions?')">
+                        <div class="suggestion-title">Behavioral Questions</div>
+                        <div class="suggestion-desc">Learn about STAR method and common patterns</div>
+                    </div>
+                    <div class="suggestion-card" onclick="askMentor('How to negotiate salary?')">
+                        <div class="suggestion-title">Salary Negotiation</div>
+                        <div class="suggestion-desc">Strategies for negotiating your compensation</div>
+                    </div>
+                    <div class="suggestion-card" onclick="askMentor('What skills should I improve?')">
+                        <div class="suggestion-title">Skill Recommendations</div>
+                        <div class="suggestion-desc">Personalized skill development suggestions</div>
+                    </div>
+                    <div class="suggestion-card" onclick="askMentor('How to handle stress interviews?')">
+                        <div class="suggestion-title">Stress Management</div>
+                        <div class="suggestion-desc">Techniques to stay calm under pressure</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div id="toastMessage"></div>
+    </div>
+
+    <!-- Modal for Question Details -->
+    <div class="modal" id="questionModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 id="modalQuestionTitle"></h2>
+            <div id="modalQuestionContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let currentSection = 'dashboard';
+        let currentQuestionIndex = 0;
+        let isRecording = false;
+        let questionTimer = 0;
+        let timerInterval = null;
+        let interviewQuestions = [];
+
+        // Interview Questions Database
+        const questionBank = [
+            {
+                id: 1,
+                category: 'hr',
+                question: 'Tell me about yourself.',
+                level: 'all',
+                company: 'all',
+                modelAnswer: 'Start with your current role, highlight key achievements, mention relevant skills, and connect to why you\'re interested in this position.',
+                tips: ['Keep it under 2 minutes', 'Focus on professional highlights', 'End with your career goals']
+            },
+            {
+                id: 2,
+                category: 'hr',
+                question: 'Why do you want to work for our company?',
+                level: 'all',
+                company: 'all',
+                modelAnswer: 'Research the company\'s mission, values, and recent achievements. Connect your career goals with their opportunities.',
+                tips: ['Show genuine interest', 'Mention specific company initiatives', 'Align your goals with theirs']
+            },
+            {
+                id: 3,
+                category: 'technical',
+                question: 'Explain the difference between stack and heap memory.',
+                level: 'entry',
+                company: 'all',
+                modelAnswer: 'Stack is used for static memory allocation and stores local variables. Heap is used for dynamic memory allocation.',
+                tips: ['Use examples', 'Mention pros and cons', 'Discuss memory management']
+            },
+            {
+                id: 4,
+                category: 'behavioral',
+                question: 'Describe a time when you faced a difficult challenge at work.',
+                level: 'all',
+                company: 'all',
+                modelAnswer: 'Use STAR method: Situation, Task, Action, Result. Be specific and quantify results when possible.',
+                tips: ['Use STAR method', 'Be specific', 'Quantify results']
+            },
+            {
+                id: 5,
+                category: 'technical',
+                question: 'What is the time complexity of binary search?',
+                level: 'entry',
+                company: 'google',
+                modelAnswer: 'O(log n) - binary search divides the search space in half with each iteration.',
+                tips: ['Explain the algorithm', 'Compare with linear search', 'Discuss best/worst cases']
+            },
+            {
+                id: 6,
+                category: 'hr',
+                question: 'What are your salary expectations?',
+                level: 'all',
+                company: 'all',
+                modelAnswer: 'Research market rates, consider your experience, and provide a range rather than a fixed number.',
+                tips: ['Research beforehand', 'Give a range', 'Be flexible']
+            },
+            {
+                id: 7,
+                category: 'technical',
+                question: 'Explain REST API principles.',
+                level: 'mid',
+                company: 'all',
+                modelAnswer: 'REST uses HTTP methods, is stateless, cacheable, and uses a client-server architecture.',
+                tips: ['Mention HTTP methods', 'Explain statelessness', 'Discuss advantages']
+            },
+            {
+                id: 8,
+                category: 'behavioral',
+                question: 'How do you handle conflicts with team members?',
+                level: 'all',
+                company: 'all',
+                modelAnswer: 'Focus on active listening, finding common ground, and working toward mutually beneficial solutions.',
+                tips: ['Show emotional intelligence', 'Emphasize collaboration', 'Give specific example']
+            },
+            {
+                id: 9,
+                category: 'technical',
+                question: 'What is the difference between SQL and NoSQL databases?',
+                level: 'mid',
+                company: 'all',
+                modelAnswer: 'SQL is relational, structured, and uses ACID. NoSQL is flexible, scalable, and uses different data models.',
+                tips: ['Compare use cases', 'Mention examples', 'Discuss scalability']
+            },
+            {
+                id: 10,
+                category: 'situational',
+                question: 'How would you prioritize tasks when everything is urgent?',
+                level: 'all',
+                company: 'all',
+                modelAnswer: 'Assess impact and urgency, communicate with stakeholders, and use time management techniques.',
+                tips: ['Mention frameworks (Eisenhower Matrix)', 'Show decision-making skills', 'Emphasize communication']
+            }
+        ];
+
+        // Initialize
+        function init() {
+            loadInterviewQuestions();
+            loadQuestionBankDisplay();
+            createCharts();
+        }
+
+        // Section Switching
+        function switchSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(sectionName).classList.add('active');
+            event.target.classList.add('active');
+            currentSection = sectionName;
+
+            showToast(`Switched to ${sectionName.replace('-', ' ')} section`);
+        }
+
+        // Load Interview Questions
+        function loadInterviewQuestions() {
+            interviewQuestions = questionBank.slice(0, 10);
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+
+            interviewQuestions.forEach((q, index) => {
+                const item = document.createElement('div');
+                item.className = 'question-item';
+                if (index === 0) item.classList.add('active');
+                item.onclick = () => selectQuestion(index);
+
+                item.innerHTML = `
+                    <div class="question-number">Question ${index + 1}</div>
+                    <div class="question-category">${q.category.toUpperCase()}</div>
+                `;
+
+                questionsList.appendChild(item);
+            });
+
+            document.getElementById('totalQuestions').textContent = interviewQuestions.length;
+            displayQuestion(0);
+        }
+
+        // Select Question
+        function selectQuestion(index) {
+            document.querySelectorAll('.question-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+            currentQuestionIndex = index;
+            displayQuestion(index);
+            startQuestionTimer();
+        }
+
+        // Display Question
+        function displayQuestion(index) {
+            const question = interviewQuestions[index];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestionNum').textContent = index + 1;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('feedbackPanel').style.display = 'none';
+        }
+
+        // Question Timer
+        function startQuestionTimer() {
+            stopQuestionTimer();
+            questionTimer = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                questionTimer++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopQuestionTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(questionTimer / 60);
+            const seconds = questionTimer % 60;
+            document.getElementById('questionTimer').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Recording
+        function toggleRecording() {
+            isRecording = !isRecording;
+            const btn = document.getElementById('recordBtn');
+            const icon = document.getElementById('recordIcon');
+            const text = document.getElementById('recordText');
+
+            if (isRecording) {
+                btn.classList.add('recording');
+                icon.textContent = '⏹️';
+                text.textContent = 'Stop Recording';
+                showToast('Recording started', 'success');
+            } else {
+                btn.classList.remove('recording');
+                icon.textContent = '🎤';
+                text.textContent = 'Start Recording';
+                showToast('Recording stopped', 'success');
+            }
+        }
+
+        // Submit Answer
+        function submitAnswer() {
+            const answer = document.getElementById('answerInput').value;
+            
+            if (!answer.trim()) {
+                showToast('Please provide an answer first!', 'error');
+                return;
+            }
+
+            stopQuestionTimer();
+            showToast('Analyzing your answer...', 'success');
+
+            setTimeout(() => {
+                const feedbackPanel = document.getElementById('feedbackPanel');
+                feedbackPanel.style.display = 'block';
+
+                // Generate random scores for demo
+                const clarity = Math.floor(Math.random() * 20) + 75;
+                const relevance = Math.floor(Math.random() * 20) + 80;
+                const confidence = Math.floor(Math.random() * 20) + 70;
+
+                document.getElementById('clarityScore').textContent = clarity;
+                document.getElementById('relevanceScore').textContent = relevance;
+                document.getElementById('confidenceScore').textContent = confidence;
+
+                // Mark question as completed
+                document.querySelectorAll('.question-item')[currentQuestionIndex].classList.add('completed');
+
+                showToast('Answer analyzed successfully!', 'success');
+            }, 2000);
+        }
+
+        // Navigation
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                selectQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < interviewQuestions.length - 1) {
+                selectQuestion(currentQuestionIndex + 1);
+            } else {
+                showToast('Interview completed! Check your analytics.', 'success');
+            }
+        }
+
+        // Load Question Bank Display
+        function loadQuestionBankDisplay() {
+            const grid = document.getElementById('questionsGrid');
+            grid.innerHTML = '';
+
+            questionBank.forEach(q => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.onclick = () => showQuestionDetails(q);
+
+                const categoryClass = `category-${q.category === 'hr' ? 'hr' : q.category === 'technical' ? 'technical' : 'behavioral'}`;
+
+                card.innerHTML = `
+                    <div class="question-card-header">
+                        <span class="category-badge ${categoryClass}">${q.category.toUpperCase()}</span>
+                        <button class="bookmark-btn" onclick="toggleBookmark(${q.id}); event.stopPropagation();">⭐</button>
+                    </div>
+                    <div class="question-title">${q.question}</div>
+                    <div class="question-meta">
+                        <span>📊 ${q.level}</span>
+                        <span>🏢 ${q.company}</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Show Question Details
+        function showQuestionDetails(question) {
+            const modal = document.getElementById('questionModal');
+            document.getElementById('modalQuestionTitle').textContent = question.question;
+            document.getElementById('modalQuestionContent').innerHTML = `
+                <div style="margin-top: 1.5rem;">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem;">Model Answer</h3>
+                    <p style="color: var(--text-gray); line-height: 1.8; margin-bottom: 2rem;">${question.modelAnswer}</p>
+                    
+                    <h3 style="color: var(--secondary-purple); margin-bottom: 1rem;">Tips</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        ${question.tips.map(tip => `
+                            <li style="color: var(--text-gray); margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--success);">✓</span>
+                                ${tip}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('questionModal').classList.remove('active');
+        }
+
+        // Toggle Bookmark
+        function toggleBookmark(id) {
+            event.target.classList.toggle('bookmarked');
+            const isBookmarked = event.target.classList.contains('bookmarked');
+            showToast(isBookmarked ? 'Question bookmarked!' : 'Bookmark removed');
+        }
+
+        // Filter Questions
+        function filterQuestions() {
+            showToast('Filters applied');
+            // Implementation would filter the displayed questions
+        }
+
+        // Search Questions
+        function searchQuestions() {
+            const searchTerm = event.target.value.toLowerCase();
+            // Implementation would filter questions by search term
+        }
+
+        // Resume Analysis
+        function analyzeResume() {
+            const file = document.getElementById('resumeUpload').files[0];
+            if (!file) return;
+
+            showToast('Analyzing resume...', 'success');
+
+            setTimeout(() => {
+                document.getElementById('resumeScore').style.display = 'block';
+                showToast('Resume analysis complete!', 'success');
+            }, 2000);
+        }
+
+        function downloadReport() {
+            showToast('Downloading report...', 'success');
+        }
+
+        function uploadNew() {
+            document.getElementById('resumeScore').style.display = 'none';
+            document.getElementById('resumeUpload').value = '';
+        }
+
+        // AI Mentor
+        function sendMentorMessage() {
+            const input = document.getElementById('mentorInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            setTimeout(() => {
+                const responses = [
+                    'Great question! For technical interviews, I recommend focusing on data structures and algorithms. Practice coding problems daily and understand the time/space complexity of your solutions.',
+                    'The STAR method is excellent for behavioral questions. Make sure to quantify your achievements and show the impact of your actions.',
+                    'When negotiating salary, research the market rate for your role and location. Be confident but flexible, and consider the entire compensation package, not just base salary.',
+                    'Based on your profile, I recommend strengthening your system design skills and gaining more experience with cloud technologies. These are in high demand.',
+                    'To handle stress interviews, remember to stay calm, take a moment to think before responding, and maintain a positive attitude. Practice with mock stress interviews.'
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(randomResponse, 'ai');
+            }, 1000);
+        }
+
+        function addMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const message = document.createElement('div');
+            message.className = `message ${sender === 'user' ? 'user' : ''}`;
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            message.innerHTML = `
+                <div class="message-avatar">${sender === 'user' ? '👤' : '🤖'}</div>
+                <div class="message-content">
+                    <div class="message-text">${text}</div>
+                    <div class="message-time">${timeStr}</div>
+                </div>
+            `;
+
+            messagesDiv.appendChild(message);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function askMentor(question) {
+            document.getElementById('mentorInput').value = question;
+            sendMentorMessage();
+        }
+
+        function handleMentorEnter(event) {
+            if (event.key === 'Enter') {
+                sendMentorMessage();
+            }
+        }
+
+        // Create Charts
+        function createCharts() {
+            // Simple chart simulation with canvas
+            const canvas = document.getElementById('performanceChart');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.strokeStyle = '#00f3ff';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                const data = [65, 70, 75, 72, 80, 85, 78, 82, 88, 85];
+                const width = canvas.width;
+                const height = canvas.height;
+                const step = width / (data.length - 1);
+                
+                data.forEach((value, index) => {
+                    const x = index * step;
+                    const y = height - (value / 100 * height);
+                    if (index === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+                
+                ctx.stroke();
+            }
+
+            // Create radar chart
+            createRadarChart();
+        }
+
+        function createRadarChart() {
+            const svg = document.getElementById('radarChart');
+            if (!svg) return;
+
+            const skills = [
+                { name: 'Technical', value: 88 },
+                { name: 'Communication', value: 72 },
+                { name: 'Problem Solving', value: 90 },
+                { name: 'Behavioral', value: 68 },
+                { name: 'Leadership', value: 75 }
+            ];
+
+            const centerX = 150;
+            const centerY = 150;
+            const maxRadius = 120;
+            const angleStep = (Math.PI * 2) / skills.length;
+
+            // Draw background circles
+            for (let i = 1; i <= 5; i++) {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', centerX);
+                circle.setAttribute('cy', centerY);
+                circle.setAttribute('r', (maxRadius / 5) * i);
+                circle.setAttribute('fill', 'none');
+                circle.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+                circle.setAttribute('stroke-width', '1');
+                svg.appendChild(circle);
+            }
+
+            // Draw skill polygon
+            let pathData = '';
+            skills.forEach((skill, index) => {
+                const angle = angleStep * index - Math.PI / 2;
+                const radius = (skill.value / 100) * maxRadius;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                if (index === 0) {
+                    pathData += `M ${x} ${y}`;
+                } else {
+                    pathData += ` L ${x} ${y}`;
+                }
+
+                // Add labels
+                const labelRadius = maxRadius + 20;
+                const labelX = centerX + Math.cos(angle) * labelRadius;
+                const labelY = centerY + Math.sin(angle) * labelRadius;
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', labelX);
+                text.setAttribute('y', labelY);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('fill', 'var(--text-gray)');
+                text.setAttribute('font-size', '12');
+                text.textContent = skill.name;
+                svg.appendChild(text);
+            });
+            pathData += ' Z';
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', pathData);
+            path.setAttribute('class', 'radar-polygon');
+            svg.appendChild(path);
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+
+        // Close modal on outside click
+        document.getElementById('questionModal').addEventListener('click', (e) => {
+            if (e.target.id === 'questionModal') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

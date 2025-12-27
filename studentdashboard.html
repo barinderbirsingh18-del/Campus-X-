@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X - Student Dashboard</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --secondary-purple: #9d00ff;
+            --accent-pink: #ff00ff;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        /* Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: 0;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .university-badge {
+            background: rgba(0, 243, 255, 0.2);
+            color: var(--primary-cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--primary-cyan);
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .welcome-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--primary-cyan));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Notice Board */
+        .notice-board {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-cyan);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notice-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .notice-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .notice-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .notice-list::-webkit-scrollbar-track {
+            background: rgba(37, 43, 74, 0.6);
+            border-radius: 4px;
+        }
+
+        .notice-list::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .notice-item {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notice-item:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .notice-item.unread {
+            border-left: 4px solid var(--success);
+        }
+
+        .notice-item.unread::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .notice-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .notice-tags {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .notice-category {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .new-tag {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            padding: 0.4rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .notice-title {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .notice-content {
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .notice-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .notice-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notice-time {
+            color: var(--text-gray);
+            font-style: italic;
+        }
+
+        /* AI Recommendations */
+        .ai-panel {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--secondary-purple);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--secondary-purple);
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendation-item {
+            background: rgba(37, 43, 74, 0.6);
+            border-left: 4px solid var(--primary-cyan);
+            padding: 1.3rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .recommendation-item:hover {
+            background: rgba(0, 243, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .rec-title {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .rec-desc {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .rec-action {
+            margin-top: 0.8rem;
+        }
+
+        .rec-btn {
+            background: transparent;
+            border: 2px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .rec-btn:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+        }
+
+        /* Placement Tracker */
+        .progress-tracker {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .tracker-title {
+            font-size: 1.6rem;
+            color: var(--primary-cyan);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 3.5rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--success) 0%, var(--warning) 50%, var(--text-gray) 100%);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -3.2rem;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-dark);
+            transition: all 0.3s;
+        }
+
+        .timeline-dot.completed {
+            background: var(--success);
+            box-shadow: 0 0 20px var(--success);
+        }
+
+        .timeline-dot.current {
+            background: var(--warning);
+            box-shadow: 0 0 20px var(--warning);
+            animation: pulseTimeline 2s infinite;
+        }
+
+        .timeline-dot.pending {
+            background: var(--text-gray);
+        }
+
+        @keyframes pulseTimeline {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--warning); }
+            50% { transform: scale(1.15); box-shadow: 0 0 30px var(--warning); }
+        }
+
+        .timeline-content {
+            background: rgba(37, 43, 74, 0.6);
+            padding: 1.3rem;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover .timeline-content {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .timeline-title {
+            font-weight: bold;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .timeline-date {
+            color: var(--primary-cyan);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Upcoming Drives */
+        .drives-section {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .drives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .drive-card {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .drive-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .drive-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .company-logo {
+            font-size: 3rem;
+        }
+
+        .match-score {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .company-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .drive-role {
+            color: var(--primary-cyan);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .drive-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .drive-detail {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .drive-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--success), #00cc70);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-dark);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .leaderboard-table th {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--primary-cyan);
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-glow);
+            font-weight: bold;
+        }
+
+        .leaderboard-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .leaderboard-table tr.current-user {
+            background: rgba(0, 243, 255, 0.1);
+            border-left: 4px solid var(--primary-cyan);
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; }
+        .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #000; }
+        .rank-3 { background: linear-gradient(135deg, #cd7f32, #e8a87c); color: #000; }
+        .rank-other { background: rgba(157, 0, 255, 0.2); color: var(--secondary-purple); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 5000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+        a{
+            color: aqua;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .drives-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notice-filters {
+                gap: 0.3rem;
+            }
+
+            .filter-btn {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-background"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">CAMPUS X</div>
+            <div class="nav-menu">
+                <a class="nav-link active" onclick="showSection('dashboard')">Dashboard</a>
+                <a class="nav-link" onclick="showSection('placements')"><a href="Placementanalytic.html">Placement</a></a>
+                <a class="nav-link" onclick="showSection('coding')"><a href="challenge.html">Coding Arena</a></a>
+                <a class="nav-link" onclick="showSection('interviews')"><a href="interviewace.html">Interview Prep</a></a>
+                <a class="nav-link" onclick="showSection('network')"><a href="networkbuilder.html">Network</a></a>
+            </div>
+            <div class="user-section">
+                <div class="user-profile">
+                    <div class="user-avatar">👨‍🎓</div>
+                    <span>User</span>
+                </div>
+                <span class="university-badge">CAMPUS X</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome back, 👋</h1>
+            <p class="welcome-subtitle">Here's your personalized dashboard with latest updates</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Active Placement Drives</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📨</div>
+                <div class="stat-value">5</div>
+                <div class="stat-label">Applications Sent</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value">#42</div>
+                <div class="stat-label">University Rank</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">485</div>
+                <div class="stat-label">Total XP Points</div>
+            </div>
+        </div>
+
+        <!-- Notice Board -->
+        <div class="notice-board">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span>📢</span> Official Notices from Placement Cell
+                </h2>
+                <div class="notice-filters">
+                    <button class="filter-btn active" onclick="filterNotices('all')">All</button>
+                    <button class="filter-btn" onclick="filterNotices('drives')">📅 Drives</button>
+                    <button class="filter-btn" onclick="filterNotices('workshops')">📚 Workshops</button>
+                    <button class="filter-btn" onclick="filterNotices('results')">🎯 Results</button>
+                </div>
+            </div>
+
+            <div class="notice-list" id="noticeList">
+                <!-- Notices will be loaded here -->
+            </div>
+        </div>
+
+        <!-- AI Recommendations -->
+        <div class="ai-panel">
+            <div class="ai-header">
+                <span>🤖</span> AI Career Recommendations
+            </div>
+            <div class="recommendation-item">
+                <div class="rec-title">📊 Improve System Design Skills</div>
+                <div class="rec-desc">
+                    Based on your profile analysis, mastering system design concepts will increase your placement chances by 35%. 
+                    Top companies in your university prefer candidates with strong system design knowledge.
+                </div>
+                <div class="rec-action">
+                    <button class="rec-btn" onclick="showToast('Opening System Design course...', 'success')">Start Learning →</button>
+                </div>
+            </div>
+            <div class="recommendation-item">
+                <div class="rec-title">🎯 Apply to TCS Digital Drive</div>
+                <div class="rec-desc">
+                    You're a 92% match for TCS Digital role based on your skills in Java, DSA, and SQL. 
+                    Registration closes in 2 days. Don't miss this opportunity!
+                </div>
+                <div class="rec-action">
+                    <button class="rec-btn" onclick="showToast('Opening application form...', 'success')">Apply Now →</button>
+                </div>
+            </div>
+            <div class="recommendation-item">
+                <div class="rec-title">💼 Career Path: Full Stack Developer</div>
+                <div class="rec-desc">
+                    You are 78% ready for Full Stack Developer roles. To bridge the gap, focus on: 
+                    React.js (40% proficiency needed) and Node.js (35% proficiency needed).
+                </div>
+                <div class="rec-action">
+                    <button class="rec-btn" onclick="showToast('Generating learning roadmap...', 'success')">View Roadmap →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placement Journey Tracker -->
+        <div class="progress-tracker">
+            <h3 class="tracker-title">
+                <span>📍</span> Your Placement Journey
+            </h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot completed"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">✅ Profile Completed</div>
+                        <div class="timeline-desc">
+                            Resume uploaded, skills added, and profile verified by placement cell
+                        </div>
+                        <div class="timeline-date">Completed on: March 1, 2024</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot completed"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">✅ Applications Submitted</div>
+                        <div class="timeline-desc">
+                            Applied to 5 companies: Google, Microsoft, Amazon, TCS, Infosys
+                        </div>
+                        <div class="timeline-date">Completed on: March 10, 2024</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot current"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">⏳ Aptitude Test Scheduled</div>
+                        <div class="timeline-desc">
+                            Online aptitude test for TCS Digital on March 25, 2024 at 10:00 AM. 
+                            Duration: 90 minutes. Prepare topics: Quantitative, Logical, Verbal.
+                        </div>
+                        <div class="timeline-date">Scheduled: March 25, 2024</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot pending"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">⏱️ Technical Interview</div>
+                        <div class="timeline-desc">
+                            Awaiting aptitude test results. Technical interview will be scheduled after shortlisting.
+                        </div>
+                        <div class="timeline-date">Status: Pending</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot pending"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🎉 Final Offer</div>
+                        <div class="timeline-desc">
+                            Final offer letter will be issued after successful completion of all interview rounds.
+                        </div>
+                        <div class="timeline-date">Status: Awaiting interviews</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Drives -->
+        <div class="drives-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span>💼</span> Upcoming Placement Drives
+                </h2>
+            </div>
+
+            <div class="drives-grid">
+                <div class="drive-card" onclick="viewDrive('Google')">
+                    <div class="drive-header">
+                        <div class="company-logo">🔍</div>
+                        <div class="match-score">95% Match</div>
+                    </div>
+                    <div class="company-name">Google</div>
+                    <div class="drive-role">Software Engineer - L3</div>
+                    <div class="drive-details">
+                        <div class="drive-detail">💰 CTC: ₹28-35 LPA</div>
+                        <div class="drive-detail">📍 Bangalore, Hyderabad</div>
+                        <div class="drive-detail">📅 Deadline: March 30, 2024</div>
+                    </div>
+                    <div class="drive-skills">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">System Design</span>
+                        <span class="skill-tag">Algorithms</span>
+                    </div>
+                    <button class="apply-btn" onclick="event.stopPropagation(); applyToDrive('Google')">Apply Now</button>
+                </div>
+
+                <div class="drive-card" onclick="viewDrive('Microsoft')">
+                    <div class="drive-header">
+                        <div class="company-logo">🪟</div>
+                        <div class="match-score">88% Match</div>
+                    </div>
+                    <div class="company-name">Microsoft</div>
+                    <div class="drive-role">SDE - Backend</div>
+                    <div class="drive-details">
+                        <div class="drive-detail">💰 CTC: ₹25-32 LPA</div>
+                        <div class="drive-detail">📍 Noida, Pune</div>
+                        <div class="drive-detail">📅 Deadline: April 5, 2024</div>
+                    </div>
+                    <div class="drive-skills">
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">Cloud</span>
+                        <span class="skill-tag">APIs</span>
+                    </div>
+                    <button class="apply-btn" onclick="event.stopPropagation(); applyToDrive('Microsoft')">Apply Now</button>
+                </div>
+
+                <div class="drive-card" onclick="viewDrive('Amazon')">
+                    <div class="drive-header">
+                        <div class="company-logo">📦</div>
+                        <div class="match-score">92% Match</div>
+                    </div>
+                    <div class="company-name">Amazon</div>
+                    <div class="drive-role">SDE-1</div>
+                    <div class="drive-details">
+                        <div class="drive-detail">💰 CTC: ₹24-30 LPA</div>
+                        <div class="drive-detail">📍 Mumbai, Bangalore</div>
+                        <div class="drive-detail">📅 Deadline: April 10, 2024</div>
+                    </div>
+                    <div class="drive-skills">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">DSA</span>
+                    </div>
+                    <button class="apply-btn" onclick="event.stopPropagation(); applyToDrive('Amazon')">Apply Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span>🏆</span> University Leaderboard
+                </h2>
+            </div>
+
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Student Name</th>
+                        <th>Skills Score</th>
+                        <th>Applications</th>
+                        <th>XP Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div class="rank-badge rank-1">🥇</div></td>
+                        <td><strong>Alex Kumar</strong></td>
+                        <td>94%</td>
+                        <td>18</td>
+                        <td><strong>1,245</strong></td>
+                    </tr>
+                    <tr>
+                        <td><div class="rank-badge rank-2">🥈</div></td>
+                        <td><strong>Priya Sharma</strong></td>
+                        <td>91%</td>
+                        <td>15</td>
+                        <td><strong>1,128</strong></td>
+                    </tr>
+                    <tr>
+                        <td><div class="rank-badge rank-3">🥉</div></td>
+                        <td><strong>Rahul Verma</strong></td>
+                        <td>89%</td>
+                        <td>12</td>
+                        <td><strong>982</strong></td>
+                    </tr>
+                    <tr class="current-user">
+                        <td><div class="rank-badge rank-other">42</div></td>
+                        <td><strong>You</strong></td>
+                        <td>76%</td>
+                        <td>5</td>
+                        <td><strong>485</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Notice Detail Modal -->
+    <div class="modal" id="noticeModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 id="modalTitle" style="color: var(--primary-cyan); margin-bottom: 1rem;"></h2>
+            <p id="modalContent" style="color: var(--text-gray); line-height: 1.8; margin-bottom: 1.5rem;"></p>
+            <div id="modalAttachment"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const notices = [
+            {
+                id: 1,
+                category: 'drives',
+                title: 'Infosys Campus Drive - Registration Deadline Extended',
+                content: 'The registration deadline for Infosys campus placement drive has been extended to October 15th, 2024. All eligible final year students must complete their registration on the Campus X portal. Eligibility: B.Tech/MCA with 60%+ aggregate. Skills required: Java, SQL, Problem Solving.',
+                author: 'Dr. Sarah Johnson (TPO)',
+                time: '2 hours ago',
+                unread: true,
+                attachment: 'View Registration Form'
+            },
+            {
+                id: 2,
+                category: 'workshops',
+                title: 'Mandatory Pre-Placement Talk Tomorrow at 10 AM',
+                content: 'All final year students are required to attend the pre-placement orientation session tomorrow at 10:00 AM sharp in Auditorium Block A. Topics covered: Interview tips, Resume building, Company expectations. Attendance is mandatory.',
+                author: 'Prof. Michael Chen (Placement Coordinator)',
+                time: '5 hours ago',
+                unread: true
+            },
+            {
+                id: 3,
+                category: 'drives',
+                title: 'TCS Digital Drive - Online Test Link Released',
+                content: 'The online aptitude test link for TCS Digital has been shared via your registered email. Test window: October 12-14, 2024. Duration: 90 minutes. Sections: Quantitative, Logical Reasoning, Verbal, Technical MCQs. Ensure stable internet connection.',
+                author: 'Placement Cell Team',
+                time: '1 day ago',
+                unread: false
+            },
+            {
+                id: 4,
+                category: 'results',
+                title: 'Wipro Elite Shortlist Announced - 45 Students Selected',
+                content: '45 students have been shortlisted for Wipro Elite technical interview rounds. Check your registered email for detailed interview schedule and preparation guidelines. Interview dates: Oct 18-20. Mode: Virtual (Microsoft Teams).',
+                author: 'Dr. Sarah Johnson (TPO)',
+                time: '2 days ago',
+                unread: false
+            },
+            {
+                id: 5,
+                category: 'workshops',
+                title: 'Resume Building Workshop with Industry Experts',
+                content: 'Expert-led workshop on creating ATS-optimized resumes and LinkedIn profiles. Learn from HR professionals from top companies. Limited to 50 seats. Register by October 10th. Workshop Date: Oct 15, 3:00 PM.',
+                author: 'Career Services Department',
+                time: '3 days ago',
+                unread: false
+            },
+            {
+                id: 6,
+                category: 'results',
+                title: 'Accenture Aptitude Test Results Published',
+                content: 'Results for Accenture aptitude test conducted on Oct 5th are now available. 62 students qualified for next round. Technical interview schedule will be shared by Oct 12th.',
+                author: 'Placement Cell',
+                time: '4 days ago',
+                unread: false
+            }
+        ];
+
+        function loadNotices() {
+            const list = document.getElementById('noticeList');
+            list.innerHTML = notices.map(notice => `
+                <div class="notice-item ${notice.unread ? 'unread' : ''}" onclick="viewNotice(${notice.id})">
+                    <div class="notice-header-row">
+                        <div class="notice-tags">
+                            <span class="notice-category">${notice.category}</span>
+                            ${notice.unread ? '<span class="new-tag">🆕 NEW</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="notice-title">${notice.title}</div>
+                    <div class="notice-content">${notice.content.substring(0, 120)}...</div>
+                    <div class="notice-footer">
+                        <div class="notice-author">
+                            <span>👤</span>
+                            <span>${notice.author}</span>
+                        </div>
+                        <div class="notice-time">${notice.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewNotice(id) {
+            const notice = notices.find(n => n.id === id);
+            if (notice) {
+                document.getElementById('modalTitle').textContent = notice.title;
+                document.getElementById('modalContent').textContent = notice.content;
+                
+                if (notice.attachment) {
+                    document.getElementById('modalAttachment').innerHTML = `
+                        <button class="rec-btn" style="width: 100%; padding: 1rem;">
+                            📎 ${notice.attachment}
+                        </button>
+                    `;
+                } else {
+                    document.getElementById('modalAttachment').innerHTML = '';
+                }
+                
+                document.getElementById('noticeModal').classList.add('active');
+                notice.unread = false;
+                loadNotices();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('noticeModal').classList.remove('active');
+        }
+
+        function filterNotices(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            showToast(`Showing ${category} notices`);
+        }
+
+        function applyToDrive(company) {
+            showToast(`Opening application for ${company}...`, 'success');
+        }
+
+        function viewDrive(company) {
+            showToast(`Loading ${company} drive details...`);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        window.onclick = (e) => {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        };
+
+        // Load notices on page load
+        loadNotices();
+
+        // Auto-refresh notices every 30 seconds
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                showToast('🔔 New notice from Placement Cell!', 'success');
+            }
+        }, 30000);
+
+        // Welcome notification
+        setTimeout(() => {
+            showToast('Welcome to your dashboard, John! You have 2 new notices.', 'success');
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X - Placement Analytics & Top Recruiters</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --secondary-purple: #9d00ff;
+            --accent-pink: #ff00ff;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: 0;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Particles */
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Analytics Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-card {
+            background: rgba(26, 31, 58, 0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .chart-card:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 15px 50px rgba(0, 243, 255, 0.3);
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            color: var(--primary-cyan);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 1.5rem;
+            height: 300px;
+            padding: 1rem 0;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            filter: brightness(1.3);
+            transform: translateY(-10px);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.95rem;
+            color: var(--primary-cyan);
+            font-weight: bold;
+        }
+
+        /* Recruiter Carousel */
+        .recruiter-section {
+            margin-top: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            background: rgba(26, 31, 58, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 3rem;
+            animation: scroll 40s linear infinite;
+            width: fit-content;
+        }
+
+        .carousel-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .company-logo-item {
+            flex-shrink: 0;
+            width: 150px;
+            height: 150px;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .company-logo-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 15px;
+        }
+
+        .company-logo-item:hover::before {
+            opacity: 1;
+            animation: shimmer 1s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .company-logo-item:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-10px) scale(1.1);
+            box-shadow: 0 15px 50px rgba(0, 243, 255, 0.4);
+            z-index: 10;
+        }
+
+        .company-icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .company-name {
+            color: var(--text-light);
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(30px);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 25px;
+            padding: 3rem;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 
+                0 30px 80px rgba(0, 243, 255, 0.5),
+                inset 0 0 40px rgba(0, 243, 255, 0.1);
+            animation: modalAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalAppear {
+            from { opacity: 0; transform: scale(0.8) rotateX(-10deg); }
+            to { opacity: 1; transform: scale(1) rotateX(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--error);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-company-icon {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px var(--primary-cyan));
+        }
+
+        .modal-company-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .modal-company-desc {
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .modal-section {
+            background: rgba(37, 43, 74, 0.6);
+            border-left: 4px solid var(--primary-cyan);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-section-title {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .skill-chip {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid var(--secondary-purple);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-box {
+            background: rgba(0, 243, 255, 0.1);
+            padding: 1.2rem;
+            border-radius: 10px;
+            border: 1px solid var(--primary-cyan);
+            text-align: center;
+        }
+
+        .stat-value-modal {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label-modal {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 1.3rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 5000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .company-logo-item {
+                width: 120px;
+                height: 120px;
+            }
+
+            .company-icon {
+                font-size: 3rem;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal-company-icon {
+                font-size: 4.5rem;
+            }
+
+            .modal-company-name {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-background"></div>
+    <div id="particles"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">CAMPUS X - ANALYTICS</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">📊 Placement Analytics Dashboard</h1>
+        <p class="page-subtitle">Real-time insights into recruitment trends and top hiring companies</p>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Top Hiring Companies Chart -->
+            <div class="chart-card">
+                <h3 class="chart-title">🏢 Top Hiring Companies (2024)</h3>
+                <div class="bar-chart" id="companiesChart"></div>
+            </div>
+
+            <!-- Package Distribution Chart -->
+            <div class="chart-card">
+                <h3 class="chart-title">💰 Package Distribution (LPA)</h3>
+                <div class="bar-chart" id="packageChart"></div>
+            </div>
+        </div>
+
+        <!-- Recruiter Carousel -->
+        <div class="recruiter-section">
+            <div class="section-header">
+                <h2 class="section-title">🌟 Our Top Recruiters</h2>
+                <p class="section-subtitle">Click on any company to view detailed hiring information</p>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Logos will be duplicated here for infinite scroll -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Detail Modal -->
+    <div class="modal" id="companyModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            
+            <div class="modal-header">
+                <div class="modal-company-icon" id="modalIcon"></div>
+                <h2 class="modal-company-name" id="modalCompanyName"></h2>
+                <p class="modal-company-desc" id="modalCompanyDesc"></p>
+            </div>
+
+            <div class="modal-section">
+                <h4 class="modal-section-title">💡 Most Valued Skills</h4>
+                <div class="skills-grid" id="modalSkills"></div>
+            </div>
+
+            <div class="modal-section">
+                <h4 class="modal-section-title">📊 Placement Statistics</h4>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value-modal" id="modalAvgPackage"></div>
+                        <div class="stat-label-modal">Average Package</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value-modal" id="modalHighestPackage"></div>
+                        <div class="stat-label-modal">Highest Package</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value-modal" id="modalStudentsHired"></div>
+                        <div class="stat-label-modal">Students Hired (2024)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value-modal" id="modalRoles"></div>
+                        <div class="stat-label-modal">Open Roles</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="modal-btn" onclick="viewDrives()">View Past Recruitment Drives →</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+   <script>
+    const companies = [
+        { icon: '🔍', name: 'Google', avg: '₹42L', highest: '₹58L', skills: ['System Design', 'Algorithms', 'Java', 'Python'], status: 'Hiring', hired: 15 },
+        { icon: '📦', name: 'Amazon', avg: '₹38L', highest: '₹52L', skills: ['DSA', 'AWS', 'Java', 'Python'], status: 'Hiring', hired: 28 },
+        { icon: '🪟', name: 'Microsoft', avg: '₹40L', highest: '₹55L', skills: ['C++', 'Azure', 'System Design', 'Algorithms'], status: 'Hiring', hired: 22 },
+        { icon: '👥', name: 'Meta', avg: '₹45L', highest: '₹62L', skills: ['React', 'GraphQL', 'System Design', 'Python'], status: 'Ongoing', hired: 12 },
+        { icon: '🍎', name: 'Apple', avg: '₹48L', highest: '₹65L', skills: ['iOS', 'Swift', 'C++', 'ML'], status: 'Ongoing', hired: 8 },
+        { icon: '💙', name: 'Infosys', avg: '₹7.5L', highest: '₹12L', skills: ['Java', 'SQL', 'Spring Boot', 'Microservices'], status: 'Hiring', hired: 145 },
+        { icon: '💻', name: 'TCS', avg: '₹7L', highest: '₹11L', skills: ['Java', 'Python', 'SQL', 'Communication'], status: 'Hiring', hired: 168 },
+        { icon: '🌊', name: 'Wipro', avg: '₹6.5L', highest: '₹10L', skills: ['Java', 'C++', 'SQL', 'Cloud'], status: 'Hiring', hired: 132 },
+        { icon: '🎨', name: 'Adobe', avg: '₹25L', highest: '₹38L', skills: ['JavaScript', 'React', 'UI/UX', 'Creative Suite'], status: 'Closed', hired: 10 },
+        { icon: '🔷', name: 'Accenture', avg: '₹8L', highest: '₹14L', skills: ['Java', 'Cloud', 'Consulting', 'Communication'], status: 'Hiring', hired: 95 },
+        { icon: '🏗️', name: 'L&T Infotech', avg: '₹7L', highest: '₹12L', skills: ['Java', 'SAP', 'Cloud', 'DevOps'], status: 'Ongoing', hired: 78 },
+        { icon: '🔧', name: 'Tech Mahindra', avg: '₹6.8L', highest: '₹11L', skills: ['Java', 'Python', 'Telecom', 'Cloud'], status: 'Hiring', hired: 88 },
+        { icon: '🚀', name: 'Cognizant', avg: '₹8.5L', highest: '₹13L', skills: ['Full Stack', 'Java', 'React', 'SQL'], status: 'Hiring', hired: 102 },
+        { icon: '💎', name: 'Capgemini', avg: '₹7.2L', highest: '₹11.5L', skills: ['Java', 'SAP', 'Cloud', 'Consulting'], status: 'Ongoing', hired: 72 },
+        { icon: '🌐', name: 'HCL Tech', avg: '₹6.5L', highest: '₹10L', skills: ['Java', 'Python', 'Cloud', 'DevOps'], status: 'Hiring', hired: 115 },
+        { icon: '⚡', name: 'Oracle', avg: '₹15L', highest: '₹22L', skills: ['Database', 'Java', 'PL/SQL', 'Cloud'], status: 'Closed', hired: 18 },
+        { icon: '📱', name: 'Samsung', avg: '₹18L', highest: '₹28L', skills: ['Android', 'Embedded', 'C++', 'IoT'], status: 'Ongoing', hired: 14 },
+        { icon: '🎮', name: 'Nvidia', avg: '₹35L', highest: '₹48L', skills: ['CUDA', 'C++', 'ML', 'Graphics'], status: 'Closed', hired: 6 },
+        { icon: '🔐', name: 'IBM', avg: '₹12L', highest: '₹18L', skills: ['Java', 'AI/ML', 'Cloud', 'Blockchain'], status: 'Hiring', hired: 32 },
+        { icon: '🌟', name: 'SAP Labs', avg: '₹16L', highest: '₹24L', skills: ['SAP', 'ABAP', 'HANA', 'Cloud'], status: 'Ongoing', hired: 20 },
+        { icon: '🎯', name: 'Deloitte', avg: '₹10L', highest: '₹16L', skills: ['Analytics', 'Consulting', 'Finance', 'Communication'], status: 'Hiring', hired: 38 },
+        { icon: '🛒', name: 'Flipkart', avg: '₹20L', highest: '₹32L', skills: ['Java', 'System Design', 'Microservices', 'SQL'], status: 'Ongoing', hired: 25 },
+        { icon: '📚', name: 'Byjus', avg: '₹9L', highest: '₹14L', skills: ['Full Stack', 'React', 'Node.js', 'MongoDB'], status: 'Closed', hired: 42 },
+        { icon: '🏭', name: 'Adani Group', avg: '₹11L', highest: '₹18L', skills: ['Engineering', 'Management', 'Analytics', 'Operations'], status: 'Hiring', hired: 28 },
+        { icon: '📡', name: 'Airtel', avg: '₹9.5L', highest: '₹15L', skills: ['Telecom', 'Network', 'Java', 'Cloud'], status: 'Ongoing', hired: 35 },
+        { icon: '⛽', name: 'Reliance', avg: '₹12L', highest: '₹20L', skills: ['Engineering', 'Analytics', 'Operations', 'Management'], status: 'Hiring', hired: 45 },
+        { icon: '⌚', name: 'Titan', avg: '₹8L', highest: '₹13L', skills: ['Design', 'Manufacturing', 'Analytics', 'Sales'], status: 'Closed', hired: 22 },
+        { icon: '💳', name: 'Paytm', avg: '₹18L', highest: '₹28L', skills: ['Java', 'System Design', 'Payments', 'Microservices'], status: 'Ongoing', hired: 18 },
+        { icon: '🏦', name: 'ICICI Bank', avg: '₹10L', highest: '₹16L', skills: ['Finance', 'Analytics', 'Java', 'Communication'], status: 'Hiring', hired: 52 },
+        { icon: '🔬', name: 'PhonePe', avg: '₹22L', highest: '₹35L', skills: ['Java', 'Kotlin', 'System Design', 'Payments'], status: 'Hiring', hired: 12 }
+    ];
+
+
+        // Chart Data
+        const topCompanies = [
+            { name: 'Infosys', value: 145 },
+            { name: 'TCS', value: 168 },
+            { name: 'Wipro', value: 132 },
+            { name: 'Cognizant', value: 102 },
+            { name: 'Amazon', value: 28 }
+        ];
+
+        const packageData = [
+            { range: '5-10', value: 245 },
+            { range: '10-15', value: 185 },
+            { range: '15-25', value: 95 },
+            { range: '25-40', value: 42 },
+            { range: '40+', value: 18 }
+        ];
+
+        // Create Charts
+        function createChart(containerId, data) {
+            const container = document.getElementById(containerId);
+            const maxValue = Math.max(...data.map(d => d.value));
+
+            data.forEach(item => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                const height = (item.value / maxValue) * 100;
+                bar.style.height = height + '%';
+
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = item.name || item.range;
+
+                const value = document.createElement('div');
+                value.className = 'bar-value';
+                value.textContent = item.value;
+
+                bar.appendChild(label);
+                bar.appendChild(value);
+                container.appendChild(bar);
+
+                setTimeout(() => {
+                    bar.style.height = height + '%';
+                }, 100);
+            });
+        }
+
+        // Create Carousel
+        function createCarousel() {
+            const track = document.getElementById('carouselTrack');
+            
+            // Duplicate companies for infinite scroll
+            const duplicatedCompanies = [...companies, ...companies];
+            
+            duplicatedCompanies.forEach(company => {
+                const item = document.createElement('div');
+                item.className = 'company-logo-item';
+                item.onclick = () => openCompanyModal(company);
+
+                item.innerHTML = `
+                    <div class="company-icon">${company.icon}</div>
+                    <div class="company-name">${company.name}</div>
+                `;
+
+                track.appendChild(item);
+            });
+        }
+
+        // Open Company Modal
+        function openCompanyModal(company) {
+            document.getElementById('modalIcon').textContent = company.icon;
+            document.getElementById('modalCompanyName').textContent = company.name;
+            document.getElementById('modalCompanyDesc').textContent = company.desc;
+            
+            // Skills
+            const skillsContainer = document.getElementById('modalSkills');
+            skillsContainer.innerHTML = company.skills.map(skill => 
+                `<span class="skill-chip">${skill}</span>`
+            ).join('');
+
+            // Stats
+            document.getElementById('modalAvgPackage').textContent = company.avgPackage;
+            document.getElementById('modalHighestPackage').textContent = company.highestPackage;
+            document.getElementById('modalStudentsHired').textContent = company.hired;
+            document.getElementById('modalRoles').textContent = company.roles;
+
+            document.getElementById('companyModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('companyModal').classList.remove('active');
+        }
+
+        function viewDrives() {
+            showToast('Loading past recruitment drives...', 'success');
+            setTimeout(() => {
+                alert('Past Drives:\n\n2023: 145 students hired\n2022: 128 students hired\n2021: 112 students hired\n\n(In production, this would show detailed drive history)');
+            }, 1000);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Create Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Close modal on outside click
+        window.onclick = (e) => {
+            if (e.target.id === 'companyModal') {
+                closeModal();
+            }
+        };
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            createChart('companiesChart', topCompanies);
+            createChart('packageChart', packageData);
+            createCarousel();
+            createParticles();
+            
+            setTimeout(() => {
+                showToast('Analytics dashboard loaded successfully!', 'success');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

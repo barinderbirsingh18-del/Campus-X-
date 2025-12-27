@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X  - Code Arena | DSA Practice Platform</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --primary-cyan-dark: #00d9ff;
+            --secondary-purple: #9d00ff;
+            --secondary-purple-dark: #7b00ff;
+            --accent-pink: #ff00ff;
+            --accent-magenta: #ff0080;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle, .run-btn, .submit-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--primary-cyan);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover, .run-btn:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--primary-cyan);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--secondary-purple), var(--accent-pink));
+            border: none;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--secondary-purple);
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 70px);
+            margin-top: 70px;
+        }
+
+        /* Sidebar - Problems List */
+        .sidebar {
+            width: 350px;
+            background: rgba(26, 31, 58, 0.8);
+            border-right: 2px solid var(--border-glow);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .sidebar-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-header h2 {
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-label {
+            display: block;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-select, .search-input {
+            width: 100%;
+            padding: 0.6rem;
+            background: var(--bg-dark-tertiary);
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .problem-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .problem-card {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .problem-card.active {
+            border-color: var(--secondary-purple);
+            background: rgba(157, 0, 255, 0.1);
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-title {
+            color: var(--text-light);
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .difficulty {
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .difficulty.easy {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .difficulty.medium {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .difficulty.hard {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .difficulty.expert {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+        }
+
+        .problem-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .problem-tag {
+            background: rgba(0, 243, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--primary-cyan);
+            font-size: 0.75rem;
+        }
+
+        /* Main Editor Area */
+        .editor-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Problem Details */
+        .problem-details {
+            height: 40%;
+            background: rgba(26, 31, 58, 0.8);
+            border-bottom: 2px solid var(--border-glow);
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .problem-details::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .problem-details::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .problem-details::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .problem-details h1 {
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-glow);
+        }
+
+        .tab {
+            padding: 0.7rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--primary-cyan);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-cyan);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .problem-statement {
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .problem-statement h3 {
+            color: var(--secondary-purple);
+            margin: 1.5rem 0 0.8rem;
+        }
+
+        .example-box {
+            background: rgba(37, 43, 74, 0.6);
+            border-left: 4px solid var(--primary-cyan);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        .constraints {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .hint-section {
+            margin-top: 1rem;
+        }
+
+        .hint {
+            background: rgba(157, 0, 255, 0.1);
+            border-left: 4px solid var(--secondary-purple);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .hint.revealed {
+            display: block;
+        }
+
+        .reveal-hint-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 2px solid var(--secondary-purple);
+            border-radius: 6px;
+            color: var(--secondary-purple);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .reveal-hint-btn:hover {
+            background: var(--secondary-purple);
+            color: white;
+        }
+
+        /* Code Editor */
+        .code-editor-section {
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-dark-secondary);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            background: rgba(26, 31, 58, 0.8);
+            border-bottom: 2px solid var(--border-glow);
+        }
+
+        .language-select {
+            padding: 0.5rem 1rem;
+            background: var(--bg-dark-tertiary);
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .timer-display {
+            color: var(--warning);
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timer-icon {
+            color: var(--primary-cyan);
+        }
+
+        #codeEditor {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow: auto;
+            border: none;
+            outline: none;
+            resize: none;
+        }
+
+        #codeEditor::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        #codeEditor::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        #codeEditor::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 5px;
+        }
+
+        /* Output Console */
+        .output-section {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: calc(100% - 350px);
+            height: 30%;
+            background: rgba(26, 31, 58, 0.95);
+            border-top: 2px solid var(--border-glow);
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            z-index: 500;
+        }
+
+        .output-section.active {
+            transform: translateY(0);
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            background: rgba(37, 43, 74, 0.8);
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .output-header h3 {
+            color: var(--primary-cyan);
+        }
+
+        .close-output {
+            background: none;
+            border: none;
+            color: var(--error);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .output-content {
+            padding: 1.5rem;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+
+        .output-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .output-content::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .output-content::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .test-case {
+            background: rgba(37, 43, 74, 0.6);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+        }
+
+        .test-case.failed {
+            border-left-color: var(--error);
+        }
+
+        .test-case-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .test-case-header .pass {
+            color: var(--success);
+        }
+
+        .test-case-header .fail {
+            color: var(--error);
+        }
+
+        .test-case-details {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Stats & Progress */
+        .stats-panel {
+            position: fixed;
+            right: 0;
+            top: 70px;
+            width: 300px;
+            height: calc(100vh - 70px);
+            background: rgba(26, 31, 58, 0.95);
+            border-left: 2px solid var(--border-glow);
+            padding: 1.5rem;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.3s;
+            z-index: 900;
+        }
+
+        .stats-panel.active {
+            transform: translateX(0);
+        }
+
+        .stats-toggle {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+            border: none;
+            padding: 1rem 0.5rem;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            z-index: 901;
+        }
+
+        .progress-circle {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            stroke: var(--bg-dark-tertiary);
+            fill: transparent;
+            stroke-width: 10;
+        }
+
+        .progress-ring-progress {
+            stroke: var(--primary-cyan);
+            fill: transparent;
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .stat-item {
+            background: rgba(37, 43, 74, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--secondary-purple);
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            color: var(--primary-cyan);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .badge {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .badge.unlocked {
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            filter: grayscale(100%);
+        }
+
+        .badge.unlocked .badge-icon {
+            filter: grayscale(0%);
+        }
+
+        .badge-name {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .badge.unlocked .badge-name {
+            color: var(--success);
+        }
+
+        /* Leaderboard Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-dark-secondary);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .leaderboard-table th {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--primary-cyan);
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-glow);
+        }
+
+        .leaderboard-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .rank {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .rank.gold { color: #ffd700; }
+        .rank.silver { color: #c0c0c0; }
+        .rank.bronze { color: #cd7f32; }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--error);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: -350px;
+                z-index: 1001;
+                transition: left 0.3s;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .output-section {
+                width: 100%;
+            }
+
+            .stats-panel {
+                width: 100%;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-glow);
+            border-radius: 50%;
+            border-top-color: var(--primary-cyan);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Code Syntax Highlighting */
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-background"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">CAMPUS X  | CODE ARENA</div>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+                <button class="run-btn" onclick="runCode()">▶ Run Code</button>
+                <button class="submit-btn" onclick="submitCode()">✓ Submit</button>
+                <button class="theme-toggle" onclick="toggleLeaderboard()">🏆 Leaderboard</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar - Problems List -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>DSA Challenges</h2>
+                <input type="text" class="search-input" placeholder="🔍 Search problems..." oninput="filterProblems()">
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label class="filter-label">Difficulty</label>
+                    <select class="filter-select" onchange="filterProblems()">
+                        <option value="all">All Levels</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Topic</label>
+                    <select class="filter-select" onchange="filterProblems()">
+                        <option value="all">All Topics</option>
+                        <option value="arrays">Arrays</option>
+                        <option value="strings">Strings</option>
+                        <option value="linked-lists">Linked Lists</option>
+                        <option value="trees">Trees</option>
+                        <option value="graphs">Graphs</option>
+                        <option value="dp">Dynamic Programming</option>
+                        <option value="recursion">Recursion</option>
+                        <option value="sorting">Sorting</option>
+                        <option value="searching">Searching</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="problem-list" id="problemList">
+                <!-- Problems will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Editor Area -->
+        <div class="editor-area">
+            <!-- Problem Details -->
+            <div class="problem-details" id="problemDetails">
+                <h1 id="problemTitle">Select a problem to begin</h1>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('description')">Description</button>
+                    <button class="tab" onclick="switchTab('hints')">Hints</button>
+                    <button class="tab" onclick="switchTab('solution')">Solution</button>
+                    <button class="tab" onclick="switchTab('discussion')">Discussion</button>
+                </div>
+
+                <div class="tab-content active" id="description">
+                    <div class="problem-statement" id="problemStatement">
+                        <p>Select a problem from the left sidebar to view its description.</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="hints">
+                    <div class="hint-section">
+                        <button class="reveal-hint-btn" onclick="revealHint(0)">💡 Reveal Hint 1</button>
+                        <div class="hint" id="hint0"></div>
+                        
+                        <button class="reveal-hint-btn" onclick="revealHint(1)">💡 Reveal Hint 2</button>
+                        <div class="hint" id="hint1"></div>
+                        
+                        <button class="reveal-hint-btn" onclick="revealHint(2)">💡 Reveal Hint 3</button>
+                        <div class="hint" id="hint2"></div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="solution">
+                    <div class="problem-statement" id="solutionContent">
+                        <p style="color: var(--warning);">⚠️ Try solving the problem yourself first before viewing the solution!</p>
+                        <button class="reveal-hint-btn" onclick="revealSolution()">🔓 Unlock Solution</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="discussion">
+                    <div class="problem-statement">
+                        <h3>Community Discussion</h3>
+                        <p>Join the conversation with other coders solving this problem...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Editor -->
+            <div class="code-editor-section">
+                <div class="editor-toolbar">
+                    <select class="language-select" id="languageSelect" onchange="changeLanguage()">
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="c">C</option>
+                    </select>
+
+                    <div class="timer-display">
+                        <span class="timer-icon">⏱️</span>
+                        <span id="timer">00:00</span>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button class="theme-toggle" onclick="resetCode()">↺ Reset</button>
+                        <button class="theme-toggle" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                    </div>
+                </div>
+
+                <textarea id="codeEditor" spellcheck="false"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Output Console -->
+    <div class="output-section" id="outputSection">
+        <div class="output-header">
+            <h3>Test Results</h3>
+            <button class="close-output" onclick="closeOutput()">×</button>
+        </div>
+        <div class="output-content" id="outputContent">
+            <!-- Test results will appear here -->
+        </div>
+    </div>
+
+    <!-- Stats Panel -->
+    <button class="stats-toggle" onclick="toggleStats()">STATS</button>
+    <div class="stats-panel" id="statsPanel">
+        <h2 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Your Progress</h2>
+
+        <div class="progress-circle">
+            <svg class="progress-ring" width="150" height="150">
+                <circle class="progress-ring-circle" cx="75" cy="75" r="65"></circle>
+                <circle class="progress-ring-progress" cx="75" cy="75" r="65" 
+                        stroke-dasharray="408" stroke-dashoffset="102"></circle>
+            </svg>
+            <div class="progress-text">75%</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-label">Problems Solved</div>
+            <div class="stat-value">47 / 100</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-label">Current Streak</div>
+            <div class="stat-value">12 Days 🔥</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-label">Total XP</div>
+            <div class="stat-value">8,450</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-label">Rank</div>
+            <div class="stat-value">#142</div>
+        </div>
+
+        <h3 style="color: var(--secondary-purple); margin-top: 2rem; margin-bottom: 1rem;">Achievements</h3>
+
+        <div class="badge-grid">
+            <div class="badge unlocked">
+                <div class="badge-icon">🏆</div>
+                <div class="badge-name">First Solve</div>
+            </div>
+            <div class="badge unlocked">
+                <div class="badge-icon">⚡</div>
+                <div class="badge-name">Speed Demon</div>
+            </div>
+            <div class="badge unlocked">
+                <div class="badge-icon">🎯</div>
+                <div class="badge-name">Accuracy</div>
+            </div>
+            <div class="badge">
+                <div class="badge-icon">💯</div>
+                <div class="badge-name">Century</div>
+            </div>
+            <div class="badge">
+                <div class="badge-icon">🔥</div>
+                <div class="badge-name">30 Day Streak</div>
+            </div>
+            <div class="badge">
+                <div class="badge-icon">👑</div>
+                <div class="badge-name">Master</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal" id="leaderboardModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="toggleLeaderboard()">×</button>
+            <h2 style="color: var(--primary-cyan);">🏆 Global Leaderboard</h2>
+            
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Problems Solved</th>
+                        <th>XP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="rank gold">🥇 1</span></td>
+                        <td>Alex Kumar</td>
+                        <td>156</td>
+                        <td>24,580</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank silver">🥈 2</span></td>
+                        <td>Priya Sharma</td>
+                        <td>142</td>
+                        <td>22,340</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank bronze">🥉 3</span></td>
+                        <td>Rahul Verma</td>
+                        <td>138</td>
+                        <td>21,120</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank">4</span></td>
+                        <td>Sneha Patel</td>
+                        <td>125</td>
+                        <td>19,450</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank">5</span></td>
+                        <td>Amit Singh</td>
+                        <td>118</td>
+                        <td>18,230</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div id="toastMessage"></div>
+    </div>
+
+    <script>
+        // Problem Database
+        const problems = [
+            {
+                id: 1,
+                title: "Two Sum",
+                difficulty: "easy",
+                topic: "arrays",
+                description: `Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+                
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> nums = [2,7,11,15], target = 9<br>
+<strong>Output:</strong> [0,1]<br>
+<strong>Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].
+</div>
+
+<h3>Constraints:</h3>
+<div class="constraints">
+• 2 ≤ nums.length ≤ 10⁴<br>
+• -10⁹ ≤ nums[i] ≤ 10⁹<br>
+• -10⁹ ≤ target ≤ 10⁹<br>
+• Only one valid answer exists.
+</div>`,
+                hints: [
+                    "A brute force approach would be to check every pair of numbers. Can you think of a more efficient solution?",
+                    "Consider using a hash map to store numbers you've seen so far and their indices.",
+                    "For each number, check if (target - number) exists in your hash map."
+                ],
+                solution: `# Python Solution
+def twoSum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+# Time Complexity: O(n)
+# Space Complexity: O(n)`,
+                starterCode: {
+                    python: "def twoSum(nums, target):\n    # Write your code here\n    pass",
+                    javascript: "function twoSum(nums, target) {\n    // Write your code here\n}",
+                    java: "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        // Write your code here\n    }\n}",
+                    cpp: "#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        // Write your code here\n    }\n};",
+                    c: "#include <stdio.h>\n#include <stdlib.h>\n\nint* twoSum(int* nums, int numsSize, int target, int* returnSize) {\n    // Write your code here\n}"
+                },
+                testCases: [
+                    { input: [[2,7,11,15], 9], expected: [0,1] },
+                    { input: [[3,2,4], 6], expected: [1,2] },
+                    { input: [[3,3], 6], expected: [0,1] }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reverse Linked List",
+                difficulty: "easy",
+                topic: "linked-lists",
+                description: `Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> head = [1,2,3,4,5]<br>
+<strong>Output:</strong> [5,4,3,2,1]
+</div>
+
+<h3>Constraints:</h3>
+<div class="constraints">
+• The number of nodes in the list is in the range [0, 5000]<br>
+• -5000 ≤ Node.val ≤ 5000
+</div>`,
+                hints: [
+                    "You can solve this iteratively or recursively. Start with the iterative approach.",
+                    "Use three pointers: previous, current, and next.",
+                    "At each step, reverse the current node's pointer and move all three pointers forward."
+                ],
+                solution: `# Python Solution
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def reverseList(head):
+    prev = None
+    current = head
+    
+    while current:
+        next_temp = current.next
+        current.next = prev
+        prev = current
+        current = next_temp
+    
+    return prev
+
+# Time Complexity: O(n)
+# Space Complexity: O(1)`,
+                starterCode: {
+                    python: "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\ndef reverseList(head):\n    # Write your code here\n    pass",
+                    javascript: "function ListNode(val, next) {\n    this.val = (val===undefined ? 0 : val)\n    this.next = (next===undefined ? null : next)\n}\n\nfunction reverseList(head) {\n    // Write your code here\n}",
+                    java: "class ListNode {\n    int val;\n    ListNode next;\n    ListNode(int val) { this.val = val; }\n}\n\nclass Solution {\n    public ListNode reverseList(ListNode head) {\n        // Write your code here\n    }\n}",
+                    cpp: "struct ListNode {\n    int val;\n    ListNode *next;\n    ListNode(int x) : val(x), next(NULL) {}\n};\n\nclass Solution {\npublic:\n    ListNode* reverseList(ListNode* head) {\n        // Write your code here\n    }\n};",
+                    c: "struct ListNode {\n    int val;\n    struct ListNode *next;\n};\n\nstruct ListNode* reverseList(struct ListNode* head) {\n    // Write your code here\n}"
+                },
+                testCases: []
+            },
+            {
+                id: 3,
+                title: "Valid Parentheses",
+                difficulty: "easy",
+                topic: "strings",
+                description: `Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+3. Every close bracket has a corresponding open bracket of the same type.
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> s = "()"<br>
+<strong>Output:</strong> true
+</div>
+
+<h3>Example 2:</h3>
+<div class="example-box">
+<strong>Input:</strong> s = "()[]{}"<br>
+<strong>Output:</strong> true
+</div>
+
+<h3>Example 3:</h3>
+<div class="example-box">
+<strong>Input:</strong> s = "(]"<br>
+<strong>Output:</strong> false
+</div>`,
+                hints: [
+                    "Use a stack data structure to keep track of opening brackets.",
+                    "When you encounter a closing bracket, check if it matches the most recent opening bracket.",
+                    "If the stack is empty at the end, all brackets were properly matched."
+                ],
+                solution: `# Python Solution
+def isValid(s):
+    stack = []
+    mapping = {')': '(', '}': '{', ']': '['}
+    
+    for char in s:
+        if char in mapping:
+            top = stack.pop() if stack else '#'
+            if mapping[char] != top:
+                return False
+        else:
+            stack.append(char)
+    
+    return not stack
+
+# Time Complexity: O(n)
+# Space Complexity: O(n)`,
+                starterCode: {
+                    python: "def isValid(s):\n    # Write your code here\n    pass",
+                    javascript: "function isValid(s) {\n    // Write your code here\n}",
+                    java: "class Solution {\n    public boolean isValid(String s) {\n        // Write your code here\n    }\n}",
+                    cpp: "#include <string>\n#include <stack>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isValid(string s) {\n        // Write your code here\n    }\n};",
+                    c: "#include <stdbool.h>\n\nbool isValid(char* s) {\n    // Write your code here\n}"
+                },
+                testCases: []
+            },
+            {
+                id: 4,
+                title: "Binary Tree Level Order Traversal",
+                difficulty: "medium",
+                topic: "trees",
+                description: `Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> root = [3,9,20,null,null,15,7]<br>
+<strong>Output:</strong> [[3],[9,20],[15,7]]
+</div>
+
+<h3>Constraints:</h3>
+<div class="constraints">
+• The number of nodes in the tree is in the range [0, 2000]<br>
+• -1000 ≤ Node.val ≤ 1000
+</div>`,
+                hints: [
+                    "Use a queue to perform breadth-first search (BFS).",
+                    "Process nodes level by level, keeping track of how many nodes are in each level.",
+                    "Add all nodes of a level to a list before moving to the next level."
+                ],
+                solution: `# Python Solution
+from collections import deque
+
+def levelOrder(root):
+    if not root:
+        return []
+    
+    result = []
+    queue = deque([root])
+    
+    while queue:
+        level = []
+        level_size = len(queue)
+        
+        for _ in range(level_size):
+            node = queue.popleft()
+            level.append(node.val)
+            
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        
+        result.append(level)
+    
+    return result
+
+# Time Complexity: O(n)
+# Space Complexity: O(n)`,
+                starterCode: {
+                    python: "class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef levelOrder(root):\n    # Write your code here\n    pass",
+                    javascript: "function TreeNode(val, left, right) {\n    this.val = (val===undefined ? 0 : val)\n    this.left = (left===undefined ? null : left)\n    this.right = (right===undefined ? null : right)\n}\n\nfunction levelOrder(root) {\n    // Write your code here\n}",
+                    java: "class TreeNode {\n    int val;\n    TreeNode left;\n    TreeNode right;\n    TreeNode(int val) { this.val = val; }\n}\n\nclass Solution {\n    public List<List<Integer>> levelOrder(TreeNode root) {\n        // Write your code here\n    }\n}",
+                    cpp: "struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n    TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n};\n\nclass Solution {\npublic:\n    vector<vector<int>> levelOrder(TreeNode* root) {\n        // Write your code here\n    }\n};",
+                    c: "struct TreeNode {\n    int val;\n    struct TreeNode *left;\n    struct TreeNode *right;\n};\n\nint** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes) {\n    // Write your code here\n}"
+                },
+                testCases: []
+            },
+            {
+                id: 5,
+                title: "Longest Palindromic Substring",
+                difficulty: "medium",
+                topic: "strings",
+                description: `Given a string s, return the longest palindromic substring in s.
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> s = "babad"<br>
+<strong>Output:</strong> "bab"<br>
+<strong>Explanation:</strong> "aba" is also a valid answer.
+</div>
+
+<h3>Example 2:</h3>
+<div class="example-box">
+<strong>Input:</strong> s = "cbbd"<br>
+<strong>Output:</strong> "bb"
+</div>`,
+                hints: [
+                    "Try expanding around each character as a potential center of a palindrome.",
+                    "Remember that palindromes can have odd or even length.",
+                    "Keep track of the longest palindrome found so far."
+                ],
+                solution: `# Python Solution
+def longestPalindrome(s):
+    if not s:
+        return ""
+    
+    def expandAroundCenter(left, right):
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            left -= 1
+            right += 1
+        return right - left - 1
+    
+    start = end = 0
+    for i in range(len(s)):
+        len1 = expandAroundCenter(i, i)
+        len2 = expandAroundCenter(i, i + 1)
+        max_len = max(len1, len2)
+        
+        if max_len > end - start:
+            start = i - (max_len - 1) // 2
+            end = i + max_len // 2
+    
+    return s[start:end + 1]
+
+# Time Complexity: O(n²)
+# Space Complexity: O(1)`,
+                starterCode: {
+                    python: "def longestPalindrome(s):\n    # Write your code here\n    pass",
+                    javascript: "function longestPalindrome(s) {\n    // Write your code here\n}",
+                    java: "class Solution {\n    public String longestPalindrome(String s) {\n        // Write your code here\n    }\n}",
+                    cpp: "#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    string longestPalindrome(string s) {\n        // Write your code here\n    }\n};",
+                    c: "#include <string.h>\n\nchar* longestPalindrome(char* s) {\n    // Write your code here\n}"
+                },
+                testCases: []
+            },
+            {
+                id: 6,
+                title: "Merge K Sorted Lists",
+                difficulty: "hard",
+                topic: "linked-lists",
+                description: `You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+
+Merge all the linked-lists into one sorted linked-list and return it.
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> lists = [[1,4,5],[1,3,4],[2,6]]<br>
+<strong>Output:</strong> [1,1,2,3,4,4,5,6]<br>
+<strong>Explanation:</strong> The linked-lists are:<br>
+[1→4→5,<br>
+ 1→3→4,<br>
+ 2→6]<br>
+merging them into one sorted list:<br>
+1→1→2→3→4→4→5→6
+</div>`,
+                hints: [
+                    "Consider using a min heap to efficiently get the smallest element among all lists.",
+                    "You can use a divide and conquer approach, merging pairs of lists.",
+                    "Start by merging lists pairwise, then merge the results recursively."
+                ],
+                solution: `# Python Solution
+import heapq
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def mergeKLists(lists):
+    heap = []
+    
+    for i, lst in enumerate(lists):
+        if lst:
+            heapq.heappush(heap, (lst.val, i, lst))
+    
+    dummy = ListNode(0)
+    current = dummy
+    
+    while heap:
+        val, i, node = heapq.heappop(heap)
+        current.next = node
+        current = current.next
+        
+        if node.next:
+            heapq.heappush(heap, (node.next.val, i, node.next))
+    
+    return dummy.next
+
+# Time Complexity: O(N log k) where N is total nodes
+# Space Complexity: O(k)`,
+                starterCode: {
+                    python: "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\ndef mergeKLists(lists):\n    # Write your code here\n    pass",
+                    javascript: "function ListNode(val, next) {\n    this.val = (val===undefined ? 0 : val)\n    this.next = (next===undefined ? null : next)\n}\n\nfunction mergeKLists(lists) {\n    // Write your code here\n}",
+                    java: "class ListNode {\n    int val;\n    ListNode next;\n    ListNode(int val) { this.val = val; }\n}\n\nclass Solution {\n    public ListNode mergeKLists(ListNode[] lists) {\n        // Write your code here\n    }\n}",
+                    cpp: "struct ListNode {\n    int val;\n    ListNode *next;\n    ListNode(int x) : val(x), next(NULL) {}\n};\n\nclass Solution {\npublic:\n    ListNode* mergeKLists(vector<ListNode*>& lists) {\n        // Write your code here\n    }\n};",
+                    c: "struct ListNode {\n    int val;\n    struct ListNode *next;\n};\n\nstruct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {\n    // Write your code here\n}"
+                },
+                testCases: []
+            },
+            {
+                id: 7,
+                title: "Coin Change",
+                difficulty: "medium",
+                topic: "dp",
+                description: `You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+
+You may assume that you have an infinite number of each kind of coin.
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> coins = [1,2,5], amount = 11<br>
+<strong>Output:</strong> 3<br>
+<strong>Explanation:</strong> 11 = 5 + 5 + 1
+</div>`,
+                hints: [
+                    "This is a classic dynamic programming problem.",
+                    "Create a DP array where dp[i] represents the minimum coins needed for amount i.",
+                    "For each amount, try using each coin and take the minimum."
+                ],
+                solution: `# Python Solution
+def coinChange(coins, amount):
+    dp = [float('inf')] * (amount + 1)
+    dp[0] = 0
+    
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if coin <= i:
+                dp[i] = min(dp[i], dp[i - coin] + 1)
+    
+    return dp[amount] if dp[amount] != float('inf') else -1
+
+# Time Complexity: O(amount * len(coins))
+# Space Complexity: O(amount)`,
+                starterCode: {
+                    python: "def coinChange(coins, amount):\n    # Write your code here\n    pass",
+                    javascript: "function coinChange(coins, amount) {\n    // Write your code here\n}",
+                    java: "class Solution {\n    public int coinChange(int[] coins, int amount) {\n        // Write your code here\n    }\n}",
+                    cpp: "#include <vector>\n#include <climits>\nusing namespace std;\n\nclass Solution {\npublic:\n    int coinChange(vector<int>& coins, int amount) {\n        // Write your code here\n    }\n};",
+                    c: "#include <limits.h>\n\nint coinChange(int* coins, int coinsSize, int amount) {\n    // Write your code here\n}"
+                },
+                testCases: []
+            },
+            {
+                id: 8,
+                title: "Course Schedule",
+                difficulty: "medium",
+                topic: "graphs",
+                description: `There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+
+Return true if you can finish all courses. Otherwise, return false.
+
+<h3>Example 1:</h3>
+<div class="example-box">
+<strong>Input:</strong> numCourses = 2, prerequisites = [[1,0]]<br>
+<strong>Output:</strong> true<br>
+<strong>Explanation:</strong> There are 2 courses. To take course 1 you should have finished course 0. So it is possible.
+</div>`,
+                hints: [
+                    "This is a graph cycle detection problem.",
+                    "Use topological sorting to detect if there's a cycle.",
+                    "You can use DFS with three states: unvisited, visiting, and visited."
+                ],
+                solution: `# Python Solution
+def canFinish(numCourses, prerequisites):
+    graph = [[] for _ in range(numCourses)]
+    for course, prereq in prerequisites:
+        graph[course].append(prereq)
+    
+    visited = [0] * numCourses
+    
+    def hasCycle(course):
+        if visited[course] == 1:
+            return True
+        if visited[course] == 2:
+            return False
+        
+        visited[course] = 1
+        for prereq in graph[course]:
+            if hasCycle(prereq):
+                return True
+        visited[course] = 2
+        return False
+    
+    for course in range(numCourses):
+        if hasCycle(course):
+            return False
+    
+    return True
+
+# Time Complexity: O(V + E)
+# Space Complexity: O(V + E)`,
+                starterCode: {
+                    python: "def canFinish(numCourses, prerequisites):\n    # Write your code here\n    pass",
+                    javascript: "function canFinish(numCourses, prerequisites) {\n    // Write your code here\n}",
+                    java: "class Solution {\n    public boolean canFinish(int numCourses, int[][] prerequisites) {\n        // Write your code here\n    }\n}",
+                    cpp: "#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {\n        // Write your code here\n    }\n};",
+                    c: "#include <stdbool.h>\n\nbool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize) {\n    // Write your code here\n}"
+                },
+                testCases: []
+            }
+        ];
+
+        // State Variables
+        let currentProblem = null;
+        let currentLanguage = 'python';
+        let timerInterval = null;
+        let timerSeconds = 0;
+        let revealedHints = [];
+        let solutionRevealed = false;
+
+        // Initialize
+        function init() {
+            loadProblems();
+            loadStarterCode();
+        }
+
+        // Load Problems List
+        function loadProblems() {
+            const problemList = document.getElementById('problemList');
+            problemList.innerHTML = '';
+
+            problems.forEach(problem => {
+                const card = document.createElement('div');
+                card.className = 'problem-card';
+                card.onclick = () => selectProblem(problem.id);
+
+                card.innerHTML = `
+                    <div class="problem-header">
+                        <div class="problem-title">${problem.title}</div>
+                        <div class="difficulty ${problem.difficulty}">${problem.difficulty.toUpperCase()}</div>
+                    </div>
+                    <div class="problem-meta">
+                        <span class="problem-tag">${problem.topic}</span>
+                    </div>
+                `;
+
+                problemList.appendChild(card);
+            });
+        }
+
+        // Select Problem
+        function selectProblem(id) {
+            currentProblem = problems.find(p => p.id === id);
+            
+            // Update active state
+            document.querySelectorAll('.problem-card').forEach((card, index) => {
+                card.classList.toggle('active', index === id - 1);
+            });
+
+            // Load problem details
+            document.getElementById('problemTitle').textContent = currentProblem.title;
+            document.getElementById('problemStatement').innerHTML = currentProblem.description;
+
+            // Load hints
+            currentProblem.hints.forEach((hint, index) => {
+                document.getElementById(`hint${index}`).textContent = hint;
+                document.getElementById(`hint${index}`).classList.remove('revealed');
+            });
+            revealedHints = [];
+            solutionRevealed = false;
+
+            // Reset editor
+            loadStarterCode();
+            
+            // Start timer
+            startTimer();
+
+            // Show notification
+            showToast('Problem loaded! Good luck! 🚀');
+        }
+
+        // Load Starter Code
+        function loadStarterCode() {
+            const editor = document.getElementById('codeEditor');
+            if (currentProblem) {
+                editor.value = currentProblem.starterCode[currentLanguage];
+            } else {
+                const templates = {
+                    python: "# Write your Python code here\n\ndef solution():\n    pass",
+                    javascript: "// Write your JavaScript code here\n\nfunction solution() {\n    \n}",
+                    java: "// Write your Java code here\n\npublic class Solution {\n    public static void main(String[] args) {\n        \n    }\n}",
+                    cpp: "// Write your C++ code here\n\n#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}",
+                    c: "// Write your C code here\n\n#include <stdio.h>\n\nint main() {\n    \n    return 0;\n}"
+                };
+                editor.value = templates[currentLanguage];
+            }
+        }
+
+        // Change Language
+        function changeLanguage() {
+            currentLanguage = document.getElementById('languageSelect').value;
+            loadStarterCode();
+            showToast(`Switched to ${currentLanguage.toUpperCase()}`);
+        }
+
+        // Timer Functions
+        function startTimer() {
+            stopTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            document.getElementById('timer').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Reveal Hints
+        function revealHint(index) {
+            if (!revealedHints.includes(index)) {
+                document.getElementById(`hint${index}`).classList.add('revealed');
+                revealedHints.push(index);
+                showToast(`Hint ${index + 1} revealed! 💡`);
+            }
+        }
+
+        // Reveal Solution
+        function revealSolution() {
+            if (!solutionRevealed && currentProblem) {
+                document.getElementById('solutionContent').innerHTML = `
+                    <h3>Optimal Solution:</h3>
+                    <pre style="background: rgba(37, 43, 74, 0.6); padding: 1rem; border-radius: 8px; overflow-x: auto;"><code>${currentProblem.solution}</code></pre>
+                `;
+                solutionRevealed = true;
+                showToast('Solution unlocked! 🔓', 'warning');
+            }
+        }
+
+        // Run Code
+        function runCode() {
+            const code = document.getElementById('codeEditor').value;
+            
+            if (!code.trim()) {
+                showToast('Please write some code first!', 'error');
+                return;
+            }
+
+            showToast('Running code...', 'success');
+            
+            // Simulate code execution
+            setTimeout(() => {
+                const outputSection = document.getElementById('outputSection');
+                const outputContent = document.getElementById('outputContent');
+                
+                outputContent.innerHTML = `
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Test Case 1</span>
+                            <span class="pass">✓ PASSED</span>
+                        </div>
+                        <div class="test-case-details">
+                            <strong>Input:</strong> [2, 7, 11, 15], target = 9<br>
+                            <strong>Expected:</strong> [0, 1]<br>
+                            <strong>Output:</strong> [0, 1]<br>
+                            <strong>Time:</strong> 12ms
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Test Case 2</span>
+                            <span class="pass">✓ PASSED</span>
+                        </div>
+                        <div class="test-case-details">
+                            <strong>Input:</strong> [3, 2, 4], target = 6<br>
+                            <strong>Expected:</strong> [1, 2]<br>
+                            <strong>Output:</strong> [1, 2]<br>
+                            <strong>Time:</strong> 8ms
+                        </div>
+                    </div>
+                    <div class="test-case failed">
+                        <div class="test-case-header">
+                            <span>Test Case 3</span>
+                            <span class="fail">✗ FAILED</span>
+                        </div>
+                        <div class="test-case-details">
+                            <strong>Input:</strong> [3, 3], target = 6<br>
+                            <strong>Expected:</strong> [0, 1]<br>
+                            <strong>Output:</strong> [0, 0]<br>
+                            <strong>Error:</strong> Index out of range<br>
+                            <strong>Time:</strong> 5ms
+                        </div>
+                    </div>
+                `;
+                
+                outputSection.classList.add('active');
+                showToast('Code executed! Check results below.', 'success');
+            }, 1500);
+        }
+
+        // Submit Code
+        function submitCode() {
+            const code = document.getElementById('codeEditor').value;
+            
+            if (!code.trim()) {
+                showToast('Please write some code first!', 'error');
+                return;
+            }
+
+            stopTimer();
+            showToast('Submitting solution...', 'success');
+            
+            setTimeout(() => {
+                const outputSection = document.getElementById('outputSection');
+                const outputContent = document.getElementById('outputContent');
+                
+                const passed = Math.random() > 0.3; // 70% pass rate for demo
+                
+                if (passed) {
+                    outputContent.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                            <h2 style="color: var(--success); margin-bottom: 1rem;">Accepted!</h2>
+                            <p style="color: var(--text-gray); margin-bottom: 1.5rem;">
+                                All test cases passed successfully!
+                            </p>
+                            <div style="display: flex; gap: 2rem; justify-content: center; margin-bottom: 2rem;">
+                                <div class="stat-item">
+                                    <div class="stat-label">Time</div>
+                                    <div class="stat-value">${Math.floor(timerSeconds / 60)}:${String(timerSeconds % 60).padStart(2, '0')}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">XP Earned</div>
+                                    <div class="stat-value">+${currentProblem.difficulty === 'easy' ? '100' : currentProblem.difficulty === 'medium' ? '250' : '500'}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Rank</div>
+                                    <div class="stat-value">#${Math.floor(Math.random() * 500) + 1}</div>
+                                </div>
+                            </div>
+                            <button class="submit-btn" onclick="nextProblem()">Next Problem →</button>
+                        </div>
+                    `;
+                    showToast('Congratulations! Solution accepted! 🎉', 'success');
+                } else {
+                    outputContent.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
+                            <h2 style="color: var(--error); margin-bottom: 1rem;">Wrong Answer</h2>
+                            <p style="color: var(--text-gray); margin-bottom: 1.5rem;">
+                                Some test cases failed. Review the errors and try again!
+                            </p>
+                            <button class="submit-btn" onclick="closeOutput()">Try Again</button>
+                        </div>
+                    `;
+                    showToast('Some test cases failed. Keep trying!', 'error');
+                }
+                
+                outputSection.classList.add('active');
+            }, 2000);
+        }
+
+        // Close Output
+        function closeOutput() {
+            document.getElementById('outputSection').classList.remove('active');
+        }
+
+        // Reset Code
+        function resetCode() {
+            if (confirm('Are you sure you want to reset your code?')) {
+                loadStarterCode();
+                showToast('Code reset successfully!');
+            }
+        }
+
+        // Toggle Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                showToast('Entered fullscreen mode');
+            } else {
+                document.exitFullscreen();
+                showToast('Exited fullscreen mode');
+            }
+        }
+
+        // Toggle Stats
+        function toggleStats() {
+            document.getElementById('statsPanel').classList.toggle('active');
+        }
+
+        // Toggle Leaderboard
+        function toggleLeaderboard() {
+            document.getElementById('leaderboardModal').classList.toggle('active');
+        }
+
+        // Filter Problems
+        function filterProblems() {
+            // Implementation for filtering would go here
+            showToast('Filter applied');
+        }
+
+        // Next Problem
+        function nextProblem() {
+            if (currentProblem && currentProblem.id < problems.length) {
+                selectProblem(currentProblem.id + 1);
+                closeOutput();
+            } else {
+                showToast('You\'ve completed all problems! 🎉', 'success');
+            }
+        }
+
+        // Toggle Theme
+        function toggleTheme() {
+            const editor = document.getElementById('codeEditor');
+            if (editor.style.background === 'rgb(30, 30, 30)' || !editor.style.background) {
+                editor.style.background = '#ffffff';
+                editor.style.color = '#000000';
+                showToast('Switched to light theme ☀️');
+            } else {
+                editor.style.background = '#1e1e1e';
+                editor.style.color = '#d4d4d4';
+                showToast('Switched to dark theme 🌙');
+            }
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('leaderboardModal').addEventListener('click', (e) => {
+            if (e.target.id === 'leaderboardModal') {
+                toggleLeaderboard();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + Enter to run code
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                runCode();
+            }
+            // Ctrl/Cmd + S to submit
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                submitCode();
+            }
+            // Escape to close output
+            if (e.key === 'Escape') {
+                closeOutput();
+                document.getElementById('statsPanel').classList.remove('active');
+                document.getElementById('leaderboardModal').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

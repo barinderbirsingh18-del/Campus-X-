@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X - Placed Students Showcase</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --secondary-purple: #9d00ff;
+            --accent-pink: #ff00ff;
+            --neon-green: #00ff88;
+            --neon-yellow: #ffea00;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(ellipse at top, #001d3d 0%, #000814 50%, #000000 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .neon-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--primary-cyan) 1px, transparent 1px),
+                linear-gradient(90deg, var(--primary-cyan) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.05;
+            animation: gridMove 25s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: orbFloat 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--primary-cyan), transparent);
+            top: 10%;
+            left: -10%;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--secondary-purple), transparent);
+            top: 50%;
+            right: -5%;
+            animation-delay: 7s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--accent-pink), transparent);
+            bottom: 20%;
+            left: 40%;
+            animation-delay: 14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(80px, -80px) scale(1.1); }
+            66% { transform: translate(-80px, 80px) scale(0.9); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 8, 20, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1.5rem 3%;
+            box-shadow: 0 5px 30px rgba(0, 243, 255, 0.2);
+        }
+
+        .header-content {
+            max-width: 1900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .stat-header {
+            text-align: center;
+        }
+
+        .stat-value-header {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            text-shadow: 0 0 15px var(--primary-cyan);
+        }
+
+        .stat-label-header {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            margin-top: 120px;
+            padding: 2rem 3%;
+            max-width: 1900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple), var(--accent-pink), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { filter: drop-shadow(0 0 20px var(--primary-cyan)); }
+            50% { filter: drop-shadow(0 0 40px var(--secondary-purple)); }
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Controls */
+        .controls-bar {
+            background: rgba(26, 31, 58, 0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+        }
+
+        .filters-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-select {
+            padding: 1rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-select:hover, .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+        }
+
+        /* Students Grid */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .student-card {
+            background: rgba(26, 31, 58, 0.85);
+            backdrop-filter: blur(25px);
+            border: 2px solid var(--border-glow);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s;
+            cursor: pointer;
+            position: relative;
+            animation: cardFloat 8s ease-in-out infinite;
+        }
+
+        .student-card:nth-child(even) {
+            animation-delay: 4s;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .student-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-20px) scale(1.03);
+            box-shadow: 
+                0 25px 70px rgba(0, 243, 255, 0.5),
+                0 0 50px rgba(157, 0, 255, 0.3);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.2), rgba(157, 0, 255, 0.2));
+            padding: 2rem;
+            position: relative;
+        }
+
+        .achievement-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 0 20px #ffd700;
+        }
+
+        .profile-section {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 4px solid rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 30px var(--primary-cyan);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .student-batch {
+            color: var(--primary-cyan);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .company-section {
+            background: rgba(0, 243, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .company-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .company-logo {
+            font-size: 3.5rem;
+            filter: drop-shadow(0 0 15px var(--primary-cyan));
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.3rem;
+        }
+
+        .company-role {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .package-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .package-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .package-label {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .package-value {
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .skills-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .skill-tag {
+            background: rgba(157, 0, 255, 0.25);
+            color: var(--secondary-purple);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--secondary-purple);
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.3);
+        }
+
+        .links-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-link {
+            flex: 1;
+            padding: 0.7rem;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            color: var(--primary-cyan);
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .profile-link:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.5);
+        }
+
+        .badges-row {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, rgba(255, 234, 0, 0.2), rgba(255, 107, 53, 0.2));
+            color: var(--neon-yellow);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid var(--neon-yellow);
+            box-shadow: 0 0 15px rgba(255, 234, 0, 0.3);
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+
+        .action-btn {
+            padding: 1rem 0.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .btn-resume {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+        }
+
+        .btn-message {
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        .btn-share {
+            background: transparent;
+            border: 2px solid var(--accent-pink);
+            color: var(--accent-pink);
+        }
+
+        .btn-resume:hover {
+            box-shadow: 0 8px 25px rgba(0, 243, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn-message:hover {
+            background: var(--neon-green);
+            color: var(--bg-dark);
+        }
+
+        .btn-share:hover {
+            background: var(--accent-pink);
+            color: var(--bg-dark);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 120px;
+            right: 3rem;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            padding: 1.2rem 1.8rem;
+            transform: translateX(500px);
+            transition: transform 0.4s;
+            z-index: 5000;
+            box-shadow: 0 8px 30px rgba(0, 243, 255, 0.5);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-background">
+        <div class="neon-grid"></div>
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+        <div id="particles"></div>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🎓 CAMPUS X - SUCCESS STORIES</div>
+            <div class="stats-bar">
+                <div class="stat-header">
+                    <div class="stat-value-header">15</div>
+                    <div class="stat-label-header">Students Placed</div>
+                </div>
+                <div class="stat-header">
+                    <div class="stat-value-header">₹42L</div>
+                    <div class="stat-label-header">Highest Package</div>
+                </div>
+                <div class="stat-header">
+                    <div class="stat-value-header">₹22.3L</div>
+                    <div class="stat-label-header">Average Package</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1 class="page-title">🌟 Our Placement Champions 2024</h1>
+        <p class="page-subtitle">Celebrating excellence and success of our talented students</p>
+
+        <div class="controls-bar">
+            <input type="text" class="search-input" placeholder="🔍 Search by name, company, or skills..." oninput="searchStudents()">
+            
+            <div class="filters-row">
+                <select class="filter-select" onchange="filterStudents()">
+                    <option>All Companies</option>
+                    <option>Google</option>
+                    <option>Microsoft</option>
+                    <option>Amazon</option>
+                    <option>Meta</option>
+                </select>
+                <select class="filter-select" onchange="filterStudents()">
+                    <option>All Packages</option>
+                    <option>40+ LPA</option>
+                    <option>25-40 LPA</option>
+                    <option>15-25 LPA</option>
+                    <option>10-15 LPA</option>
+                </select>
+                <select class="filter-select" onchange="filterStudents()">
+                    <option>All Branches</option>
+                    <option>Computer Science</option>
+                    <option>IT</option>
+                    <option>Electronics</option>
+                </select>
+                <select class="filter-select" onchange="filterStudents()">
+                    <option>Sort: Default</option>
+                    <option>Package: High to Low</option>
+                    <option>Package: Low to High</option>
+                    <option>Name: A-Z</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="students-grid" id="studentsGrid">
+            <!-- Students will be loaded here -->
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const placedStudents = [
+            { name: 'Alex Kumar', batch: '2024', company: 'Google', companyIcon: '🔍', role: 'Software Engineer L3', avgPkg: '₹42 LPA', highestPkg: '₹42 LPA', skills: ['Java', 'System Design', 'Algorithms', 'Python'], badges: ['🏆 Top Performer', '💻 Coding Master'], cgpa: 9.2, branch: 'CSE' },
+            { name: 'Priya Sharma', batch: '2024', company: 'Microsoft', companyIcon: '🪟', role: 'SDE - Backend', avgPkg: '₹38 LPA', highestPkg: '₹38 LPA', skills: ['React', 'Node.js', 'Cloud', 'TypeScript'], badges: ['⭐ Internship Pro', '🎯 Interview Ace'], cgpa: 8.8, branch: 'IT' },
+            { name: 'Rahul Singh', batch: '2024', company: 'Amazon', companyIcon: '📦', role: 'SDE-1', avgPkg: '₹35 LPA', highestPkg: '₹35 LPA', skills: ['Python', 'AWS', 'Microservices', 'Docker'], badges: ['🚀 Hackathon Winner'], cgpa: 9.5, branch: 'CSE' },
+            { name: 'Sneha Patel', batch: '2024', company: 'Meta', companyIcon: '👥', role: 'Frontend Engineer', avgPkg: '₹45 LPA', highestPkg: '₹45 LPA', skills: ['React', 'GraphQL', 'System Design', 'JavaScript'], badges: ['🏆 Top Performer', '🎨 UI Master'], cgpa: 9.0, branch: 'IT' },
+            { name: 'Arjun Reddy', batch: '2024', company: 'Adobe', companyIcon: '🎨', role: 'UI Engineer', avgPkg: '₹28 LPA', highestPkg: '₹28 LPA', skills: ['JavaScript', 'UI/UX', 'React', 'CSS'], badges: ['🎨 Design Pro'], cgpa: 8.7, branch: 'CSE' },
+            { name: 'Kavya Iyer', batch: '2024', company: 'Infosys', companyIcon: '💙', role: 'Technology Analyst', avgPkg: '₹12 LPA', highestPkg: '₹12 LPA', skills: ['Java', 'Spring Boot', 'SQL', 'REST APIs'], badges: ['💻 Java Expert'], cgpa: 8.9, branch: 'IT' },
+            { name: 'Vikram Joshi', batch: '2024', company: 'TCS Digital', companyIcon: '💻', role: 'Digital Engineer', avgPkg: '₹11 LPA', highestPkg: '₹11 LPA', skills: ['Python', 'Django', 'PostgreSQL', 'APIs'], badges: ['🐍 Python Pro'], cgpa: 9.3, branch: 'CSE' },
+            { name: 'Meera Nair', batch: '2024', company: 'Wipro', companyIcon: '🌊', role: 'Project Engineer', avgPkg: '₹9.5 LPA', highestPkg: '₹9.5 LPA', skills: ['Java', 'Cloud', 'DevOps', 'Jenkins'], badges: ['☁️ Cloud Expert'], cgpa: 8.5, branch: 'IT' },
+            { name: 'Karthik Rao', batch: '2024', company: 'Oracle', companyIcon: '⚡', role: 'Application Developer', avgPkg: '₹18 LPA', highestPkg: '₹18 LPA', skills: ['Database', 'Java', 'PL/SQL', 'Oracle'], badges: ['🗄️ DB Master'], cgpa: 9.1, branch: 'CSE' },
+            { name: 'Divya Menon', batch: '2024', company: 'Accenture', companyIcon: '🔷', role: 'Application Developer', avgPkg: '₹10 LPA', highestPkg: '₹10 LPA', skills: ['Full Stack', 'React', 'Node.js', 'MongoDB'], badges: ['🌐 Full Stack'], cgpa: 8.6, branch: 'IT' },
+            { name: 'Rohan Gupta', batch: '2024', company: 'Samsung', companyIcon: '📱', role: 'Android Developer', avgPkg: '₹22 LPA', highestPkg: '₹22 LPA', skills: ['Android', 'Kotlin', 'Java', 'Mobile Dev'], badges: ['📱 Mobile Pro'], cgpa: 9.4, branch: 'CSE' },
+            { name: 'Aisha Khan', batch: '2024', company: 'IBM', companyIcon: '🔐', role: 'Software Engineer', avgPkg: '₹15 LPA', highestPkg: '₹15 LPA', skills: ['Java', 'AI/ML', 'Python', 'Cloud'], badges: ['🤖 AI Enthusiast'], cgpa: 8.8, branch: 'IT' },
+            { name: 'Siddharth Jain', batch: '2024', company: 'Flipkart', companyIcon: '🛒', role: 'SDE', avgPkg: '₹25 LPA', highestPkg: '₹25 LPA', skills: ['Java', 'Microservices', 'Kafka', 'Spring Boot'], badges: ['🚀 System Design'], cgpa: 9.0, branch: 'CSE' },
+            { name: 'Nisha Agarwal', batch: '2024', company: 'Cognizant', companyIcon: '🚀', role: 'Programmer Analyst', avgPkg: '₹11 LPA', highestPkg: '₹11 LPA', skills: ['React', 'Angular', 'TypeScript', 'JavaScript'], badges: ['⚛️ React Expert'], cgpa: 8.7, branch: 'IT' },
+            { name: 'Aarav Malhotra', batch: '2024', company: 'Deloitte', companyIcon: '🎯', role: 'Business Analyst', avgPkg: '₹13 LPA', highestPkg: '₹13 LPA', skills: ['Analytics', 'Python', 'Tableau', 'SQL'], badges: ['📊 Data Wizard'], cgpa: 9.2, branch: 'CSE' }
+        ];
+
+        function loadStudents() {
+            const grid = document.getElementById('studentsGrid');
+            grid.innerHTML = placedStudents.map(student => `
+                <div class="student-card">
+                    <div class="card-header">
+                        <div class="achievement-badge">${student.badges[0]}</div>
+                        <div class="profile-section">
+                            <div class="profile-image">${student.companyIcon}</div>
+                            <div class="profile-info">
+                                <div class="student-name">${student.name}</div>
+                                <div class="student-batch">Batch ${student.batch} • ${student.branch} • CGPA: ${student.cgpa}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="company-section">
+                            <div class="company-header">
+                                <div class="company-logo">${student.companyIcon}</div>
+                                <div class="company-info">
+                                    <div class="company-name">${student.company}</div>
+                                    <div class="company-role">${student.role}</div>
+                                </div>
+                            </div>
+                            <div class="package-info">
+                                <div class="package-box">
+                                    <div class="package-label">Package Offered</div>
+                                    <div class="package-value">${student.avgPkg}</div>
+                                </div>
+                                <div class="package-box">
+                                    <div class="package-label">Highest in Batch</div>
+                                    <div class="package-value">${student.highestPkg}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="skills-section">
+                            <div class="section-label">🛠️ Key Skills</div>
+                            <div class="skills-grid">
+                                ${student.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="links-section">
+                            <a class="profile-link" href="#" onclick="openLink('linkedin'); return false;">
+                                <span>💼</span> LinkedIn
+                            </a>
+                            <a class="profile-link" href="#" onclick="openLink('github'); return false;">
+                                <span>🐙</span> GitHub
+                            </a>
+                        </div>
+
+                        <div class="badges-row">
+                            ${student.badges.map(badge => `<div class="badge">${badge}</div>`).join('')}
+                        </div>
+
+                        <div class="card-actions">
+                            <button class="action-btn btn-resume" onclick="viewResume('${student.name}')">📄 Resume</button>
+                            <button class="action-btn btn-message" onclick="sendMessage('${student.name}')">💬 Message</button>
+                            <button class="action-btn btn-share" onclick="shareStory('${student.name}')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 4px;
+                    height: 4px;
+                    background: ${i % 2 === 0 ? 'var(--primary-cyan)' : 'var(--secondary-purple)'};
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    animation-delay: ${Math.random() * 15}s;
+                    animation-duration: ${12 + Math.random() * 8}s;
+                    box-shadow: 0 0 10px ${i % 2 === 0 ? 'var(--primary-cyan)' : 'var(--secondary-purple)'};
+                `;
+                container.appendChild(particle);
+            }
+        }
+
+        function searchStudents() {
+            showToast('Searching students...', 'success');
+        }
+
+        function filterStudents() {
+            showToast('Applying filters...', 'success');
+        }
+
+        function viewResume(name) {
+            showToast(`Opening ${name}'s resume...`, 'success');
+        }
+
+        function sendMessage(name) {
+            showToast(`Opening chat with ${name}...`, 'success');
+        }
+
+        function shareStory(name) {
+            showToast(`Sharing ${name}'s success story...`, 'success');
+        }
+
+        function openLink(type) {
+            showToast(`Opening ${type} profile...`, 'success');
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStudents();
+            createParticles();
+            
+            setTimeout(() => {
+                showToast('🎉 Placed Students Showcase loaded! 15 success stories.', 'success');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

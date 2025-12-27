@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X - Certificate Pro | Blockchain-Verified Certifications</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --primary-cyan-dark: #00d9ff;
+            --secondary-purple: #9d00ff;
+            --secondary-purple-dark: #7b00ff;
+            --accent-pink: #ff00ff;
+            --accent-magenta: #ff0080;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Dashboard Section */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--primary-cyan));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Section Container */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Certificate Grid */
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .certificate-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .certificate-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .certificate-preview {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(157, 0, 255, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            border-bottom: 2px solid var(--border-glow);
+        }
+
+        .certificate-tier {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .tier-bronze {
+            background: linear-gradient(135deg, #cd7f32, #e8a87c);
+            color: #000;
+        }
+
+        .tier-silver {
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            color: #000;
+        }
+
+        .tier-gold {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #000;
+        }
+
+        .tier-platinum {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+        }
+
+        .certificate-info {
+            padding: 1.5rem;
+        }
+
+        .certificate-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .certificate-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .certificate-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-badge {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .verified-badge {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .certificate-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+        }
+
+        /* Certificate Generator */
+        .generator-container {
+            display: grid;
+            grid-template-columns: 1fr 600px;
+            gap: 2rem;
+        }
+
+        .generator-form {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-option {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .template-option:hover, .template-option.active {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .template-preview-small {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .certificate-display {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            position: sticky;
+            top: 100px;
+        }
+
+        .certificate-canvas {
+            background: white;
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            min-height: 500px;
+        }
+
+        .cert-header {
+            border-bottom: 3px solid var(--primary-cyan);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .cert-logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .cert-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .cert-body {
+            margin: 2rem 0;
+            color: #333;
+        }
+
+        .cert-awarded-to {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a1f3a;
+            margin-bottom: 1rem;
+        }
+
+        .cert-achievement {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .cert-details {
+            background: rgba(0, 243, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .cert-detail-item {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .cert-footer {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #ddd;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-line {
+            width: 150px;
+            height: 2px;
+            background: #333;
+            margin: 0 auto 0.5rem;
+        }
+
+        .signature-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .signature-title {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .qr-code {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .cert-id {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        /* Progress Ladder */
+        .progress-ladder {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .ladder-title {
+            color: var(--primary-cyan);
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .ladder-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .ladder-steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success), var(--warning), var(--error), var(--secondary-purple));
+            z-index: 0;
+        }
+
+        .ladder-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 4px solid var(--border-glow);
+            background: var(--bg-dark-secondary);
+            transition: all 0.3s;
+        }
+
+        .ladder-step.completed .step-icon {
+            background: linear-gradient(135deg, var(--success), #00cc70);
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .ladder-step.current .step-icon {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .step-label {
+            color: var(--text-gray);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .ladder-step.completed .step-label,
+        .ladder-step.current .step-label {
+            color: var(--text-light);
+        }
+
+        .step-requirement {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-dark-secondary);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 2rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal h2 {
+            color: var(--primary-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Share Options */
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .share-option {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .share-option:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .share-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .share-label {
+            color: var(--text-light);
+            font-weight: bold;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--error);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .generator-container {
+                grid-template-columns: 1fr;
+            }
+
+            .certificate-display {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+
+            .dashboard-grid, .certificates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ladder-steps {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .ladder-steps::before {
+                display: none;
+            }
+
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-glow);
+            border-radius: 50%;
+            border-top-color: var(--primary-cyan);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-background"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">CAMPUS X | CERTIFICATE PRO</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchSection('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="switchSection('certificates')">My Certificates</button>
+                <button class="nav-tab" onclick="switchSection('generator')">Generate</button>
+                <button class="nav-tab" onclick="switchSection('progress')">Progress</button>
+                <button class="nav-tab" onclick="switchSection('verify')">Verify</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="section-header">
+                <h2>Certificates Dashboard</h2>
+                <p>Blockchain-verified certifications for your achievements</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card" onclick="switchSection('certificates')">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Total Certificates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✓</div>
+                    <div class="stat-value">12/12</div>
+                    <div class="stat-label">Blockchain Verified</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('progress')">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">Gold</div>
+                    <div class="stat-label">Current Tier</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔗</div>
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Shared on LinkedIn</div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h2>Recent Certificates</h2>
+            </div>
+
+            <div class="certificates-grid">
+                <div class="certificate-card" onclick="viewCertificate('Coding Master')">
+                    <div class="certificate-preview">
+                        🏆
+                        <div class="certificate-tier tier-gold">Gold</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Coding Master Certificate</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 15, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">💻 100+ Challenges</div>
+                            <div class="achievement-badge">⚡ Top Coder</div>
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Coding Master')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Coding Master')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificate-card" onclick="viewCertificate('Interview Ace')">
+                    <div class="certificate-preview">
+                        🎯
+                        <div class="certificate-tier tier-gold">Gold</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Interview Ace Certificate</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 12, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">🎤 15+ Interviews</div>
+                            <div class="achievement-badge">⭐ 88% Score</div>
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Interview Ace')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Interview Ace')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificate-card" onclick="viewCertificate('Video Resume Pro')">
+                    <div class="certificate-preview">
+                        🎥
+                        <div class="certificate-tier tier-silver">Silver</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Video Resume Pro</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 10, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">🎬 5 Videos</div>
+                            <div class="achievement-badge">👁️ 300+ Views</div>
+                        </div>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Video Resume Pro')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Video Resume Pro')">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Certificates Section -->
+        <section class="section" id="certificates">
+            <div class="section-header">
+                <h2>My Certificates</h2>
+                <p>Complete collection of your verified achievements</p>
+            </div>
+
+            <div class="certificates-grid">
+                <div class="certificate-card" onclick="viewCertificate('Coding Master')">
+                    <div class="certificate-preview">
+                        🏆
+                        <div class="certificate-tier tier-gold">Gold</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Coding Master Certificate</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 15, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">💻 100+ Challenges</div>
+                            <div class="achievement-badge">⚡ Top Coder</div>
+                        </div>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Certificate ID: CX2-CM-2024-001234
+                        </p>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Coding Master')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Coding Master')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificate-card" onclick="viewCertificate('Interview Ace')">
+                    <div class="certificate-preview">
+                        🎯
+                        <div class="certificate-tier tier-gold">Gold</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Interview Ace Certificate</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 12, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">🎤 15+ Interviews</div>
+                            <div class="achievement-badge">⭐ 88% Score</div>
+                        </div>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Certificate ID: CX2-IA-2024-001235
+                        </p>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Interview Ace')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Interview Ace')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificate-card" onclick="viewCertificate('Video Resume Pro')">
+                    <div class="certificate-preview">
+                        🎥
+                        <div class="certificate-tier tier-silver">Silver</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Video Resume Pro</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 10, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">🎬 5 Videos</div>
+                            <div class="achievement-badge">👁️ 300+ Views</div>
+                        </div>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Certificate ID: CX2-VR-2024-001236
+                        </p>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Video Resume Pro')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Video Resume Pro')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificate-card" onclick="viewCertificate('Resume Builder')">
+                    <div class="certificate-preview">
+                        📄
+                        <div class="certificate-tier tier-silver">Silver</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Resume Builder Expert</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 8, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">📝 3 Resumes</div>
+                            <div class="achievement-badge">⭐ 87/100</div>
+                        </div>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Certificate ID: CX2-RB-2024-001237
+                        </p>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Resume Builder')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Resume Builder')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificate-card" onclick="viewCertificate('Network Builder')">
+                    <div class="certificate-preview">
+                        🤝
+                        <div class="certificate-tier tier-bronze">Bronze</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Network Builder</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 5, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">🤝 50+ Connections</div>
+                        </div>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Certificate ID: CX2-NB-2024-001238
+                        </p>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Network Builder')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Network Builder')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificate-card" onclick="viewCertificate('Skill Gap Master')">
+                    <div class="certificate-preview">
+                        🎯
+                        <div class="certificate-tier tier-platinum">Platinum</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Skill Gap Master</div>
+                        <div class="certificate-meta">
+                            <span>Issued: Mar 3, 2024</span>
+                            <span class="verified-badge">✓ Verified</span>
+                        </div>
+                        <div class="certificate-badges">
+                            <div class="achievement-badge">🎓 10 Skills</div>
+                            <div class="achievement-badge">⭐ Elite</div>
+                        </div>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Certificate ID: CX2-SG-2024-001239
+                        </p>
+                        <div class="certificate-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadCert('Skill Gap Master')">Download</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareCert('Skill Gap Master')">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Generator Section -->
+        <section class="section" id="generator">
+            <div class="section-header">
+                <h2>Certificate Generator</h2>
+                <p>Create custom certificates with blockchain verification</p>
+            </div>
+
+            <div class="generator-container">
+                <div class="generator-form">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Certificate Details</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Template Style</label>
+                        <div class="template-grid">
+                            <div class="template-option active" onclick="selectTemplate('modern')">
+                                <div class="template-preview-small">🎨</div>
+                                <div>Modern</div>
+                            </div>
+                            <div class="template-option" onclick="selectTemplate('classic')">
+                                <div class="template-preview-small">📜</div>
+                                <div>Classic</div>
+                            </div>
+                            <div class="template-option" onclick="selectTemplate('minimal')">
+                                <div class="template-preview-small">✨</div>
+                                <div>Minimal</div>
+                            </div>
+                            <div class="template-option" onclick="selectTemplate('elegant')">
+                                <div class="template-preview-small">💎</div>
+                                <div>Elegant</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Student Name</label>
+                        <input type="text" class="form-input" value="John Doe" oninput="updatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Achievement Type</label>
+                        <select class="form-select" onchange="updatePreview()">
+                            <option>Coding Master</option>
+                            <option>Interview Ace</option>
+                            <option>Video Resume Pro</option>
+                            <option>Resume Builder Expert</option>
+                            <option>Network Builder</option>
+                            <option>Skill Gap Master</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Certificate Tier</label>
+                        <select class="form-select" onchange="updatePreview()">
+                            <option value="bronze">Bronze</option>
+                            <option value="silver">Silver</option>
+                            <option value="gold" selected>Gold</option>
+                            <option value="platinum">Platinum</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Achievement Description</label>
+                        <input type="text" class="form-input" value="Successfully completed 100+ coding challenges with excellent performance" oninput="updatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Badge Tags (comma-separated)</label>
+                        <input type="text" class="form-input" value="Top Coder, Problem Solver, Algorithm Expert" oninput="updatePreview()">
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="generateCertificate()">
+                        🎓 Generate Certificate
+                    </button>
+                </div>
+
+                <div class="certificate-display">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Preview</h3>
+                    <div class="certificate-canvas" id="certificatePreview">
+                        <div class="cert-header">
+                            <div class="cert-logo">🎓</div>
+                            <div class="cert-title">CAMPUS X 2</div>
+                            <div class="cert-subtitle">Certificate of Achievement</div>
+                        </div>
+
+                        <div class="cert-body">
+                            <div class="cert-awarded-to">This certificate is awarded to</div>
+                            <div class="cert-name">John Doe</div>
+                            <div class="cert-achievement">
+                                For successfully completing Coding Master certification
+                            </div>
+
+                            <div class="cert-details">
+                                <div class="cert-detail-item"><strong>Achievement:</strong> Successfully completed 100+ coding challenges</div>
+                                <div class="cert-detail-item"><strong>Tier:</strong> Gold Level</div>
+                                <div class="cert-detail-item"><strong>Issue Date:</strong> March 15, 2024</div>
+                                <div class="cert-detail-item"><strong>Batch:</strong> 2024</div>
+                            </div>
+                        </div>
+
+                        <div class="cert-footer">
+                            <div class="signature-box">
+                                <div class="signature-line"></div>
+                                <div class="signature-name">Dr. Sarah Johnson</div>
+                                <div class="signature-title">Head of Department</div>
+                            </div>
+                            <div class="signature-box">
+                                <div class="signature-line"></div>
+                                <div class="signature-name">Prof. Michael Chen</div>
+                                <div class="signature-title">Placement Head</div>
+                            </div>
+                            <div class="signature-box">
+                                <div class="signature-line"></div>
+                                <div class="signature-name">Dr. Emily Brown</div>
+                                <div class="signature-title">Principal</div>
+                            </div>
+                        </div>
+
+                        <div class="qr-code" title="Scan to verify">📱</div>
+                        <div class="cert-id">Certificate ID: CX2-CM-2024-001234</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="section" id="progress">
+            <div class="section-header">
+                <h2>Certification Progress</h2>
+                <p>Track your journey through different certificate tiers</p>
+            </div>
+
+            <div class="progress-ladder">
+                <h3 class="ladder-title">Your Certification Ladder</h3>
+                <div class="ladder-steps">
+                    <div class="ladder-step completed">
+                        <div class="step-icon">🥉</div>
+                        <div class="step-label">Bronze</div>
+                        <div class="step-requirement">10+ Achievements</div>
+                    </div>
+                    <div class="ladder-step completed">
+                        <div class="step-icon">🥈</div>
+                        <div class="step-label">Silver</div>
+                        <div class="step-requirement">25+ Achievements</div>
+                    </div>
+                    <div class="ladder-step current">
+                        <div class="step-icon">🥇</div>
+                        <div class="step-label">Gold</div>
+                        <div class="step-requirement">50+ Achievements</div>
+                    </div>
+                    <div class="ladder-step">
+                        <div class="step-icon">💎</div>
+                        <div class="step-label">Platinum</div>
+                        <div class="step-requirement">100+ Achievements</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h2>Upcoming Certificates</h2>
+            </div>
+
+            <div class="certificates-grid">
+                <div class="certificate-card">
+                    <div class="certificate-preview" style="opacity: 0.6;">
+                        🏆
+                        <div class="certificate-tier tier-platinum">Platinum</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Ultimate Achiever</div>
+                        <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                            Complete 100+ achievements across all modules
+                        </p>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-gray);">Progress</span>
+                                <span style="color: var(--primary-cyan); font-weight: bold;">47 / 100</span>
+                            </div>
+                            <div style="height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden;">
+                                <div style="height: 100%; background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple)); width: 47%; transition: width 1s;"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="showToast('Keep working to unlock this certificate!', 'success')">
+                            View Requirements
+                        </button>
+                    </div>
+                </div>
+
+                <div class="certificate-card">
+                    <div class="certificate-preview" style="opacity: 0.6;">
+                        🌟
+                        <div class="certificate-tier tier-gold">Gold</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Full Stack Master</div>
+                        <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                            Master both frontend and backend technologies
+                        </p>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-gray);">Progress</span>
+                                <span style="color: var(--primary-cyan); font-weight: bold;">32 / 50</span>
+                            </div>
+                            <div style="height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden;">
+                                <div style="height: 100%; background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple)); width: 64%; transition: width 1s;"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="showToast('64% complete! You are almost there!', 'success')">
+                            View Requirements
+                        </button>
+                    </div>
+                </div>
+
+                <div class="certificate-card">
+                    <div class="certificate-preview" style="opacity: 0.6;">
+                        💼
+                        <div class="certificate-tier tier-silver">Silver</div>
+                    </div>
+                    <div class="certificate-info">
+                        <div class="certificate-title">Career Ready</div>
+                        <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                            Complete all career preparation modules
+                        </p>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-gray);">Progress</span>
+                                <span style="color: var(--primary-cyan); font-weight: bold;">18 / 25</span>
+                            </div>
+                            <div style="height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden;">
+                                <div style="height: 100%; background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple)); width: 72%; transition: width 1s;"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="showToast('72% complete! Great progress!', 'success')">
+                            View Requirements
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verify Section -->
+        <section class="section" id="verify">
+            <div class="section-header">
+                <h2>Certificate Verification</h2>
+                <p>Verify any Campus X 2 certificate using blockchain technology</p>
+            </div>
+
+            <div class="generator-form" style="max-width: 600px; margin: 0 auto;">
+                <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Verify Certificate</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Certificate ID</label>
+                    <input type="text" class="form-input" placeholder="Enter Certificate ID (e.g., CX2-CM-2024-001234)" id="verifyCertId">
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 2rem;" onclick="verifyCertificate()">
+                    🔍 Verify Certificate
+                </button>
+
+                <div style="text-align: center; color: var(--text-gray); margin-bottom: 2rem;">
+                    <p>— OR —</p>
+                </div>
+
+                <div style="border: 3px dashed var(--border-glow); border-radius: 15px; padding: 3rem; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="scanQRCode()">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📱</div>
+                    <p style="color: var(--text-gray);">Scan QR Code</p>
+                </div>
+
+                <div id="verificationResult" style="display: none; margin-top: 2rem; padding: 2rem; background: rgba(0, 255, 136, 0.1); border: 2px solid var(--success); border-radius: 15px;">
+                    <h4 style="color: var(--success); margin-bottom: 1rem;">✓ Certificate Verified</h4>
+                    <div style="color: var(--text-gray);">
+                        <p><strong>Name:</strong> John Doe</p>
+                        <p><strong>Achievement:</strong> Coding Master Certificate</p>
+                        <p><strong>Issue Date:</strong> March 15, 2024</p>
+                        <p><strong>Tier:</strong> Gold</p>
+                        <p><strong>Blockchain Hash:</strong> 0x7f9fade1c0d57a7af66ab4ead7c2eb2b9a0a9...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div id="toastMessage"></div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('shareModal')">×</button>
+            <h2>Share Certificate</h2>
+            <p style="color: var(--text-gray); margin-bottom: 2rem;">
+                Share your achievement on social media or with recruiters
+            </p>
+
+            <div class="share-grid">
+                <div class="share-option" onclick="shareToLinkedIn()">
+                    <div class="share-icon">💼</div>
+                    <div class="share-label">LinkedIn</div>
+                </div>
+                <div class="share-option" onclick="shareToTwitter()">
+                    <div class="share-icon">🐦</div>
+                    <div class="share-label">Twitter</div>
+                </div>
+                <div class="share-option" onclick="shareToFacebook()">
+                    <div class="share-icon">📘</div>
+                    <div class="share-label">Facebook</div>
+                </div>
+                <div class="share-option" onclick="shareViaEmail()">
+                    <div class="share-icon">✉️</div>
+                    <div class="share-label">Email</div>
+                </div>
+                <div class="share-option" onclick="copyShareLink()">
+                    <div class="share-icon">🔗</div>
+                    <div class="share-label">Copy Link</div>
+                </div>
+                <div class="share-option" onclick="embedCertificate()">
+                    <div class="share-icon">📎</div>
+                    <div class="share-label">Embed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Certificate Modal -->
+    <div class="modal" id="viewCertModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('viewCertModal')">×</button>
+            <div class="certificate-canvas">
+                <div class="cert-header">
+                    <div class="cert-logo">🎓</div>
+                    <div class="cert-title">CAMPUS X 2</div>
+                    <div class="cert-subtitle">Certificate of Achievement</div>
+                </div>
+
+                <div class="cert-body">
+                    <div class="cert-awarded-to">This certificate is awarded to</div>
+                    <div class="cert-name" id="viewCertName">John Doe</div>
+                    <div class="cert-achievement" id="viewCertAchievement">
+                        For successfully completing Coding Master certification
+                    </div>
+
+                    <div class="cert-details">
+                        <div class="cert-detail-item"><strong>Achievement:</strong> Successfully completed 100+ coding challenges</div>
+                        <div class="cert-detail-item"><strong>Tier:</strong> Gold Level</div>
+                        <div class="cert-detail-item"><strong>Issue Date:</strong> March 15, 2024</div>
+                        <div class="cert-detail-item"><strong>Batch:</strong> 2024</div>
+                    </div>
+                </div>
+
+                <div class="cert-footer">
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-name">Dr. Sarah Johnson</div>
+                        <div class="signature-title">Head of Department</div>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-name">Prof. Michael Chen</div>
+                        <div class="signature-title">Placement Head</div>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-name">Dr. Emily Brown</div>
+                        <div class="signature-title">Principal</div>
+                    </div>
+                </div>
+
+                <div class="qr-code" title="Scan to verify">📱</div>
+                <div class="cert-id">Certificate ID: CX2-CM-2024-001234</div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="downloadCurrentCert()">📥 Download PDF</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="shareCurrentCert()">🔗 Share</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let currentSection = 'dashboard';
+        let selectedTemplate = 'modern';
+        let currentCertificate = null;
+
+        // Section Switching
+        function switchSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(sectionName).classList.add('active');
+            const activeTab = Array.from(document.querySelectorAll('.nav-tab')).find(
+                tab => tab.textContent.toLowerCase().includes(sectionName.replace('-', ' '))
+            );
+            if (activeTab) activeTab.classList.add('active');
+
+            currentSection = sectionName;
+            showToast(`Switched to ${sectionName.replace('-', ' ')} section`);
+        }
+
+        // Template Selection
+        function selectTemplate(template) {
+            document.querySelectorAll('.template-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            event.target.closest('.template-option').classList.add('active');
+            selectedTemplate = template;
+            showToast(`Template changed to ${template}`);
+        }
+
+        // Update Preview
+        function updatePreview() {
+            showToast('Preview updated', 'success');
+        }
+
+        // Generate Certificate
+        function generateCertificate() {
+            showToast('Generating certificate with blockchain verification...', 'success');
+            setTimeout(() => {
+                showToast('Certificate generated successfully! Registered on blockchain.', 'success');
+            }, 2000);
+        }
+
+        // View Certificate
+        function viewCertificate(certName) {
+            currentCertificate = certName;
+            document.getElementById('viewCertName').textContent = 'John Doe';
+            document.getElementById('viewCertAchievement').textContent = 
+                `For successfully completing ${certName} certification`;
+            document.getElementById('viewCertModal').classList.add('active');
+        }
+
+        // Download Certificate
+        function downloadCert(certName) {
+            showToast(`Downloading ${certName} certificate...`, 'success');
+            setTimeout(() => {
+                showToast('Certificate downloaded successfully!', 'success');
+            }, 1000);
+        }
+
+        function downloadCurrentCert() {
+            downloadCert(currentCertificate || 'certificate');
+        }
+
+        // Share Certificate
+        function shareCert(certName) {
+            currentCertificate = certName;
+            document.getElementById('shareModal').classList.add('active');
+        }
+
+        function shareCurrentCert() {
+            shareCert(currentCertificate || 'certificate');
+        }
+
+        function shareToLinkedIn() {
+            showToast('Opening LinkedIn...', 'success');
+            closeModal('shareModal');
+        }
+
+        function shareToTwitter() {
+            showToast('Opening Twitter...', 'success');
+            closeModal('shareModal');
+        }
+
+        function shareToFacebook() {
+            showToast('Opening Facebook...', 'success');
+            closeModal('shareModal');
+        }
+
+        function shareViaEmail() {
+            showToast('Opening email client...', 'success');
+            closeModal('shareModal');
+        }
+
+        function copyShareLink() {
+            const link = 'https://campusx2.com/verify/CX2-CM-2024-001234';
+            navigator.clipboard.writeText(link);
+            showToast('Share link copied to clipboard!', 'success');
+            closeModal('shareModal');
+        }
+
+        function embedCertificate() {
+            const embedCode = '<iframe src="https://campusx2.com/cert/CX2-CM-2024-001234" width="600" height="450"></iframe>';
+            navigator.clipboard.writeText(embedCode);
+            showToast('Embed code copied to clipboard!', 'success');
+            closeModal('shareModal');
+        }
+
+        // Verify Certificate
+        function verifyCertificate() {
+            const certId = document.getElementById('verifyCertId').value;
+            if (!certId) {
+                showToast('Please enter a certificate ID', 'error');
+                return;
+            }
+
+            showToast('Verifying certificate on blockchain...', 'success');
+            setTimeout(() => {
+                document.getElementById('verificationResult').style.display = 'block';
+                showToast('Certificate verified successfully!', 'success');
+            }, 2000);
+        }
+
+        function scanQRCode() {
+            showToast('Opening camera to scan QR code...', 'success');
+            setTimeout(() => {
+                document.getElementById('verifyCertId').value = 'CX2-CM-2024-001234';
+                verifyCertificate();
+            }, 1500);
+        }
+
+        // Modal Functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Simulate notifications on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showToast('🎉 New certificate available: Skill Gap Master!', 'success');
+            }, 2000);
+
+            setTimeout(() => {
+                showToast('✓ Certificate verified by peer mentor', 'success');
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

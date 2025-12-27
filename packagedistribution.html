@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X - Global Package Distribution Insights</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --secondary-purple: #9d00ff;
+            --accent-pink: #ff00ff;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #000814 0%, #001d3d 50%, #000814 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .neon-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--primary-cyan) 1px, transparent 1px),
+                linear-gradient(90deg, var(--primary-cyan) 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.08;
+            animation: linesMove 30s linear infinite;
+        }
+
+        @keyframes linesMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(80px, 80px); }
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+            animation: orbFloat 25s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, var(--primary-cyan), transparent);
+            top: -15%;
+            left: -15%;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--secondary-purple), transparent);
+            bottom: -15%;
+            right: -15%;
+            animation-delay: 12s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(120px, -120px) scale(1.3); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 8, 20, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1.5rem 3%;
+        }
+
+        .header-content {
+            max-width: 1900px;
+            margin: 0 auto;
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .live-stats {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .live-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .live-indicator {
+            width: 12px;
+            height: 12px;
+            background: var(--error);
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+            box-shadow: 0 0 15px var(--error);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .stat-number {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            margin-top: 160px;
+            padding: 2rem 3%;
+            max-width: 1900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .analytics-layout {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 2.5rem;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary-cyan);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .pie-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .pie-chart-card {
+            background: rgba(26, 31, 58, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.8rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pie-chart-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.08), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pie-chart-card:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 15px 50px rgba(0, 243, 255, 0.4);
+            transform: translateY(-8px);
+        }
+
+        .pie-chart {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 1.2rem;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .pie-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            text-shadow: 0 0 15px var(--primary-cyan);
+        }
+
+        .pie-label {
+            color: var(--text-light);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pie-count {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Maps */
+        .maps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .map-card {
+            background: rgba(26, 31, 58, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            min-height: 450px;
+        }
+
+        .map-card:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.3);
+        }
+
+        .map-title {
+            font-size: 1.6rem;
+            color: var(--primary-cyan);
+            margin-bottom: 2rem;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 350px;
+            position: relative;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .hotspot {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 25px var(--primary-cyan);
+            animation: hotspotPulse 2.5s infinite;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hotspot:hover {
+            transform: scale(1.8);
+            z-index: 10;
+        }
+
+        @keyframes hotspotPulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.8),
+                           0 0 25px var(--primary-cyan);
+            }
+            50% { 
+                box-shadow: 0 0 0 25px rgba(0, 243, 255, 0),
+                           0 0 35px var(--primary-cyan);
+            }
+        }
+
+        .hotspot-label {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 243, 255, 0.95);
+            color: var(--bg-dark);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .hotspot:hover .hotspot-label {
+            opacity: 1;
+        }
+
+        /* Company Panel */
+        .company-panel {
+            background: rgba(26, 31, 58, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.8rem;
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+            position: sticky;
+            top: 180px;
+        }
+
+        .company-panel::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .company-panel::-webkit-scrollbar-track {
+            background: rgba(37, 43, 74, 0.4);
+            border-radius: 5px;
+        }
+
+        .company-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--primary-cyan);
+        }
+
+        .panel-title {
+            font-size: 1.6rem;
+            color: var(--primary-cyan);
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 0 0 20px var(--primary-cyan);
+        }
+
+        .company-card {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s;
+            animation: floatCard 6s ease-in-out infinite;
+        }
+
+        .company-card:nth-child(even) {
+            animation-delay: 3s;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .company-card:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.12);
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 18px 45px rgba(0, 243, 255, 0.45);
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .company-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .status-hiring {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+            animation: statusGlow 2.5s infinite;
+        }
+
+        @keyframes statusGlow {
+            0%, 100% { box-shadow: 0 0 8px var(--success); }
+            50% { box-shadow: 0 0 20px var(--success); }
+        }
+
+        .status-ongoing {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .status-closed {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .company-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .company-stat {
+            background: rgba(0, 243, 255, 0.06);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 243, 255, 0.25);
+            text-align: center;
+        }
+
+        .stat-label-small {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-value-small {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .company-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .skill-tag-small {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(157, 0, 255, 0.4);
+        }
+
+        .hiring-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.8rem;
+        }
+
+        .hiring-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 10px;
+            transition: width 1.5s ease;
+            box-shadow: 0 0 15px var(--primary-cyan);
+        }
+
+        .hiring-count {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 140px;
+            right: 3rem;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            padding: 1.2rem 1.8rem;
+            transform: translateX(500px);
+            transition: transform 0.4s;
+            z-index: 5000;
+            box-shadow: 0 8px 30px rgba(0, 243, 255, 0.5);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .analytics-layout {
+                grid-template-columns: 1fr 400px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .analytics-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .company-panel {
+                position: static;
+                max-height: 700px;
+            }
+
+            .pie-charts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pie-charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .maps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .live-stats {
+                gap: 1.5rem;
+            }
+
+            .header-title {
+                font-size: 1.8rem;
+            }
+
+            .company-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="cyber-background">
+        <div class="neon-lines"></div>
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1 class="header-title">🌍 Global Placement Tracker 2025</h1>
+            <div class="live-stats">
+                <div class="live-stat">
+                    <div class="live-indicator"></div>
+                    <span>Live Updates</span>
+                </div>
+                <div class="live-stat">
+                    <span class="stat-number" id="totalPlaced">2543</span>
+                    <span>Students Placed</span>
+                </div>
+                <div class="live-stat">
+                    <span class="stat-number" id="activeDrives">152</span>
+                    <span>Drives Ongoing</span>
+                </div>
+                <div class="live-stat">
+                    <span class="stat-number">₹28.5L</span>
+                    <span>Avg Package</span>
+                </div>
+                <div class="live-stat">
+                    <span class="stat-number">₹65L</span>
+                    <span>Highest Package</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="analytics-layout">
+            <!-- Left Side - Charts and Maps -->
+            <div class="charts-section">
+                <!-- Package Distribution Pie Charts -->
+                <div>
+                    <h2 class="section-title">
+                        <span>📊</span> Salary Package Distribution Analytics
+                    </h2>
+                    <div class="pie-charts-grid">
+                        <div class="pie-chart-card">
+                            <div class="pie-chart" style="background: conic-gradient(var(--primary-cyan) 0deg 108deg, rgba(255,255,255,0.1) 108deg 360deg);">
+                                <div class="pie-percentage">30%</div>
+                            </div>
+                            <div class="pie-label">Interns</div>
+                            <div class="pie-count">763 Students</div>
+                        </div>
+
+                        <div class="pie-chart-card">
+                            <div class="pie-chart" style="background: conic-gradient(var(--secondary-purple) 0deg 144deg, rgba(255,255,255,0.1) 144deg 360deg);">
+                                <div class="pie-percentage">40%</div>
+                            </div>
+                            <div class="pie-label">Freshers (0-5 LPA)</div>
+                            <div class="pie-count">1017 Students</div>
+                        </div>
+
+                        <div class="pie-chart-card">
+                            <div class="pie-chart" style="background: conic-gradient(var(--success) 0deg 72deg, rgba(255,255,255,0.1) 72deg 360deg);">
+                                <div class="pie-percentage">20%</div>
+                            </div>
+                            <div class="pie-label">5-10 LPA</div>
+                            <div class="pie-count">509 Students</div>
+                        </div>
+
+                        <div class="pie-chart-card">
+                            <div class="pie-chart" style="background: conic-gradient(var(--warning) 0deg 36deg, rgba(255,255,255,0.1) 36deg 360deg);">
+                                <div class="pie-percentage">10%</div>
+                            </div>
+                            <div class="pie-label">10-20 LPA</div>
+                            <div class="pie-count">254 Students</div>
+                        </div>
+
+                        <div class="pie-chart-card">
+                            <div class="pie-chart" style="background: conic-gradient(var(--accent-pink) 0deg 18deg, rgba(255,255,255,0.1) 18deg 360deg);">
+                                <div class="pie-percentage">5%</div>
+                            </div>
+                            <div class="pie-label">20-40 LPA</div>
+                            <div class="pie-count">127 Students</div>
+                        </div>
+
+                        <div class="pie-chart-card">
+                            <div class="pie-chart" style="background: conic-gradient(#ffd700 0deg 10.8deg, rgba(255,255,255,0.1) 10.8deg 360deg);">
+                                <div class="pie-percentage">3%</div>
+                            </div>
+                            <div class="pie-label">40+ LPA</div>
+                            <div class="pie-count">76 Students</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maps -->
+                <div>
+                    <h2 class="section-title">
+                        <span>🗺️</span> Global & Domestic Placement Hotspots
+                    </h2>
+                    <div class="maps-grid">
+                        <div class="map-card">
+                            <h3 class="map-title">🌏 World Map - International Placements</h3>
+                            <div class="map-container">
+                                <div class="hotspot" style="top: 35%; left: 75%;" title="USA">
+                                    <div class="hotspot-label">USA: 234</div>
+                                </div>
+                                <div class="hotspot" style="top: 40%; left: 50%;" title="Europe">
+                                    <div class="hotspot-label">Europe: 156</div>
+                                </div>
+                                <div class="hotspot" style="top: 52%; left: 68%;" title="India">
+                                    <div class="hotspot-label">India: 2043</div>
+                                </div>
+                                <div class="hotspot" style="top: 68%; left: 88%;" title="Australia">
+                                    <div class="hotspot-label">Australia: 45</div>
+                                </div>
+                                <div class="hotspot" style="top: 45%; left: 86%;" title="Singapore">
+                                    <div class="hotspot-label">Singapore: 65</div>
+                                </div>
+                                <div class="hotspot" style="top: 30%; left: 25%;" title="Canada">
+                                    <div class="hotspot-label">Canada: 78</div>
+                                </div>
+                                <div class="hotspot" style="top: 48%; left: 82%;" title="UAE">
+                                    <div class="hotspot-label">UAE: 52</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="map-card">
+                            <h3 class="map-title">🇮🇳 India Map - State-wise Distribution</h3>
+                            <div class="map-container">
+                                <div class="hotspot" style="top: 28%; left: 48%;" title="Delhi NCR">
+                                    <div class="hotspot-label">Delhi: 542</div>
+                                </div>
+                                <div class="hotspot" style="top: 58%; left: 38%;" title="Maharashtra">
+                                    <div class="hotspot-label">Maharashtra: 487</div>
+                                </div>
+                                <div class="hotspot" style="top: 62%; left: 58%;" title="Karnataka">
+                                    <div class="hotspot-label">Karnataka: 398</div>
+                                </div>
+                                <div class="hotspot" style="top: 72%; left: 62%;" title="Tamil Nadu">
+                                    <div class="hotspot-label">Tamil Nadu: 245</div>
+                                </div>
+                                <div class="hotspot" style="top: 48%; left: 62%;" title="Telangana">
+                                    <div class="hotspot-label">Telangana: 178</div>
+                                </div>
+                                <div class="hotspot" style="top: 35%; left: 58%;" title="Uttar Pradesh">
+                                    <div class="hotspot-label">UP: 123</div>
+                                </div>
+                                <div class="hotspot" style="top: 52%; left: 18%;" title="Gujarat">
+                                    <div class="hotspot-label">Gujarat: 92</div>
+                                </div>
+                                <div class="hotspot" style="top: 22%; left: 42%;" title="Punjab">
+                                    <div class="hotspot-label">Punjab: 67</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Company Panel -->
+            <div class="company-panel">
+                <h3 class="panel-title">💼 Top Recruiters - Live Hiring</h3>
+                <div id="companyList">
+                    <!-- Companies will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const companies = [
+            { name: 'Google', avg: '₹42L', highest: '₹58L', skills: ['System Design', 'Algorithms', 'Java', 'Python'], status: 'Hiring', hired: 15, maxHiring: 25 },
+            { name: 'Amazon', avg: '₹38L', highest: '₹52L', skills: ['DSA', 'AWS', 'Java', 'Python'], status: 'Hiring', hired: 28, maxHiring: 40 },
+            { name: 'Microsoft', avg: '₹40L', highest: '₹55L', skills: ['C++', 'Azure', 'System Design', '.NET'], status: 'Hiring', hired: 22, maxHiring: 30 },
+            { name: 'Meta (Facebook)', avg: '₹45L', highest: '₹62L', skills: ['React', 'GraphQL', 'System Design', 'Python'], status: 'Ongoing', hired: 12, maxHiring: 18 },
+            { name: 'Apple', avg: '₹48L', highest: '₹65L', skills: ['iOS', 'Swift', 'C++', 'ML'], status: 'Closed', hired: 8, maxHiring: 12 },
+            { name: 'Infosys', avg: '₹7.5L', highest: '₹12L', skills: ['Java', 'SQL', 'Spring Boot', 'Problem Solving'], status: 'Hiring', hired: 145, maxHiring: 200 },
+            { name: 'TCS (Tata Consultancy)', avg: '₹7L', highest: '₹11L', skills: ['Java', 'Python', 'SQL', 'Communication'], status: 'Hiring', hired: 168, maxHiring: 220 },
+            { name: 'Wipro', avg: '₹6.5L', highest: '₹10L', skills: ['Java', 'C++', 'SQL', 'Cloud'], status: 'Hiring', hired: 132, maxHiring: 180 },
+            { name: 'Adobe Systems', avg: '₹25L', highest: '₹38L', skills: ['JavaScript', 'React', 'UI/UX', 'Photoshop'], status: 'Ongoing', hired: 10, maxHiring: 15 },
+            { name: 'Accenture', avg: '₹8L', highest: '₹14L', skills: ['Java', 'Cloud', 'Consulting', 'Leadership'], status: 'Hiring', hired: 95, maxHiring: 130 },
+            { name: 'L&T Infotech', avg: '₹7L', highest: '₹12L', skills: ['Java', 'SAP', 'Cloud', 'DevOps'], status: 'Hiring', hired: 78, maxHiring: 110 },
+            { name: 'Tech Mahindra', avg: '₹6.8L', highest: '₹11L', skills: ['Java', 'Python', 'Telecom', 'AI/ML'], status: 'Hiring', hired: 88, maxHiring: 120 },
+            { name: 'Cognizant', avg: '₹8.5L', highest: '₹13L', skills: ['Full Stack', 'Java', 'React', 'SQL'], status: 'Hiring', hired: 102, maxHiring: 140 },
+            { name: 'Capgemini', avg: '₹7.2L', highest: '₹11.5L', skills: ['Java', 'SAP', 'Cloud', 'Analytics'], status: 'Ongoing', hired: 72, maxHiring: 100 },
+            { name: 'HCL Technologies', avg: '₹6.5L', highest: '₹10L', skills: ['Java', 'Python', 'Cloud', 'Testing'], status: 'Hiring', hired: 115, maxHiring: 160 },
+            { name: 'Oracle Corporation', avg: '₹15L', highest: '₹22L', skills: ['Database', 'Java', 'PL/SQL', 'ERP'], status: 'Ongoing', hired: 18, maxHiring: 25 },
+            { name: 'Samsung Electronics', avg: '₹18L', highest: '₹28L', skills: ['Android', 'Embedded', 'C++', 'IoT'], status: 'Ongoing', hired: 14, maxHiring: 22 },
+            { name: 'Nvidia Graphics', avg: '₹35L', highest: '₹48L', skills: ['CUDA', 'C++', 'ML', 'Graphics'], status: 'Closed', hired: 6, maxHiring: 10 },
+            { name: 'IBM India', avg: '₹12L', highest: '₹18L', skills: ['Java', 'AI/ML', 'Cloud', 'Cybersecurity'], status: 'Hiring', hired: 32, maxHiring: 45 },
+            { name: 'SAP Labs India', avg: '₹16L', highest: '₹24L', skills: ['SAP', 'ABAP', 'HANA', 'ERP'], status: 'Ongoing', hired: 20, maxHiring: 28 },
+            { name: 'Deloitte Consulting', avg: '₹10L', highest: '₹16L', skills: ['Analytics', 'Consulting', 'Finance', 'Leadership'], status: 'Hiring', hired: 38, maxHiring: 55 },
+            { name: 'Flipkart', avg: '₹20L', highest: '₹32L', skills: ['Java', 'System Design', 'Microservices', 'SQL'], status: 'Hiring', hired: 25, maxHiring: 35 },
+            { name: 'Paytm', avg: '₹18L', highest: '₹28L', skills: ['Java', 'System Design', 'Payments', 'Kotlin'], status: 'Ongoing', hired: 18, maxHiring: 25 },
+            { name: 'PhonePe', avg: '₹22L', highest: '₹35L', skills: ['Java', 'Kotlin', 'Microservices', 'Payments'], status: 'Hiring', hired: 12, maxHiring: 20 },
+            { name: 'Airtel (Bharti)', avg: '₹9.5L', highest: '₹15L', skills: ['Telecom', 'Network', 'Java', 'Cloud'], status: 'Hiring', hired: 35, maxHiring: 50 },
+            { name: 'Reliance Industries', avg: '₹12L', highest: '₹20L', skills: ['Engineering', 'Analytics', 'Operations', 'Management'], status: 'Hiring', hired: 45, maxHiring: 65 },
+            { name: 'Adani Group', avg: '₹11L', highest: '₹18L', skills: ['Engineering', 'Management', 'Analytics', 'Operations'], status: 'Ongoing', hired: 28, maxHiring: 40 },
+            { name: 'Titan Company', avg: '₹8L', highest: '₹13L', skills: ['Design', 'Manufacturing', 'Analytics', 'Sales'], status: 'Closed', hired: 22, maxHiring: 30 },
+            { name: 'ICICI Bank', avg: '₹10L', highest: '₹16L', skills: ['Finance', 'Analytics', 'Java', 'Communication'], status: 'Hiring', hired: 52, maxHiring: 70 },
+            { name: 'HDFC Bank', avg: '₹9.5L', highest: '₹15L', skills: ['Finance', 'Sales', 'Analytics', 'Communication'], status: 'Hiring', hired: 48, maxHiring: 65 },
+            { name: 'Byjus (Think & Learn)', avg: '₹9L', highest: '₹14L', skills: ['Full Stack', 'React', 'Node.js', 'Teaching'], status: 'Closed', hired: 42, maxHiring: 60 },
+            { name: 'Myntra (Flipkart)', avg: '₹17L', highest: '₹26L', skills: ['React', 'Node.js', 'Python', 'E-commerce'], status: 'Ongoing', hired: 16, maxHiring: 22 },
+            { name: 'Swiggy', avg: '₹16L', highest: '₹24L', skills: ['Full Stack', 'System Design', 'Python', 'Microservices'], status: 'Hiring', hired: 19, maxHiring: 28 },
+            { name: 'Zomato', avg: '₹15L', highest: '₹23L', skills: ['Full Stack', 'React', 'Python', 'Golang'], status: 'Ongoing', hired: 14, maxHiring: 20 },
+            { name: 'Ola (ANI Technologies)', avg: '₹14L', highest: '₹22L', skills: ['Full Stack', 'System Design', 'Java', 'Python'], status: 'Closed', hired: 18, maxHiring: 25 },
+            { name: 'Uber India', avg: '₹28L', highest: '₹42L', skills: ['System Design', 'Java', 'Golang', 'Microservices'], status: 'Ongoing', hired: 9, maxHiring: 15 },
+            { name: 'MakeMyTrip', avg: '₹13L', highest: '₹20L', skills: ['Java', 'React', 'System Design', 'Travel Tech'], status: 'Hiring', hired: 22, maxHiring: 32 },
+            { name: 'Razorpay', avg: '₹20L', highest: '₹32L', skills: ['Full Stack', 'System Design', 'Payments', 'Ruby'], status: 'Hiring', hired: 15, maxHiring: 22 },
+            { name: 'Freshworks', avg: '₹16L', highest: '₹25L', skills: ['Full Stack', 'Ruby', 'React', 'SaaS'], status: 'Ongoing', hired: 12, maxHiring: 18 },
+            { name: 'Zoho Corporation', avg: '₹11L', highest: '₹17L', skills: ['C++', 'Java', 'Web Tech', 'Problem Solving'], status: 'Hiring', hired: 65, maxHiring: 90 }
+        ];
+
+        function loadCompanies() {
+            const container = document.getElementById('companyList');
+            
+            companies.forEach((company, index) => {
+                const card = document.createElement('div');
+                card.className = 'company-card';
+                card.style.animationDelay = `${index * 0.15}s`;
+
+                const statusClass = company.status === 'Hiring' ? 'status-hiring' : 
+                                   company.status === 'Ongoing' ? 'status-ongoing' : 'status-closed';
+
+                const hiringPercentage = (company.hired / company.maxHiring) * 100;
+
+                card.innerHTML = `
+                    <div class="company-header">
+                        <div class="company-name">${company.name}</div>
+                        <div class="status-badge ${statusClass}">🔥 ${company.status}</div>
+                    </div>
+
+                    <div class="company-stats">
+                        <div class="company-stat">
+                            <div class="stat-label-small">💰 Avg Package</div>
+                            <div class="stat-value-small">${company.avg}</div>
+                        </div>
+                        <div class="company-stat">
+                            <div class="stat-label-small">🏆 Highest Package</div>
+                            <div class="stat-value-small">${company.highest}</div>
+                        </div>
+                    </div>
+
+                    <div class="company-skills">
+                        ${company.skills.map(skill => `<span class="skill-tag-small">🧠 ${skill}</span>`).join('')}
+                    </div>
+
+                    <div>
+                        <div class="hiring-bar">
+                            <div class="hiring-progress" style="width: ${hiringPercentage}%"></div>
+                        </div>
+                        <div class="hiring-count">👥 ${company.hired} / ${company.maxHiring} Students Hired</div>
+                    </div>
+                `;
+
+                card.onclick = () => {
+                    showToast(`${company.name}: ${company.hired} students hired with avg package of ${company.avg}`, 'success');
+                };
+
+                container.appendChild(card);
+            });
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // Simulate live updates
+        function simulateLiveUpdates() {
+            setInterval(() => {
+                const totalPlaced = document.getElementById('totalPlaced');
+                const activeDrives = document.getElementById('activeDrives');
+                
+                const currentPlaced = parseInt(totalPlaced.textContent);
+                const currentDrives = parseInt(activeDrives.textContent);
+                
+                if (Math.random() > 0.5) {
+                    totalPlaced.textContent = currentPlaced + 1;
+                    showToast('🎉 New student placed! Total: ' + (currentPlaced + 1), 'success');
+                }
+                
+                if (Math.random() > 0.8) {
+                    activeDrives.textContent = currentDrives + (Math.random() > 0.5 ? 1 : -1);
+                }
+            }, 15000); // Every 15 seconds
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCompanies();
+            simulateLiveUpdates();
+            
+            setTimeout(() => {
+                showToast('📊 Analytics dashboard loaded! Showing real-time placement data.', 'success');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+
+
+       

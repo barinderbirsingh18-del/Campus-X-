@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X  - VR Company Booths | Virtual Career Fair</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --primary-cyan-dark: #00d9ff;
+            --secondary-purple: #9d00ff;
+            --secondary-purple-dark: #7b00ff;
+            --accent-pink: #ff00ff;
+            --accent-magenta: #ff0080;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Section Container */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Dashboard Stats */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--primary-cyan));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* VR Environment */
+        .vr-environment {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            height: calc(100vh - 200px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vr-scene {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1f3a 0%, #0a0e27 100%);
+            border-radius: 10px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .booth-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .booth {
+            position: absolute;
+            width: 300px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(157, 0, 255, 0.1));
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+        }
+
+        .booth:hover {
+            transform: translateZ(50px) scale(1.05);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 20px 60px rgba(0, 243, 255, 0.4);
+        }
+
+        .booth-logo {
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .booth-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .booth-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .booth-action {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .booth-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        /* Booth Detail View */
+        .booth-detail {
+            display: grid;
+            grid-template-columns: 350px 1fr 350px;
+            gap: 2rem;
+            height: calc(100vh - 200px);
+        }
+
+        .booth-sidebar {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .booth-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .booth-sidebar::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .booth-sidebar::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .company-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .company-logo-large {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+        }
+
+        .company-name-large {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .company-tagline {
+            color: var(--text-gray);
+        }
+
+        .booth-nav-item {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .booth-nav-item:hover, .booth-nav-item.active {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .booth-nav-icon {
+            font-size: 1.8rem;
+        }
+
+        .booth-main {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .booth-content {
+            display: none;
+        }
+
+        .booth-content.active {
+            display: block;
+        }
+
+        /* AI Chat */
+        .ai-chat-container {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: rgba(37, 43, 74, 0.8);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            max-width: 70%;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+        }
+
+        .send-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        /* Job Postings */
+        .job-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.7rem 1.2rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .job-card {
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .job-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .job-match {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .job-details {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+
+        .job-detail-item {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .job-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--success), #00cc70);
+            border: none;
+            border-radius: 10px;
+            color: var(--bg-dark);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        /* 3D Booth Grid */
+        .booths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .booth-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .booth-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 60px rgba(0, 243, 255, 0.4);
+        }
+
+        .booth-banner {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+        }
+
+        .booth-live-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--error);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .booth-info {
+            padding: 1.5rem;
+        }
+
+        .booth-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .booth-tagline {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+
+        .booth-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .booth-stat {
+            text-align: center;
+        }
+
+        .booth-stat-value {
+            color: var(--primary-cyan);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .booth-stat-label {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+        }
+
+        /* Controls */
+        .vr-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 31, 58, 0.9);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 243, 255, 0.2);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            color: var(--primary-cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+        }
+
+        /* Leaderboard */
+        .leaderboard-table {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        th {
+            color: var(--primary-cyan);
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid var(--border-glow);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-glow);
+            color: var(--text-light);
+        }
+
+        tr:hover {
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; }
+        .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #000; }
+        .rank-3 { background: linear-gradient(135deg, #cd7f32, #e8a87c); color: #000; }
+        .rank-other { background: rgba(157, 0, 255, 0.2); color: var(--secondary-purple); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--error); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-dark-secondary);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 2rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .booth-detail {
+                grid-template-columns: 300px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .booth-detail {
+                grid-template-columns: 1fr;
+            }
+
+            .booth-sidebar, .ai-chat-container {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+
+            .dashboard-grid, .booths-grid, .job-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vr-controls {
+                bottom: 1rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-background"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">CAMPUS X  | VR CAREER FAIR</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchSection('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="switchSection('booths')">Company Booths</button>
+                <button class="nav-tab" onclick="switchSection('lounge')">Networking Lounge</button>
+                <button class="nav-tab" onclick="switchSection('leaderboard')">Leaderboard</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="section-header">
+                <h2>Virtual Career Fair Dashboard</h2>
+                <p>Explore company booths in immersive 3D environment</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card" onclick="switchSection('booths')">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Company Booths</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Booths Visited</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Recruiter Chats</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('leaderboard')">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value">485</div>
+                    <div class="stat-label">Exploration Points</div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h2>Featured Company Booths</h2>
+            </div>
+
+            <div class="booths-grid">
+                <div class="booth-card" onclick="enterBooth('Google')">
+                    <div class="booth-banner">
+                        🔍
+                        <div class="booth-live-badge">🔴 LIVE</div>
+                    </div>
+                    <div class="booth-info">
+                        <div class="booth-title">Google</div>
+                        <div class="booth-tagline">Organize the world's information</div>
+                        <div class="booth-stats-grid">
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">45</div>
+                                <div class="booth-stat-label">Jobs</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">234</div>
+                                <div class="booth-stat-label">Visitors</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">Live</div>
+                                <div class="booth-stat-label">Event</div>
+                            </div>
+                        </div>
+                        <button class="booth-action">Enter Booth →</button>
+                    </div>
+                </div>
+
+                <div class="booth-card" onclick="enterBooth('Microsoft')">
+                    <div class="booth-banner">🪟</div>
+                    <div class="booth-info">
+                        <div class="booth-title">Microsoft</div>
+                        <div class="booth-tagline">Empower every person and organization</div>
+                        <div class="booth-stats-grid">
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">38</div>
+                                <div class="booth-stat-label">Jobs</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">189</div>
+                                <div class="booth-stat-label">Visitors</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">2h</div>
+                                <div class="booth-stat-label">Next Event</div>
+                            </div>
+                        </div>
+                        <button class="booth-action">Enter Booth →</button>
+                    </div>
+                </div>
+
+                <div class="booth-card" onclick="enterBooth('Amazon')">
+                    <div class="booth-banner">📦</div>
+                    <div class="booth-info">
+                        <div class="booth-title">Amazon</div>
+                        <div class="booth-tagline">Earth's most customer-centric company</div>
+                        <div class="booth-stats-grid">
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">52</div>
+                                <div class="booth-stat-label">Jobs</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">312</div>
+                                <div class="booth-stat-label">Visitors</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">5h</div>
+                                <div class="booth-stat-label">Next Event</div>
+                            </div>
+                        </div>
+                        <button class="booth-action">Enter Booth →</button>
+                    </div>
+                </div>
+
+                <div class="booth-card" onclick="enterBooth('Meta')">
+                    <div class="booth-banner">
+                        👥
+                        <div class="booth-live-badge">🔴 LIVE</div>
+                    </div>
+                    <div class="booth-info">
+                        <div class="booth-title">Meta</div>
+                        <div class="booth-tagline">Building the metaverse</div>
+                        <div class="booth-stats-grid">
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">41</div>
+                                <div class="booth-stat-label">Jobs</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">267</div>
+                                <div class="booth-stat-label">Visitors</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">Live</div>
+                                <div class="booth-stat-label">Event</div>
+                            </div>
+                        </div>
+                        <button class="booth-action">Enter Booth →</button>
+                    </div>
+                </div>
+
+                <div class="booth-card" onclick="enterBooth('Apple')">
+                    <div class="booth-banner">🍎</div>
+                    <div class="booth-info">
+                        <div class="booth-title">Apple</div>
+                        <div class="booth-tagline">Think Different</div>
+                        <div class="booth-stats-grid">
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">29</div>
+                                <div class="booth-stat-label">Jobs</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">198</div>
+                                <div class="booth-stat-label">Visitors</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">1d</div>
+                                <div class="booth-stat-label">Next Event</div>
+                            </div>
+                        </div>
+                        <button class="booth-action">Enter Booth →</button>
+                    </div>
+                </div>
+
+                <div class="booth-card" onclick="enterBooth('Netflix')">
+                    <div class="booth-banner">🎬</div>
+                    <div class="booth-info">
+                        <div class="booth-title">Netflix</div>
+                        <div class="booth-tagline">Entertaining the world</div>
+                        <div class="booth-stats-grid">
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">22</div>
+                                <div class="booth-stat-label">Jobs</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">156</div>
+                                <div class="booth-stat-label">Visitors</div>
+                            </div>
+                            <div class="booth-stat">
+                                <div class="booth-stat-value">3h</div>
+                                <div class="booth-stat-label">Next Event</div>
+                            </div>
+                        </div>
+                        <button class="booth-action">Enter Booth →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Company Booths Section -->
+        <section class="section" id="booths">
+            <div class="section-header">
+                <h2>VR Company Booths</h2>
+                <p>Explore companies in immersive 3D virtual environment</p>
+            </div>
+
+            <div class="vr-environment">
+                <div class="vr-scene" id="vrScene">
+                    <div class="booth-container" id="boothContainer">
+                        <div class="booth" style="left: 10%; top: 20%;" onclick="enterBooth('Google')">
+                            <div class="booth-logo">🔍</div>
+                            <div class="booth-name">Google</div>
+                            <div class="booth-stats">
+                                <span>45 Jobs</span>
+                                <span>234 Visitors</span>
+                            </div>
+                            <button class="booth-action">Enter →</button>
+                        </div>
+
+                        <div class="booth" style="right: 10%; top: 20%;" onclick="enterBooth('Microsoft')">
+                            <div class="booth-logo">🪟</div>
+                            <div class="booth-name">Microsoft</div>
+                            <div class="booth-stats">
+                                <span>38 Jobs</span>
+                                <span>189 Visitors</span>
+                            </div>
+                            <button class="booth-action">Enter →</button>
+                        </div>
+
+                        <div class="booth" style="left: 35%; top: 50%;" onclick="enterBooth('Amazon')">
+                            <div class="booth-logo">📦</div>
+                            <div class="booth-name">Amazon</div>
+                            <div class="booth-stats">
+                                <span>52 Jobs</span>
+                                <span>312 Visitors</span>
+                            </div>
+                            <button class="booth-action">Enter →</button>
+                        </div>
+
+                        <div class="booth" style="right: 35%; top: 50%;" onclick="enterBooth('Meta')">
+                            <div class="booth-logo">👥</div>
+                            <div class="booth-name">Meta</div>
+                            <div class="booth-stats">
+                                <span>41 Jobs</span>
+                                <span>267 Visitors</span>
+                            </div>
+                            <button class="booth-action">Enter →</button>
+                        </div>
+                    </div>
+
+                    <div class="vr-controls">
+                        <button class="control-btn" onclick="moveCamera('left')" title="Move Left">←</button>
+                        <button class="control-btn" onclick="moveCamera('up')" title="Move Forward">↑</button>
+                        <button class="control-btn" onclick="moveCamera('down')" title="Move Backward">↓</button>
+                        <button class="control-btn" onclick="moveCamera('right')" title="Move Right">→</button>
+                        <button class="control-btn" onclick="resetView()" title="Reset View">⟳</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Networking Lounge Section -->
+        <section class="section" id="lounge">
+            <div class="section-header">
+                <h2>Virtual Networking Lounge</h2>
+                <p>Connect with peers and alumni in real-time</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">People Online</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Active Conversations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">AI Recommendations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🤝</div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">Connections Made</div>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: var(--text-gray); padding: 4rem; font-size: 1.2rem;">
+                🚧 Virtual Networking Lounge - Coming Soon 🚧
+            </p>
+        </section>
+
+        <!-- Leaderboard Section -->
+        <section class="section" id="leaderboard">
+            <div class="section-header">
+                <h2>Exploration Leaderboard</h2>
+                <p>Top students earning points through booth exploration</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value">#8</div>
+                    <div class="stat-label">Your Rank</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">485</div>
+                    <div class="stat-label">Total Points</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">+42</div>
+                    <div class="stat-label">Points Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">Top 15%</div>
+                    <div class="stat-label">Percentile</div>
+                </div>
+            </div>
+
+            <div class="leaderboard-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Student</th>
+                            <th>Booths Visited</th>
+                            <th>Chats</th>
+                            <th>Applications</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="rank-badge rank-1">🥇</div></td>
+                            <td><strong>Alex Kumar</strong></td>
+                            <td>24</td>
+                            <td>18</td>
+                            <td>12</td>
+                            <td><strong>1,245</strong></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rank-badge rank-2">🥈</div></td>
+                            <td><strong>Priya Sharma</strong></td>
+                            <td>22</td>
+                            <td>15</td>
+                            <td>10</td>
+                            <td><strong>1,128</strong></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rank-badge rank-3">🥉</div></td>
+                            <td><strong>Rahul Verma</strong></td>
+                            <td>20</td>
+                            <td>16</td>
+                            <td>9</td>
+                            <td><strong>982</strong></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rank-badge rank-other">4</div></td>
+                            <td><strong>Sarah Chen</strong></td>
+                            <td>19</td>
+                            <td>14</td>
+                            <td>8</td>
+                            <td><strong>856</strong></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rank-badge rank-other">5</div></td>
+                            <td><strong>David Lee</strong></td>
+                            <td>18</td>
+                            <td>12</td>
+                            <td>7</td>
+                            <td><strong>734</strong></td>
+                        </tr>
+                        <tr style="background: rgba(0, 243, 255, 0.1);">
+                            <td><div class="rank-badge rank-other">8</div></td>
+                            <td><strong>You</strong></td>
+                            <td>12</td>
+                            <td>8</td>
+                            <td>5</td>
+                            <td><strong>485</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div id="toastMessage"></div>
+    </div>
+
+    <!-- Booth Detail Modal -->
+    <div class="modal" id="boothDetailModal">
+        <div class="modal-content" style="max-width: 1600px;">
+            <button class="modal-close" onclick="closeModal('boothDetailModal')">×</button>
+            
+            <div class="booth-detail">
+                <!-- Left Sidebar -->
+                <div class="booth-sidebar">
+                    <div class="company-header">
+                        <div class="company-logo-large" id="companyLogo">🔍</div>
+                        <div class="company-name-large" id="companyName">Google</div>
+                        <div class="company-tagline" id="companyTagline">Organize the world's information</div>
+                    </div>
+
+                    <div class="booth-nav-item active" onclick="switchBoothTab('about')">
+                        <div class="booth-nav-icon">ℹ️</div>
+                        <div>About Company</div>
+                    </div>
+                    <div class="booth-nav-item" onclick="switchBoothTab('jobs')">
+                        <div class="booth-nav-icon">💼</div>
+                        <div>Job Openings</div>
+                    </div>
+                    <div class="booth-nav-item" onclick="switchBoothTab('ai-chat')">
+                        <div class="booth-nav-icon">🤖</div>
+                        <div>AI Recruiter</div>
+                    </div>
+                    <div class="booth-nav-item" onclick="switchBoothTab('presentation')">
+                        <div class="booth-nav-icon">🎥</div>
+                        <div>Live Presentation</div>
+                    </div>
+                    <div class="booth-nav-item" onclick="switchBoothTab('apply')">
+                        <div class="booth-nav-icon">📝</div>
+                        <div>Apply Now</div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="booth-main">
+                    <!-- About Tab -->
+                    <div class="booth-content active" id="about">
+                        <h2 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">About Google</h2>
+                        <p style="color: var(--text-gray); line-height: 1.8; margin-bottom: 2rem;">
+                            Google is a global technology leader focused on improving the ways people connect with information. 
+                            Our innovations in search, advertising, operating systems, and cloud computing have made information 
+                            universally accessible and useful.
+                        </p>
+
+                        <h3 style="color: var(--secondary-purple); margin-bottom: 1rem;">Why Join Google?</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                            <div style="background: rgba(37, 43, 74, 0.6); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--success);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+                                <div style="font-weight: bold; margin-bottom: 0.5rem;">Innovation</div>
+                                <div style="color: var(--text-gray); font-size: 0.9rem;">Work on cutting-edge technology</div>
+                            </div>
+                            <div style="background: rgba(37, 43, 74, 0.6); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--primary-cyan);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌍</div>
+                                <div style="font-weight: bold; margin-bottom: 0.5rem;">Global Impact</div>
+                                <div style="color: var(--text-gray); font-size: 0.9rem;">Billions of users worldwide</div>
+                            </div>
+                            <div style="background: rgba(37, 43, 74, 0.6); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--secondary-purple);">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+                                <div style="font-weight: bold; margin-bottom: 0.5rem;">Benefits</div>
+                                <div style="color: var(--text-gray); font-size: 0.9rem;">Top compensation packages</div>
+                            </div>
+                        </div>
+
+                        <h3 style="color: var(--secondary-purple); margin-bottom: 1rem;">Company Culture</h3>
+                        <div style="background: rgba(37, 43, 74, 0.6); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                            <p style="color: var(--text-gray); line-height: 1.8;">
+                                At Google, we believe in fostering an inclusive environment where innovation thrives. 
+                                Our culture emphasizes collaboration, creativity, and continuous learning. We offer 
+                                flexible work arrangements, comprehensive benefits, and opportunities for growth.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Jobs Tab -->
+                    <div class="booth-content" id="jobs">
+                        <h2 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Job Openings</h2>
+                        
+                        <div class="job-filters">
+                            <select class="filter-select">
+                                <option>All Departments</option>
+                                <option>Engineering</option>
+                                <option>Product</option>
+                                <option>Design</option>
+                                <option>Sales</option>
+                            </select>
+                            <select class="filter-select">
+                                <option>All Locations</option>
+                                <option>Mountain View, CA</option>
+                                <option>New York, NY</option>
+                                <option>Seattle, WA</option>
+                                <option>Bangalore, India</option>
+                            </select>
+                            <select class="filter-select">
+                                <option>All Experience Levels</option>
+                                <option>Entry Level</option>
+                                <option>Mid Level</option>
+                                <option>Senior Level</option>
+                            </select>
+                        </div>
+
+                        <div class="job-grid">
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Software Engineer</div>
+                                        <div style="color: var(--text-gray); font-size: 0.9rem;">Mountain View, CA</div>
+                                    </div>
+                                    <div class="job-match">95% Match</div>
+                                </div>
+                                <div class="job-details">
+                                    <div class="job-detail-item">💰 $120k - $180k</div>
+                                    <div class="job-detail-item">🎓 Bachelor's required</div>
+                                    <div class="job-detail-item">⏱️ Full-time</div>
+                                </div>
+                                <div class="job-skills">
+                                    <span class="skill-tag">Python</span>
+                                    <span class="skill-tag">Java</span>
+                                    <span class="skill-tag">System Design</span>
+                                    <span class="skill-tag">Algorithms</span>
+                                </div>
+                                <button class="apply-btn" onclick="applyToJob('Software Engineer')">Apply Now</button>
+                            </div>
+
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Frontend Engineer</div>
+                                        <div style="color: var(--text-gray); font-size: 0.9rem;">New York, NY</div>
+                                    </div>
+                                    <div class="job-match">88% Match</div>
+                                </div>
+                                <div class="job-details">
+                                    <div class="job-detail-item">💰 $110k - $160k</div>
+                                    <div class="job-detail-item">🎓 Bachelor's required</div>
+                                    <div class="job-detail-item">⏱️ Full-time</div>
+                                </div>
+                                <div class="job-skills">
+                                    <span class="skill-tag">React</span>
+                                    <span class="skill-tag">TypeScript</span>
+                                    <span class="skill-tag">CSS</span>
+                                    <span class="skill-tag">UI/UX</span>
+                                </div>
+                                <button class="apply-btn" onclick="applyToJob('Frontend Engineer')">Apply Now</button>
+                            </div>
+
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Product Manager</div>
+                                        <div style="color: var(--text-gray); font-size: 0.9rem;">Seattle, WA</div>
+                                    </div>
+                                    <div class="job-match">82% Match</div>
+                                </div>
+                                <div class="job-details">
+                                    <div class="job-detail-item">💰 $130k - $190k</div>
+                                    <div class="job-detail-item">🎓 MBA preferred</div>
+                                    <div class="job-detail-item">⏱️ Full-time</div>
+                                </div>
+                                <div class="job-skills">
+                                    <span class="skill-tag">Strategy</span>
+                                    <span class="skill-tag">Analytics</span>
+                                    <span class="skill-tag">Leadership</span>
+                                    <span class="skill-tag">Agile</span>
+                                </div>
+                                <button class="apply-btn" onclick="applyToJob('Product Manager')">Apply Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Chat Tab -->
+                    <div class="booth-content" id="ai-chat">
+                        <h2 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">AI Recruiter Chat</h2>
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-content">
+                                    <div>
+                                        Hello! I'm the Google AI Recruiter. I can help you learn about our company culture, 
+                                        job opportunities, and interview process. What would you like to know?
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" class="chat-input" id="chatInput" placeholder="Ask about company culture, roles, internships..." onkeypress="handleChatEnter(event)">
+                            <button class="send-btn" onclick="sendMessage()">Send</button>
+                        </div>
+                    </div>
+
+                    <!-- Presentation Tab -->
+                    <div class="booth-content" id="presentation">
+                        <h2 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Live Presentation</h2>
+                        <div style="background: #000; border-radius: 10px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 5rem; margin-bottom: 1rem;">🎥</div>
+                                <div style="color: var(--text-gray);">Live presentation will appear here</div>
+                                <div style="color: var(--error); font-weight: bold; margin-top: 1rem;">🔴 LIVE NOW</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                            <button class="btn btn-primary" style="flex: 1;" onclick="showToast('Joining presentation...', 'success')">Join Presentation</button>
+                            <button class="btn btn-secondary" style="flex: 1;" onclick="showToast('Questions panel opened', 'success')">Ask Question</button>
+                        </div>
+                        <div style="background: rgba(37, 43, 74, 0.6); padding: 1.5rem; border-radius: 10px;">
+                            <h3 style="color: var(--secondary-purple); margin-bottom: 1rem;">Upcoming Events</h3>
+                            <div style="color: var(--text-gray); margin-bottom: 0.8rem;">
+                                📅 <strong>Today 3:00 PM</strong> - Engineering Culture at Google
+                            </div>
+                            <div style="color: var(--text-gray); margin-bottom: 0.8rem;">
+                                📅 <strong>Tomorrow 2:00 PM</strong> - Interview Process Overview
+                            </div>
+                            <div style="color: var(--text-gray);">
+                                📅 <strong>Mar 25 5:00 PM</strong> - Q&A with Engineering Managers
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apply Tab -->
+                    <div class="booth-content" id="apply">
+                        <h2 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Apply to Google</h2>
+                        <div style="background: rgba(37, 43, 74, 0.6); padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+                            <h3 style="color: var(--secondary-purple); margin-bottom: 1rem;">Quick Apply</h3>
+                            <p style="color: var(--text-gray); margin-bottom: 1.5rem;">
+                                Your profile is pre-filled from Campus X 2. Review and submit your application.
+                            </p>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--text-gray);">Profile Completeness</span>
+                                    <span style="color: var(--primary-cyan); font-weight: bold;">92%</span>
+                                </div>
+                                <div style="height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden;">
+                                    <div style="height: 100%; background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple)); width: 92%;"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; padding: 1.2rem; margin-top: 1rem;" onclick="submitApplication()">
+                                📤 Submit Application
+                            </button>
+                        </div>
+
+                        <div style="background: rgba(37, 43, 74, 0.6); padding: 2rem; border-radius: 10px;">
+                            <h3 style="color: var(--secondary-purple); margin-bottom: 1rem;">Upload Additional Documents</h3>
+                            <div style="border: 2px dashed var(--border-glow); border-radius: 10px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="uploadDocument()">
+                                <div style="font-size: 3rem; margin-bottom: 0.5rem;">📄</div>
+                                <div style="color: var(--text-gray);">Click to upload resume, cover letter, or portfolio</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar - AI Chat -->
+                <div class="ai-chat-container">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1rem;">Quick Chat</h3>
+                    <div class="chat-messages" style="flex: 1; margin-bottom: 1rem; max-height: 400px;">
+                        <div class="message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <div>Hi! I'm here to help. Ask me anything about Google!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" placeholder="Type your question..." style="width: 100%; margin-bottom: 0.5rem;" onkeypress="handleQuickChatEnter(event)">
+                        <button class="send-btn" style="width: 100%;" onclick="sendQuickMessage()">Send</button>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border-glow);">
+                        <h4 style="color: var(--secondary-purple); margin-bottom: 1rem;">Booth Stats</h4>
+                        <div style="margin-bottom: 0.8rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                <span style="color: var(--text-gray);">Your Visit Time</span>
+                                <span style="color: var(--primary-cyan);">12:35</span>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 0.8rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                <span style="color: var(--text-gray);">Points Earned</span>
+                                <span style="color: var(--success); font-weight: bold;">+50 XP</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                                <span style="color: var(--text-gray);">Items Viewed</span>
+                                <span style="color: var(--primary-cyan);">4 / 7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentSection = 'dashboard';
+        let currentCompany = null;
+        let cameraRotation = { x: 0, y: 0 };
+
+        // Initialize
+        function init() {
+            setupVRControls();
+        }
+
+        // Section Switching
+        function switchSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(sectionName).classList.add('active');
+            const activeTab = Array.from(document.querySelectorAll('.nav-tab')).find(
+                tab => tab.textContent.toLowerCase().includes(sectionName)
+            );
+            if (activeTab) activeTab.classList.add('active');
+
+            currentSection = sectionName;
+            showToast(`Switched to ${sectionName} section`);
+        }
+
+        // VR Controls
+        function setupVRControls() {
+            const container = document.getElementById('boothContainer');
+            let isDragging = false;
+            let startX, startY;
+
+            document.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.vr-scene')) {
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && container) {
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    
+                    cameraRotation.x += deltaY * 0.1;
+                    cameraRotation.y += deltaX * 0.1;
+                    
+                    container.style.transform = `rotateX(${cameraRotation.x}deg) rotateY(${cameraRotation.y}deg)`;
+                    
+                    startX = e.clientX;
+                    startY = e.clientY;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        function moveCamera(direction) {
+            const container = document.getElementById('boothContainer');
+            switch(direction) {
+                case 'left':
+                    cameraRotation.y -= 15;
+                    break;
+                case 'right':
+                    cameraRotation.y += 15;
+                    break;
+                case 'up':
+                    cameraRotation.x -= 15;
+                    break;
+                case 'down':
+                    cameraRotation.x += 15;
+                    break;
+            }
+            if (container) {
+                container.style.transform = `rotateX(${cameraRotation.x}deg) rotateY(${cameraRotation.y}deg)`;
+            }
+        }
+
+        function resetView() {
+            cameraRotation = { x: 0, y: 0 };
+            const container = document.getElementById('boothContainer');
+            if (container) {
+                container.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            }
+            showToast('View reset', 'success');
+        }
+
+        // Enter Booth
+        function enterBooth(companyName) {
+            currentCompany = companyName;
+            
+            const companyData = {
+                'Google': { logo: '🔍', tagline: 'Organize the world\'s information' },
+                'Microsoft': { logo: '🪟', tagline: 'Empower every person and organization' },
+                'Amazon': { logo: '📦', tagline: 'Earth\'s most customer-centric company' },
+                'Meta': { logo: '👥', tagline: 'Building the metaverse' }
+            };
+
+            const company = companyData[companyName] || { logo: '🏢', tagline: 'Innovation and excellence' };
+            
+            document.getElementById('companyLogo').textContent = company.logo;
+            document.getElementById('companyName').textContent = companyName;
+            document.getElementById('companyTagline').textContent = company.tagline;
+            
+            document.getElementById('boothDetailModal').classList.add('active');
+            switchBoothTab('about');
+            showToast(`Entered ${companyName} booth! +10 XP earned`, 'success');
+        }
+
+        // Switch Booth Tabs
+        function switchBoothTab(tabName) {
+            document.querySelectorAll('.booth-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.booth-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            event.target.closest('.booth-nav-item')?.classList.add('active');
+            document.getElementById(tabName)?.classList.add('active');
+        }
+
+        // Chat Functions
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            addChatMessage(message, 'user');
+            input.value = '';
+
+            setTimeout(() => {
+                const responses = [
+                    'At Google, we foster a culture of innovation and collaboration. We believe in "20% time" where engineers can work on passion projects.',
+                    'We have openings in Engineering, Product, Design, and Sales across multiple locations globally.',
+                    'Our interview process includes phone screening, technical interviews, and behavioral rounds. We focus on problem-solving and cultural fit.',
+                    'We offer competitive compensation, comprehensive benefits, learning opportunities, and a collaborative work environment.',
+                    'Our internship programs are designed for students to work on real projects with experienced mentors and potentially convert to full-time roles.'
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addChatMessage(randomResponse, 'ai');
+            }, 1000);
+        }
+
+        function addChatMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const message = document.createElement('div');
+            message.className = `message ${sender === 'user' ? 'user' : ''}`;
+
+            message.innerHTML = `
+                <div class="message-avatar">${sender === 'user' ? '👤' : '🤖'}</div>
+                <div class="message-content">
+                    <div>${text}</div>
+                </div>
+            `;
+
+            messagesDiv.appendChild(message);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function handleChatEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendQuickMessage() {
+            // Quick chat in sidebar
+            showToast('Message sent to recruiter', 'success');
+        }
+
+        function handleQuickChatEnter(event) {
+            if (event.key === 'Enter') {
+                sendQuickMessage();
+            }
+        }
+
+        // Job Application
+        function applyToJob(jobTitle) {
+            showToast(`Applying to ${jobTitle}...`, 'success');
+            setTimeout(() => {
+                showToast('Application submitted successfully! +25 XP earned', 'success');
+            }, 1500);
+        }
+
+        function submitApplication() {
+            showToast('Submitting application to Google...', 'success');
+            setTimeout(() => {
+                showToast('Application submitted! You will receive updates via email.', 'success');
+            }, 2000);
+        }
+
+        function uploadDocument() {
+            showToast('Opening file picker...', 'success');
+        }
+
+        // Modal Functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+
+        // Simulate notifications
+        setTimeout(() => {
+            showToast('🔴 Google is hosting a live presentation now!', 'success');
+        }, 3000);
+
+        setTimeout(() => {
+            showToast('🎯 New job posting matches your profile!', 'success');
+        }, 7000);
+    </script>
+</body>
+</html>

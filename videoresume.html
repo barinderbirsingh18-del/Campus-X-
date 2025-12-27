@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X  - Video Resume Builder | AI-Powered Video CVs</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --primary-cyan-dark: #00d9ff;
+            --secondary-purple: #9d00ff;
+            --secondary-purple-dark: #7b00ff;
+            --accent-pink: #ff00ff;
+            --accent-magenta: #ff0080;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Dashboard Section */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--primary-cyan));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Section Container */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Video Studio */
+        .studio-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            gap: 2rem;
+            height: calc(100vh - 200px);
+        }
+
+        .studio-tools {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .studio-tools::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .studio-tools::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .studio-tools::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .tool-section {
+            margin-bottom: 2rem;
+        }
+
+        .tool-section h3 {
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .tool-btn {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-btn:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .video-workspace {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-preview {
+            flex: 1;
+            background: #000;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .recording-indicator {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--error);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+
+        .recording-indicator.active {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .placeholder-content {
+            text-align: center;
+            color: var(--text-gray);
+        }
+
+        .placeholder-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error), var(--accent-magenta));
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        /* AI Feedback Panel */
+        .feedback-panel {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .score-display {
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--success);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .score-svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 12;
+        }
+
+        .score-progress {
+            fill: none;
+            stroke: url(#scoreGradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .score-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .feedback-section {
+            background: rgba(37, 43, 74, 0.6);
+            border-left: 4px solid var(--primary-cyan);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-section h4 {
+            color: var(--primary-cyan);
+            margin-bottom: 0.8rem;
+        }
+
+        .feedback-item {
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feedback-item.positive::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+        }
+
+        .feedback-item.negative::before {
+            content: '!';
+            position: absolute;
+            left: 0;
+            color: var(--warning);
+        }
+
+        /* Video Library */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-score {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Analytics Dashboard */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            color: var(--primary-cyan);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .heatmap {
+            width: 100%;
+            height: 60px;
+            background: rgba(37, 43, 74, 0.6);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .heatmap-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--warning), var(--error));
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        /* Badges */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .badge-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .badge-card.unlocked {
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .badge-card.locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-name {
+            color: var(--text-light);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-description {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-dark-secondary);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 2rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal h2 {
+            color: var(--primary-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--error);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .studio-container {
+                grid-template-columns: 250px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .studio-container {
+                grid-template-columns: 1fr;
+            }
+
+            .studio-tools, .feedback-panel {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+
+            .dashboard-grid, .video-grid, .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-glow);
+            border-radius: 50%;
+            border-top-color: var(--primary-cyan);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* File Upload */
+        .upload-area {
+            border: 3px dashed var(--border-glow);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--primary-cyan);
+        }
+
+        /* Interactive Hotspots */
+        .hotspot {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 243, 255, 0.3);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: hotspotPulse 2s infinite;
+        }
+
+        .hotspot:hover {
+            transform: scale(1.2);
+            background: rgba(0, 243, 255, 0.6);
+        }
+
+        @keyframes hotspotPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(0, 243, 255, 0); }
+        }
+
+        .hotspot-popup {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 200px;
+            display: none;
+            white-space: nowrap;
+        }
+
+        .hotspot:hover .hotspot-popup {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-background"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">CAMPUS X  | VIDEO RESUME</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchSection('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="switchSection('studio')">Video Studio</button>
+                <button class="nav-tab" onclick="switchSection('library')">My Videos</button>
+                <button class="nav-tab" onclick="switchSection('analytics')">Analytics</button>
+                <button class="nav-tab" onclick="switchSection('achievements')">Achievements</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="section-header">
+                <h2>Video Resume Dashboard</h2>
+                <p>Create AI-powered video resumes that stand out to recruiters</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card" onclick="switchSection('library')">
+                    <div class="stat-icon">🎥</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Video Resumes</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('analytics')">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-value">347</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('analytics')">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">88/100</div>
+                    <div class="stat-label">AI Score</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('achievements')">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Badges Earned</div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h2>Quick Actions</h2>
+            </div>
+
+            <div class="video-grid">
+                <div class="video-card" onclick="switchSection('studio')">
+                    <div class="video-thumbnail">🎬</div>
+                    <div class="video-info">
+                        <div class="video-title">Create New Video Resume</div>
+                        <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                            Record or upload a professional video resume with AI guidance
+                        </p>
+                        <button class="btn btn-primary" style="width: 100%;">
+                            Start Recording
+                        </button>
+                    </div>
+                </div>
+
+                <div class="video-card" onclick="openAISimulation()">
+                    <div class="video-thumbnail">🤖</div>
+                    <div class="video-info">
+                        <div class="video-title">AI Interview Simulation</div>
+                        <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                            Practice answering interview questions with AI feedback
+                        </p>
+                        <button class="btn btn-primary" style="width: 100%;">
+                            Start Simulation
+                        </button>
+                    </div>
+                </div>
+
+                <div class="video-card" onclick="openRoleOptimizer()">
+                    <div class="video-thumbnail">🎯</div>
+                    <div class="video-info">
+                        <div class="video-title">Role-Specific Versions</div>
+                        <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                            Create optimized versions for different job roles
+                        </p>
+                        <button class="btn btn-primary" style="width: 100%;">
+                            Optimize
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Studio Section -->
+        <section class="section" id="studio">
+            <div class="section-header">
+                <h2>Video Resume Studio</h2>
+                <p>Record, edit, and enhance your video resume with AI assistance</p>
+            </div>
+
+            <div class="studio-container">
+                <!-- Tools Sidebar -->
+                <div class="studio-tools">
+                    <div class="tool-section">
+                        <h3>📹 Recording</h3>
+                        <button class="tool-btn" onclick="startRecording()">
+                            <span>⏺️</span> Start Recording
+                        </button>
+                        <button class="tool-btn" onclick="stopRecording()">
+                            <span>⏹️</span> Stop Recording
+                        </button>
+                        <button class="tool-btn" onclick="document.getElementById('videoUpload').click()">
+                            <span>📤</span> Upload Video
+                        </button>
+                        <input type="file" id="videoUpload" accept="video/*" style="display: none;" onchange="handleVideoUpload(event)">
+                    </div>
+
+                    <div class="tool-section">
+                        <h3>✂️ Editing</h3>
+                        <button class="tool-btn" onclick="trimVideo()">
+                            <span>✂️</span> Trim Video
+                        </button>
+                        <button class="tool-btn" onclick="addSubtitles()">
+                            <span>📝</span> Add Subtitles
+                        </button>
+                        <button class="tool-btn" onclick="addHotspots()">
+                            <span>📍</span> Add Links
+                        </button>
+                    </div>
+
+                    <div class="tool-section">
+                        <h3>🎨 Enhancements</h3>
+                        <button class="tool-btn" onclick="applyFilter()">
+                            <span>🎨</span> Apply Filter
+                        </button>
+                        <button class="tool-btn" onclick="adjustBrightness()">
+                            <span>💡</span> Adjust Lighting
+                        </button>
+                        <button class="tool-btn" onclick="improveAudio()">
+                            <span>🎵</span> Enhance Audio
+                        </button>
+                    </div>
+
+                    <div class="tool-section">
+                        <h3>🤖 AI Tools</h3>
+                        <button class="tool-btn" onclick="analyzeVideo()">
+                            <span>🤖</span> AI Analysis
+                        </button>
+                        <button class="tool-btn" onclick="generateSummary()">
+                            <span>📊</span> Generate Summary
+                        </button>
+                        <button class="tool-btn" onclick="optimizeForRole()">
+                            <span>🎯</span> Role Optimizer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Video Workspace -->
+                <div class="video-workspace">
+                    <div class="video-preview" id="videoPreview">
+                        <div class="recording-indicator" id="recordingIndicator">● REC</div>
+                        <video class="video-player" id="videoPlayer" controls style="display: none;"></video>
+                        <div class="placeholder-content" id="placeholderContent">
+                            <div class="placeholder-icon">🎥</div>
+                            <p>No video loaded. Record or upload to begin.</p>
+                        </div>
+                        <!-- Interactive Hotspots -->
+                        <div class="hotspot" style="top: 30%; left: 20%; display: none;" id="hotspot1">
+                            <div class="hotspot-popup">View Portfolio</div>
+                        </div>
+                        <div class="hotspot" style="top: 50%; left: 70%; display: none;" id="hotspot2">
+                            <div class="hotspot-popup">GitHub Projects</div>
+                        </div>
+                    </div>
+
+                    <div class="video-controls">
+                        <button class="btn btn-primary" onclick="startRecording()">
+                            <span>⏺️</span> Record
+                        </button>
+                        <button class="btn btn-secondary" onclick="pauseRecording()">
+                            <span>⏸️</span> Pause
+                        </button>
+                        <button class="btn btn-danger" onclick="stopRecording()">
+                            <span>⏹️</span> Stop
+                        </button>
+                        <button class="btn btn-primary" onclick="saveVideo()">
+                            <span>💾</span> Save
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Feedback Panel -->
+                <div class="feedback-panel">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">AI Feedback</h3>
+                    
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <svg class="score-svg" width="150" height="150">
+                                <defs>
+                                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: var(--primary-cyan)" />
+                                        <stop offset="100%" style="stop-color: var(--secondary-purple)" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="score-bg" cx="75" cy="75" r="65"></circle>
+                                <circle class="score-progress" cx="75" cy="75" r="65" 
+                                        stroke-dasharray="408" stroke-dashoffset="82" id="scoreCircle"></circle>
+                            </svg>
+                            <div class="score-text" id="aiScore">88</div>
+                        </div>
+                        <div class="score-label">Overall Score</div>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h4>✓ Strengths</h4>
+                        <div class="feedback-item positive">Clear and confident speech</div>
+                        <div class="feedback-item positive">Professional appearance</div>
+                        <div class="feedback-item positive">Good eye contact with camera</div>
+                        <div class="feedback-item positive">Well-structured content</div>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h4>💡 Suggestions</h4>
+                        <div class="feedback-item negative">Reduce filler words ("um", "uh")</div>
+                        <div class="feedback-item negative">Improve lighting from the front</div>
+                        <div class="feedback-item negative">Slow down slightly for clarity</div>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h4>📊 Detailed Metrics</h4>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-gray);">Communication</span>
+                                <span style="color: var(--primary-cyan); font-weight: bold;">92%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-gray);">Confidence</span>
+                                <span style="color: var(--primary-cyan); font-weight: bold;">85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-gray);">Body Language</span>
+                                <span style="color: var(--primary-cyan); font-weight: bold;">88%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-gray);">Appearance</span>
+                                <span style="color: var(--primary-cyan); font-weight: bold;">90%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Library Section -->
+        <section class="section" id="library">
+            <div class="section-header">
+                <h2>My Video Resumes</h2>
+                <p>Manage and share your video resume collection</p>
+            </div>
+
+            <div class="video-grid">
+                <div class="video-card" onclick="viewVideo('Software Engineer')">
+                    <div class="video-thumbnail">
+                        👨‍💻
+                        <div class="video-duration">2:45</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">Software Engineer Resume</div>
+                        <div class="video-meta">
+                            <span>Created: Mar 15, 2024</span>
+                            <span class="video-score">88/100</span>
+                        </div>
+                        <div class="video-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); editVideo('Software Engineer')">Edit</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareVideo('Software Engineer')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" onclick="viewVideo('Product Manager')">
+                    <div class="video-thumbnail">
+                        👩‍💼
+                        <div class="video-duration">3:12</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">Product Manager Resume</div>
+                        <div class="video-meta">
+                            <span>Created: Mar 12, 2024</span>
+                            <span class="video-score">85/100</span>
+                        </div>
+                        <div class="video-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); editVideo('Product Manager')">Edit</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareVideo('Product Manager')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" onclick="viewVideo('Data Scientist')">
+                    <div class="video-thumbnail">
+                        👨‍🔬
+                        <div class="video-duration">2:58</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">Data Scientist Resume</div>
+                        <div class="video-meta">
+                            <span>Created: Mar 10, 2024</span>
+                            <span class="video-score">90/100</span>
+                        </div>
+                        <div class="video-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); editVideo('Data Scientist')">Edit</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareVideo('Data Scientist')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" onclick="viewVideo('UX Designer')">
+                    <div class="video-thumbnail">
+                        🎨
+                        <div class="video-duration">3:05</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">UX Designer Resume</div>
+                        <div class="video-meta">
+                            <span>Created: Mar 8, 2024</span>
+                            <span class="video-score">87/100</span>
+                        </div>
+                        <div class="video-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); editVideo('UX Designer')">Edit</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareVideo('UX Designer')">Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" onclick="viewVideo('DevOps Engineer')">
+                    <div class="video-thumbnail">
+                        ⚙️
+                        <div class="video-duration">2:52</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">DevOps Engineer Resume</div>
+                        <div class="video-meta">
+                            <span>Created: Mar 5, 2024</span>
+                            <span class="video-score">86/100</span>
+                        </div>
+                        <div class="video-actions">
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); editVideo('DevOps Engineer')">Edit</button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); shareVideo('DevOps Engineer')">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="section" id="analytics">
+            <div class="section-header">
+                <h2>Video Analytics</h2>
+                <p>Track performance and engagement metrics for your video resumes</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-value">347</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-value">2:15</div>
+                    <div class="stat-label">Avg. Watch Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💼</div>
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Recruiter Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">+28%</div>
+                    <div class="stat-label">Growth This Week</div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">View Heatmap</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                        Shows which parts of your video are watched most
+                    </p>
+                    <div class="heatmap">
+                        <div class="heatmap-bar" style="left: 0%; width: 20%; background: var(--success);"></div>
+                        <div class="heatmap-bar" style="left: 20%; width: 30%; background: var(--warning);"></div>
+                        <div class="heatmap-bar" style="left: 50%; width: 15%; background: var(--error);"></div>
+                        <div class="heatmap-bar" style="left: 65%; width: 25%; background: var(--success);"></div>
+                        <div class="timeline-marker" style="left: 0%;">0:00</div>
+                        <div class="timeline-marker" style="left: 25%;">0:45</div>
+                        <div class="timeline-marker" style="left: 50%;">1:30</div>
+                        <div class="timeline-marker" style="left: 75%;">2:15</div>
+                        <div class="timeline-marker" style="right: 0%;">3:00</div>
+                    </div>
+                    <p style="color: var(--text-gray); margin-top: 2rem; font-size: 0.9rem;">
+                        <span style="color: var(--success);">■</span> High engagement (80-100%)<br>
+                        <span style="color: var(--warning);">■</span> Medium engagement (50-80%)<br>
+                        <span style="color: var(--error);">■</span> Low engagement (<50%)
+                    </p>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Views Over Time</h3>
+                    <canvas id="viewsChart" width="400" height="250"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card" style="margin-top: 2rem;">
+                <h3 class="chart-title">Engagement Breakdown</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Complete Views</span>
+                            <span style="color: var(--primary-cyan); font-weight: bold;">78%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Shared</span>
+                            <span style="color: var(--primary-cyan); font-weight: bold;">45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Downloads</span>
+                            <span style="color: var(--primary-cyan); font-weight: bold;">23%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 23%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Link Clicks</span>
+                            <span style="color: var(--primary-cyan); font-weight: bold;">62%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 62%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section class="section" id="achievements">
+            <div class="section-header">
+                <h2>Achievements & Badges</h2>
+                <p>Unlock badges by improving your video resume skills</p>
+            </div>
+
+            <div class="badges-grid">
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">🎬</div>
+                    <div class="badge-name">First Recording</div>
+                    <div class="badge-description">Created your first video resume</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">⭐</div>
+                    <div class="badge-name">Perfect Score</div>
+                    <div class="badge-description">Achieved 90+ AI score</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">🗣️</div>
+                    <div class="badge-name">Clear Communicator</div>
+                    <div class="badge-description">Excellent speech clarity</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">👔</div>
+                    <div class="badge-name">Professional</div>
+                    <div class="badge-description">Professional appearance rating</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-name">Popular Video</div>
+                    <div class="badge-description">100+ views on a video</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">🔗</div>
+                    <div class="badge-name">Interactive Pro</div>
+                    <div class="badge-description">Added 5+ hotspots</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-name">Master Creator</div>
+                    <div class="badge-description">Create 10 video resumes</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">🌟</div>
+                    <div class="badge-name">Viral Video</div>
+                    <div class="badge-description">1000+ views on a video</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">💎</div>
+                    <div class="badge-name">Elite</div>
+                    <div class="badge-description">Maintain 95+ score on 5 videos</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div id="toastMessage"></div>
+    </div>
+
+    <!-- AI Simulation Modal -->
+    <div class="modal" id="aiSimulationModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('aiSimulationModal')">×</button>
+            <h2>AI Interview Simulation</h2>
+            <p style="color: var(--text-gray); margin-bottom: 2rem;">
+                Practice answering common interview questions. AI will evaluate your responses in real-time.
+            </p>
+
+            <div class="form-group">
+                <label class="form-label">Select Interview Type</label>
+                <select class="form-select">
+                    <option>Technical Interview</option>
+                    <option>Behavioral Interview</option>
+                    <option>Case Study Interview</option>
+                    <option>HR Round</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Select Role</label>
+                <select class="form-select">
+                    <option>Software Engineer</option>
+                    <option>Data Scientist</option>
+                    <option>Product Manager</option>
+                    <option>UX Designer</option>
+                    <option>DevOps Engineer</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%;" onclick="startAISimulation()">
+                🎬 Start Simulation
+            </button>
+        </div>
+    </div>
+
+    <!-- Role Optimizer Modal -->
+    <div class="modal" id="roleOptimizerModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('roleOptimizerModal')">×</button>
+            <h2>Role-Specific Optimizer</h2>
+            <p style="color: var(--text-gray); margin-bottom: 2rem;">
+                AI will analyze your video and suggest improvements for specific roles
+            </p>
+
+            <div class="form-group">
+                <label class="form-label">Target Role</label>
+                <select class="form-select" id="targetRole">
+                    <option>Software Engineer</option>
+                    <option>Frontend Developer</option>
+                    <option>Backend Developer</option>
+                    <option>Full Stack Developer</option>
+                    <option>Data Scientist</option>
+                    <option>ML Engineer</option>
+                    <option>Product Manager</option>
+                    <option>UX/UI Designer</option>
+                    <option>DevOps Engineer</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Company Type</label>
+                <select class="form-select">
+                    <option>FAANG Companies</option>
+                    <option>Startups</option>
+                    <option>Enterprise</option>
+                    <option>Consulting</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%;" onclick="optimizeForRole()">
+                🎯 Optimize Video
+            </button>
+        </div>
+    </div>
+
+    <!-- Share Video Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('shareModal')">×</button>
+            <h2>Share Video Resume</h2>
+            <p style="color: var(--text-gray); margin-bottom: 2rem;">
+                Generate a secure shareable link with privacy controls
+            </p>
+
+            <div class="form-group">
+                <label class="form-label">Share With</label>
+                <select class="form-select">
+                    <option>Anyone with link</option>
+                    <option>Recruiters only</option>
+                    <option>Mentors only</option>
+                    <option>Peer review</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Link Expiry</label>
+                <select class="form-select">
+                    <option>7 days</option>
+                    <option>30 days</option>
+                    <option>90 days</option>
+                    <option>Never expires</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Shareable Link</label>
+                <input type="text" class="form-input" value="https://campusx2.com/video/abc123xyz" readonly>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%;" onclick="copyShareLink()">
+                📋 Copy Link
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let currentSection = 'dashboard';
+        let isRecording = false;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+
+        // Initialize
+        function init() {
+            createViewsChart();
+        }
+
+        // Section Switching
+        function switchSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(sectionName).classList.add('active');
+            const activeTab = Array.from(document.querySelectorAll('.nav-tab')).find(
+                tab => tab.textContent.toLowerCase().includes(sectionName.replace('-', ' '))
+            );
+            if (activeTab) activeTab.classList.add('active');
+
+            currentSection = sectionName;
+            showToast(`Switched to ${sectionName.replace('-', ' ')} section`);
+        }
+
+        // Recording Functions
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: true 
+                });
+
+                document.getElementById('videoPlayer').srcObject = stream;
+                document.getElementById('videoPlayer').style.display = 'block';
+                document.getElementById('placeholderContent').style.display = 'none';
+                document.getElementById('recordingIndicator').classList.add('active');
+                document.getElementById('videoPlayer').play();
+
+                mediaRecorder = new MediaRecorder(stream);
+                recordedChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                showToast('Recording started!', 'success');
+            } catch (error) {
+                showToast('Camera access denied. Please allow camera permissions.', 'error');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    document.getElementById('videoPlayer').srcObject = null;
+                    document.getElementById('videoPlayer').src = url;
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                };
+
+                isRecording = false;
+                showToast('Recording stopped!', 'success');
+                
+                // Simulate AI analysis
+                setTimeout(() => {
+                    analyzeVideo();
+                }, 1000);
+            }
+        }
+
+        function pauseRecording() {
+            if (mediaRecorder && isRecording) {
+                if (mediaRecorder.state === 'recording') {
+                    mediaRecorder.pause();
+                    showToast('Recording paused', 'success');
+                } else if (mediaRecorder.state === 'paused') {
+                    mediaRecorder.resume();
+                    showToast('Recording resumed', 'success');
+                }
+            }
+        }
+
+        function saveVideo() {
+            if (recordedChunks.length > 0) {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'video-resume-' + Date.now() + '.webm';
+                a.click();
+                showToast('Video saved successfully!', 'success');
+            } else {
+                showToast('No video to save', 'error');
+            }
+        }
+
+        // Video Upload
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('videoPlayer').src = url;
+                document.getElementById('videoPlayer').style.display = 'block';
+                document.getElementById('placeholderContent').style.display = 'none';
+                document.getElementById('videoPlayer').play();
+                showToast('Video uploaded successfully!', 'success');
+                
+                setTimeout(() => {
+                    analyzeVideo();
+                }, 1000);
+            }
+        }
+
+        // AI Analysis
+        function analyzeVideo() {
+            showToast('Analyzing video with AI...', 'success');
+            
+            setTimeout(() => {
+                const score = Math.floor(Math.random() * 15) + 82;
+                document.getElementById('aiScore').textContent = score;
+                
+                const circumference = 2 * Math.PI * 65;
+                const offset = circumference - (score / 100) * circumference;
+                document.getElementById('scoreCircle').style.strokeDashoffset = offset;
+                
+                showToast(`Analysis complete! Score: ${score}/100`, 'success');
+            }, 2000);
+        }
+
+        // Editing Functions
+        function trimVideo() {
+            showToast('Opening video trimmer...', 'success');
+        }
+
+        function addSubtitles() {
+            showToast('Generating automatic subtitles...', 'success');
+            setTimeout(() => {
+                showToast('Subtitles added successfully!', 'success');
+            }, 2000);
+        }
+
+        function addHotspots() {
+            document.querySelectorAll('.hotspot').forEach(hotspot => {
+                hotspot.style.display = 'block';
+            });
+            showToast('Hotspots enabled! Click to add interactive links.', 'success');
+        }
+
+        // Enhancement Functions
+        function applyFilter() {
+            showToast('Filter applied!', 'success');
+        }
+
+        function adjustBrightness() {
+            showToast('Brightness adjusted!', 'success');
+        }
+
+        function improveAudio() {
+            showToast('Audio enhanced!', 'success');
+        }
+
+        // AI Tools
+        function generateSummary() {
+            showToast('Generating video summary...', 'success');
+            setTimeout(() => {
+                showToast('Summary generated! Key points extracted.', 'success');
+            }, 1500);
+        }
+
+        function optimizeForRole() {
+            const role = document.getElementById('targetRole')?.value || 'Software Engineer';
+            showToast(`Optimizing for ${role}...`, 'success');
+            setTimeout(() => {
+                showToast('Video optimized successfully!', 'success');
+                closeModal('roleOptimizerModal');
+            }, 2000);
+        }
+
+        // Library Functions
+        function viewVideo(title) {
+            showToast(`Loading ${title} video...`, 'success');
+            switchSection('studio');
+        }
+
+        function editVideo(title) {
+            showToast(`Opening ${title} in editor...`, 'success');
+            switchSection('studio');
+        }
+
+        function shareVideo(title) {
+            openShareModal();
+        }
+
+        // Modal Functions
+        function openAISimulation() {
+            document.getElementById('aiSimulationModal').classList.add('active');
+        }
+
+        function startAISimulation() {
+            showToast('Starting AI interview simulation...', 'success');
+            closeModal('aiSimulationModal');
+            switchSection('studio');
+        }
+
+        function openRoleOptimizer() {
+            document.getElementById('roleOptimizerModal').classList.add('active');
+        }
+
+        function openShareModal() {
+            document.getElementById('shareModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function copyShareLink() {
+            const input = document.querySelector('#shareModal .form-input');
+            input.select();
+            document.execCommand('copy');
+            showToast('Link copied to clipboard!', 'success');
+        }
+
+        // Analytics
+        function createViewsChart() {
+            const canvas = document.getElementById('viewsChart');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.strokeStyle = '#00f3ff';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                const data = [25, 42, 38, 55, 68, 75, 82, 78, 95, 108, 124, 137];
+                const width = canvas.width;
+                const height = canvas.height;
+                const step = width / (data.length - 1);
+                
+                data.forEach((value, index) => {
+                    const x = index * step;
+                    const y = height - (value / 150 * height);
+                    if (index === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+                
+                ctx.stroke();
+
+                // Add points
+                ctx.fillStyle = '#00f3ff';
+                data.forEach((value, index) => {
+                    const x = index * step;
+                    const y = height - (value / 150 * height);
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

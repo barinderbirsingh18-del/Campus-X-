@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X - Smart Analytics Dashboard</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bd00ff;
+            --neon-pink: #ff006e;
+            --neon-gold: #ffd700;
+            --neon-orange: #ff9500;
+            --dark-bg: #0d0221;
+            --dark-secondary: #1a0b2e;
+            --dark-tertiary: #2d1b4e;
+            --text-white: #ffffff;
+            --text-gray: #b8b8d1;
+        }
+
+        body {
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            background: radial-gradient(ellipse at center, #1a0b2e 0%, #0d0221 100%);
+            color: var(--text-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Holographic Background */
+        .holo-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .grid-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridFlow 20s linear infinite;
+            perspective: 500px;
+            transform: rotateX(60deg);
+        }
+
+        @keyframes gridFlow {
+            0% { transform: rotateX(60deg) translateY(0); }
+            100% { transform: rotateX(60deg) translateY(50px); }
+        }
+
+        .holo-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: orbFloat 25s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--neon-blue), transparent);
+            top: -10%;
+            left: -10%;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--neon-purple), transparent);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: 12s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--neon-pink), transparent);
+            top: 50%;
+            left: 50%;
+            animation-delay: 6s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(100px, -100px) scale(1.2); }
+            66% { transform: translate(-100px, 100px) scale(0.9); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(13, 2, 33, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(0, 243, 255, 0.3);
+            z-index: 1000;
+            padding: 1.5rem 3%;
+            box-shadow: 0 5px 30px rgba(0, 243, 255, 0.2);
+        }
+
+        .header-content {
+            max-width: 1900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--neon-gold);
+            text-shadow: 0 0 15px var(--neon-gold);
+        }
+
+        .header-stat-label {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        .optimize-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--neon-gold), var(--neon-orange));
+            border: none;
+            border-radius: 30px;
+            color: var(--dark-bg);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            animation: optimizePulse 2s infinite;
+        }
+
+        @keyframes optimizePulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.8); }
+        }
+
+        .optimize-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 50px rgba(255, 215, 0, 0.8);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            margin-top: 110px;
+            padding: 2rem 3%;
+            max-width: 1900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-title {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 25px var(--neon-blue)); }
+            50% { filter: drop-shadow(0 0 45px var(--neon-purple)); }
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Performance Overview */
+        .performance-overview {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.08), rgba(189, 0, 255, 0.08));
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            border-radius: 25px;
+            padding: 3rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 0 40px rgba(0, 243, 255, 0.1);
+        }
+
+        .overview-title {
+            font-size: 2rem;
+            color: var(--neon-blue);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .metric-card {
+            background: rgba(45, 27, 78, 0.6);
+            border: 2px solid rgba(0, 243, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .metric-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 243, 255, 0.4);
+        }
+
+        .metric-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px var(--neon-blue));
+        }
+
+        .metric-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(26, 11, 46, 0.7), rgba(13, 2, 33, 0.7));
+            backdrop-filter: blur(25px);
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 0 40px rgba(0, 243, 255, 0.05);
+            transition: all 0.4s;
+        }
+
+        .glass-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 25px 80px rgba(0, 243, 255, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Heatmap */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.2);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.5);
+        }
+
+        .level-0 { background: rgba(255, 255, 255, 0.05); }
+        .level-1 { background: rgba(0, 243, 255, 0.2); box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); }
+        .level-2 { background: rgba(0, 243, 255, 0.4); box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); }
+        .level-3 { background: rgba(0, 243, 255, 0.6); box-shadow: 0 0 20px rgba(0, 243, 255, 0.7); }
+        .level-4 { background: rgba(0, 243, 255, 0.8); box-shadow: 0 0 25px rgba(0, 243, 255, 0.9); }
+        .level-5 { background: var(--neon-blue); box-shadow: 0 0 30px var(--neon-blue); }
+
+        /* Radar Chart */
+        .radar-container {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radar-svg {
+            filter: drop-shadow(0 0 20px var(--neon-blue));
+        }
+
+        /* Leaderboard */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table th {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-blue);
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 2px solid rgba(0, 243, 255, 0.3);
+            font-weight: bold;
+        }
+
+        .leaderboard-table td {
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .leaderboard-table tr.current-user {
+            background: rgba(0, 243, 255, 0.15);
+            border-left: 4px solid var(--neon-gold);
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; box-shadow: 0 0 20px #ffd700; }
+        .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #000; box-shadow: 0 0 20px #c0c0c0; }
+        .rank-3 { background: linear-gradient(135deg, #cd7f32, #e8a87c); color: #000; box-shadow: 0 0 20px #cd7f32; }
+        .rank-other { background: rgba(189, 0, 255, 0.3); color: var(--neon-purple); }
+
+        /* KPI Counters */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .kpi-card {
+            background: rgba(26, 11, 46, 0.7);
+            border: 2px solid rgba(189, 0, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .kpi-card:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 15px 50px rgba(189, 0, 255, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .kpi-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--neon-purple);
+            text-shadow: 0 0 25px var(--neon-purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Company Matches */
+        .company-matches {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .company-match {
+            background: rgba(45, 27, 78, 0.6);
+            border: 2px solid rgba(0, 243, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .company-match:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.3);
+            transform: translateX(10px);
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-white);
+        }
+
+        .match-score {
+            background: linear-gradient(135deg, var(--neon-gold), var(--neon-orange));
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-gold);
+        }
+
+        .skill-requirements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(189, 0, 255, 0.2);
+            color: var(--neon-purple);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            border: 1px solid var(--neon-purple);
+        }
+
+        .probability-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .probability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-gold));
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--neon-blue);
+            transition: width 1s ease;
+        }
+
+        /* Rotating Globe */
+        .globe-container {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .globe {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 243, 255, 0.3), rgba(13, 2, 33, 0.8));
+            border: 3px solid var(--neon-blue);
+            box-shadow: 
+                0 0 60px var(--neon-blue),
+                inset 0 0 40px rgba(0, 243, 255, 0.3);
+            animation: globeRotate 20s linear infinite;
+            position: relative;
+        }
+
+        @keyframes globeRotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .globe-point {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--neon-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--neon-gold);
+            animation: pointPulse 2s infinite;
+        }
+
+        @keyframes pointPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* AI Assistant - REDESIGNED */
+        .ai-assistant {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.5);
+            animation: assistantFloat 3s ease-in-out infinite;
+            z-index: 6000;
+        }
+
+        @keyframes assistantFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .ai-assistant:hover {
+            transform: scale(1.15);
+            box-shadow: 0 15px 60px rgba(0, 243, 255, 0.8);
+        }
+
+        /* AI Chat Panel - COMPACT */
+        .ai-chat-panel {
+            position: fixed;
+            bottom: 110px;
+            right: 2rem;
+            width: 350px;
+            height: 420px;
+            background: rgba(26, 11, 46, 0.98);
+            backdrop-filter: blur(35px);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transform: scale(0) translateY(50px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 5500;
+            box-shadow: 0 20px 70px rgba(0, 243, 255, 0.6);
+        }
+
+        .ai-chat-panel.active {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .chat-header {
+            font-size: 1.3rem;
+            color: var(--neon-blue);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 2px solid rgba(0, 243, 255, 0.3);
+            padding-bottom: 0.8rem;
+        }
+
+        .chat-messages {
+            height: 280px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 3px;
+        }
+
+        .chat-message {
+            background: rgba(0, 243, 255, 0.08);
+            border-left: 3px solid var(--neon-blue);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            animation: messageFadeIn 0.5s;
+        }
+
+        @keyframes messageFadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(45, 27, 78, 0.6);
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            border-radius: 10px;
+            color: var(--text-white);
+            font-size: 0.9rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        .send-btn {
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Advanced Features Panel */
+        .advanced-features {
+            background: linear-gradient(135deg, rgba(189, 0, 255, 0.08), rgba(255, 0, 110, 0.08));
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(189, 0, 255, 0.3);
+            border-radius: 25px;
+            padding: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(45, 27, 78, 0.6);
+            border: 2px solid rgba(189, 0, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--neon-purple);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(189, 0, 255, 0.4);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            margin-bottom: 0.8rem;
+            font-weight: bold;
+        }
+
+        .feature-desc {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 120px;
+            right: 3rem;
+            background: rgba(26, 11, 46, 0.98);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            transform: translateX(500px);
+            transition: transform 0.4s;
+            z-index: 8000;
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.6);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--neon-gold);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-stats {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .globe-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .ai-chat-panel {
+                width: calc(100% - 4rem);
+                right: 2rem;
+                left: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="holo-background">
+        <div class="grid-lines"></div>
+        <div class="holo-orb orb-1"></div>
+        <div class="holo-orb orb-2"></div>
+        <div class="holo-orb orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🧠 SMART ANALYTICS</div>
+            <div class="header-stats">
+                <div class="header-stat">
+                    <div class="header-stat-value" id="apiScore">87</div>
+                    <div class="header-stat-label">AI Performance Index</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">#42</div>
+                    <div class="header-stat-label">Global Rank</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">Top 8%</div>
+                    <div class="header-stat-label">Percentile</div>
+                </div>
+            </div>
+            <button class="optimize-btn" onclick="optimizeProfile()">
+                ⚡ Optimize My Profile
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <h1 class="page-title">🎯 AI-Powered Analytics Dashboard</h1>
+        <p class="page-subtitle">Holographic insights into your placement readiness</p>
+
+        <!-- Performance Overview -->
+        <div class="performance-overview">
+            <h2 class="overview-title">
+                <span>📊</span> Performance Intelligence Overview
+            </h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">🎯</div>
+                    <div class="metric-value">94%</div>
+                    <div class="metric-label">Coding Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-value">8.2/10</div>
+                    <div class="metric-label">Problem-Solving Speed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📈</div>
+                    <div class="metric-value">92%</div>
+                    <div class="metric-label">Consistency Index</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Counters -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-value" id="totalAttempts">347</div>
+                <div class="kpi-label">Total Attempts</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="solvedProblems">289</div>
+                <div class="kpi-label">Problems Solved</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="timeSpent">142h</div>
+                <div class="kpi-label">Time Invested</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="streakDays">15</div>
+                <div class="kpi-label">Current Streak</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Heatmap -->
+            <div class="glass-card">
+                <h3 class="card-title">
+                    <span>🔥</span> Daily Coding Activity Heatmap
+                </h3>
+                <div class="heatmap-grid" id="heatmapGrid"></div>
+            </div>
+
+            <!-- Radar Chart -->
+            <div class="glass-card">
+                <h3 class="card-title">
+                    <span>🎯</span> Skills Gap Analysis
+                </h3>
+                <div class="radar-container">
+                    <svg class="radar-svg" width="350" height="350" id="radarChart"></svg>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="glass-card">
+                <h3 class="card-title">
+                    <span>🏆</span> Global Leaderboard
+                </h3>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Problems</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Company Matches -->
+            <div class="glass-card">
+                <h3 class="card-title">
+                    <span>💼</span> Smart Resume Fit Analysis
+                </h3>
+                <div class="company-matches" id="companyMatches"></div>
+            </div>
+
+            <!-- Placement Globe -->
+            <div class="glass-card">
+                <h3 class="card-title">
+                    <span>🌍</span> Global Placement Map
+                </h3>
+                <div class="globe-container">
+                    <div class="globe">
+                        <div class="globe-point" style="top: 30%; left: 40%;"></div>
+                        <div class="globe-point" style="top: 50%; left: 60%;"></div>
+                        <div class="globe-point" style="top: 70%; left: 30%;"></div>
+                        <div class="globe-point" style="top: 40%; left: 75%;"></div>
+                        <div class="globe-point" style="top: 55%; left: 50%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Predictive Analytics -->
+            <div class="glass-card">
+                <h3 class="card-title">
+                    <span>🔮</span> Selection Probability Forecast
+                </h3>
+                <div class="company-matches">
+                    <div class="company-match">
+                        <div class="company-header">
+                            <span style="font-size: 1.3rem; font-weight: bold;">Google SDE</span>
+                            <span style="color: var(--neon-gold); font-weight: bold; font-size: 1.2rem;">85%</span>
+                        </div>
+                        <div class="probability-bar">
+                            <div class="probability-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="company-match">
+                        <div class="company-header">
+                            <span style="font-size: 1.3rem; font-weight: bold;">Microsoft SDE</span>
+                            <span style="color: var(--neon-gold); font-weight: bold; font-size: 1.2rem;">78%</span>
+                        </div>
+                        <div class="probability-bar">
+                            <div class="probability-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div class="company-match">
+                        <div class="company-header">
+                            <span style="font-size: 1.3rem; font-weight: bold;">Amazon SDE-1</span>
+                            <span style="color: var(--neon-gold); font-weight: bold; font-size: 1.2rem;">82%</span>
+                        </div>
+                        <div class="probability-bar">
+                            <div class="probability-fill" style="width: 82%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Features -->
+        <div class="advanced-features">
+            <h2 style="font-size: 2rem; color: var(--neon-purple); margin-bottom: 2rem; text-align: center;">
+                🚀 Advanced AI Features
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card" onclick="showToast('🎯 Skill Prediction Engine activated!', 'success')">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">Skill Prediction Engine</div>
+                    <div class="feature-desc">AI predicts which skills you need to focus on next week based on trends</div>
+                </div>
+                <div class="feature-card" onclick="showToast('📊 Peer comparison analysis loading...', 'success')">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Peer Comparison Graph</div>
+                    <div class="feature-desc">Compare your metrics with top students in your region and college</div>
+                </div>
+                <div class="feature-card" onclick="showToast('🎬 Mock test simulator ready!', 'success')">
+                    <div class="feature-icon">🎬</div>
+                    <div class="feature-title">Mock Test Simulator</div>
+                    <div class="feature-desc">Simulate real placement tests and track skill growth after each session</div>
+                </div>
+                <div class="feature-card" onclick="showToast('🗺️ Career path forecast generated!', 'success')">
+                    <div class="feature-icon">🗺️</div>
+                    <div class="feature-title">Career Path Forecast</div>
+                    <div class="feature-desc">AI predicts which company types (product/service/startup) fit you best</div>
+                </div>
+                <div class="feature-card" onclick="showToast('💡 Dynamic tips generated!', 'success')">
+                    <div class="feature-icon">💡</div>
+                    <div class="feature-title">Dynamic Improvement Tips</div>
+                    <div class="feature-desc">Auto-generated action cards like "Focus on DP" or "Practice SQL joins"</div>
+                </div>
+                <div class="feature-card" onclick="showToast('🌍 Company selection map loading...', 'success')">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-title">Company-wise Selection Map</div>
+                    <div class="feature-desc">Interactive globe showing companies hiring students with similar skills</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant -->
+    <div class="ai-assistant" id="aiAssistant" onclick="toggleAIChat()">
+        🤖
+    </div>
+
+    <!-- AI Chat Panel -->
+    <div class="ai-chat-panel" id="aiChatPanel">
+        <h3 class="chat-header">
+            <span>🤖</span> AI Career Coach
+        </h3>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message">
+                <strong style="color: var(--neon-blue);">AI:</strong> Hi Aayush! Your algorithmic thinking improved by 8% this week. Great progress! 🎉
+            </div>
+            <div class="chat-message">
+                <strong style="color: var(--neon-blue);">AI:</strong> I recommend focusing on Dynamic Programming and Graph Algorithms for maximum impact.
+            </div>
+            <div class="chat-message">
+                <strong style="color: var(--neon-blue);">AI:</strong> You have high match (85-95%) with Google, Microsoft, and Amazon for SDE roles.
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" placeholder="Ask me anything..." onkeypress="handleChatEnter(event)">
+            <button class="send-btn" onclick="sendChatMessage()">Send</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Generate Heatmap
+        function generateHeatmap() {
+            const grid = document.getElementById('heatmapGrid');
+            for (let i = 0; i < 49; i++) {
+                const cell = document.createElement('div');
+                const level = Math.floor(Math.random() * 6);
+                cell.className = `heatmap-cell level-${level}`;
+                cell.title = `Activity: ${level * 20}%`;
+                cell.onclick = () => showToast(`Day ${i + 1}: ${level * 20}% activity`);
+                grid.appendChild(cell);
+            }
+        }
+
+        // Generate Radar Chart
+        function generateRadarChart() {
+            const svg = document.getElementById('radarChart');
+            const skills = [
+                { name: 'DSA', you: 87, top: 95 },
+                { name: 'System Design', you: 65, top: 92 },
+                { name: 'Problem Solving', you: 92, top: 96 },
+                { name: 'Coding Speed', you: 78, top: 90 },
+                { name: 'Communication', you: 85, top: 88 }
+            ];
+
+            const center = 175;
+            const maxRadius = 140;
+            const angleStep = (Math.PI * 2) / skills.length;
+
+            // Background circles
+            for (let i = 1; i <= 5; i++) {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', center);
+                circle.setAttribute('cy', center);
+                circle.setAttribute('r', (maxRadius / 5) * i);
+                circle.setAttribute('fill', 'none');
+                circle.setAttribute('stroke', 'rgba(0, 243, 255, 0.1)');
+                circle.setAttribute('stroke-width', '1');
+                svg.appendChild(circle);
+            }
+
+            // Paths
+            let userPath = '';
+            let topPath = '';
+            skills.forEach((skill, i) => {
+                const angle = angleStep * i - Math.PI / 2;
+                
+                const userRadius = (skill.you / 100) * maxRadius;
+                const userX = center + Math.cos(angle) * userRadius;
+                const userY = center + Math.sin(angle) * userRadius;
+                userPath += (i === 0 ? 'M' : ' L') + ` ${userX} ${userY}`;
+
+                const topRadius = (skill.top / 100) * maxRadius;
+                const topX = center + Math.cos(angle) * topRadius;
+                const topY = center + Math.sin(angle) * topRadius;
+                topPath += (i === 0 ? 'M' : ' L') + ` ${topX} ${topY}`;
+
+                // Labels
+                const labelRadius = maxRadius + 30;
+                const labelX = center + Math.cos(angle) * labelRadius;
+                const labelY = center + Math.sin(angle) * labelRadius;
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', labelX);
+                text.setAttribute('y', labelY);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('fill', 'var(--text-gray)');
+                text.setAttribute('font-size', '12');
+                text.textContent = skill.name;
+                svg.appendChild(text);
+            });
+
+            userPath += ' Z';
+            topPath += ' Z';
+
+            // Top 10% polygon
+            const topPoly = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            topPoly.setAttribute('d', topPath);
+            topPoly.setAttribute('fill', 'rgba(255, 149, 0, 0.1)');
+            topPoly.setAttribute('stroke', 'var(--neon-orange)');
+            topPoly.setAttribute('stroke-width', '2');
+            svg.appendChild(topPoly);
+
+            // User polygon
+            const userPoly = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            userPoly.setAttribute('d', userPath);
+            userPoly.setAttribute('fill', 'rgba(0, 243, 255, 0.2)');
+            userPoly.setAttribute('stroke', 'var(--neon-blue)');
+            userPoly.setAttribute('stroke-width', '3');
+            svg.appendChild(userPoly);
+        }
+
+        // Populate Leaderboard
+        function populateLeaderboard() {
+            const tbody = document.getElementById('leaderboardBody');
+            const data = [
+                { rank: 1, name: 'Alex Kumar', score: 2543, problems: 542 },
+                { rank: 2, name: 'Priya Sharma', score: 2398, problems: 518 },
+                { rank: 3, name: 'Rahul Verma', score: 2187, problems: 495 },
+                { rank: 42, name: 'You (Aayush)', score: 1456, problems: 289, current: true }
+            ];
+
+            tbody.innerHTML = data.map(row => `
+                <tr class="${row.current ? 'current-user' : ''}">
+                    <td><div class="rank-badge rank-${row.rank <= 3 ? row.rank : 'other'}">${row.rank <= 3 ? (row.rank === 1 ? '🥇' : row.rank === 2 ? '🥈' : '🥉') : row.rank}</div></td>
+                    <td><strong>${row.name}</strong></td>
+                    <td>${row.score}</td>
+                    <td>${row.problems}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Populate Company Matches
+        function populateCompanyMatches() {
+            const container = document.getElementById('companyMatches');
+            const companies = [
+                { name: 'Google', match: 95, skills: ['System Design', 'Algorithms', 'Java'] },
+                { name: 'Microsoft', match: 92, skills: ['C++', 'Cloud', 'DSA'] },
+                { name: 'Amazon', match: 88, skills: ['Java', 'AWS', 'Microservices'] }
+            ];
+
+            container.innerHTML = companies.map(c => `
+                <div class="company-match">
+                    <div class="company-header">
+                        <div class="company-name">${c.name}</div>
+                        <div class="match-score">${c.match}%</div>
+                    </div>
+                    <div class="skill-requirements">
+                        ${c.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: ${c.match}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle AI Chat
+        function toggleAIChat() {
+            document.getElementById('aiChatPanel').classList.toggle('active');
+        }
+
+        // Chat Functions
+        function sendChatMessage() {
+            const input = document.querySelector('.chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const messagesDiv = document.getElementById('chatMessages');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-message';
+            userMsg.innerHTML = `<strong style="color: var(--neon-gold);">You:</strong> ${message}`;
+            messagesDiv.appendChild(userMsg);
+
+            input.value = '';
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'chat-message';
+                aiMsg.innerHTML = `<strong style="color: var(--neon-blue);">AI:</strong> Based on your question, I recommend focusing on system design fundamentals and practicing more complex algorithms.`;
+                messagesDiv.appendChild(aiMsg);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 1000);
+        }
+
+        function handleChatEnter(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        // Optimize Profile
+        function optimizeProfile() {
+            showToast('🤖 AI is analyzing your profile and generating optimization recommendations...', 'success');
+            
+            setTimeout(() => {
+                showToast('✅ Profile optimized! Resume score: 96/100. New learning path created.', 'success');
+            }, 3000);
+        }
+
+        // Toast
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // Animate KPIs
+        function animateKPIs() {
+            const counters = [
+                { id: 'totalAttempts', target: 347 },
+                { id: 'solvedProblems', target: 289 },
+                { id: 'apiScore', target: 87 }
+            ];
+
+            counters.forEach(({ id, target }) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                let current = 0;
+                const increment = target / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        el.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        el.textContent = Math.floor(current);
+                    }
+                }, 30);
+            });
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            generateHeatmap();
+            generateRadarChart();
+            populateLeaderboard();
+            populateCompanyMatches();
+            animateKPIs();
+
+            setTimeout(() => {
+                showToast('🎯 Smart Analytics Dashboard loaded! AI insights ready.', 'success');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

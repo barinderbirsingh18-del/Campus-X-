@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAMPUS X - Future of College Placements</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Inline CSS -->
+  <style>
+    :root {
+      --bg: #020817;
+      --cyber-blue: #06b6ff;
+      --accent: #00f5ff;
+      --text-light: #e2f3ff;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-light);
+    }
+
+/* ===== AI Chatbot ===== */
+#chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  max-width: 90%;
+  background: rgba(2,8,23,0.95);
+  border:1px solid var(--cyber-blue);
+  border-radius:15px;
+  overflow:hidden;
+  z-index: 1000;
+}
+#chatbot-header {
+  background: var(--cyber-blue);
+  padding:10px;
+  font-family:'Orbitron', sans-serif;
+  font-weight: bold;
+  color: var(--bg);
+  cursor:pointer;
+}
+#chatbot-body {
+  display:none;
+  max-height: 400px;
+  overflow-y:auto;
+  padding:10px;
+}
+.chat-message {
+  margin:5px 0;
+  padding:8px 10px;
+  border-radius:10px;
+}
+.user-msg { background: var(--accent); color: var(--bg); align-self: flex-end;}
+.bot-msg { background: rgba(6,182,255,0.1); color: var(--text-light); align-self: flex-start;}
+#chatbot-input { width:100%; padding:8px; border:none; border-top:1px solid var(--cyber-blue); background: rgba(0,0,0,0.1); color: var(--text-light);}
+    /* About Section */
+    .about-section {
+      background: linear-gradient(180deg, rgba(2, 8, 23, 1) 0%, rgba(6, 182, 255, 0.05) 100%);
+      padding: 80px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .about-section h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--cyber-blue);
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .about-section p {
+      max-width: 800px;
+      margin: 0 auto 20px auto;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text-light);
+    }
+
+    /* Stats */
+    .about-stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .stat-box {
+      background: rgba(6, 182, 255, 0.08);
+      border: 1px solid var(--cyber-blue);
+      border-radius: 15px;
+      padding: 30px;
+      width: 240px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 20px var(--cyber-blue);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      color: var(--accent);
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      margin-top: 10px;
+      color: var(--text-light);
+    }
+
+    /* Success Stories */
+    .success-stories {
+      margin-top: 60px;
+    }
+
+    .success-stories h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 30px;
+    }
+
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      justify-items: center;
+    }
+
+    .story-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--cyber-blue);
+      border-radius: 15px;
+      padding: 20px;
+      width: 250px;
+      transition: 0.3s;
+    }
+
+    .story-card:hover {
+      box-shadow: 0 0 15px var(--cyber-blue);
+      transform: scale(1.05);
+    }
+
+    .story-card h4 {
+      color: var(--accent);
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 5px;
+    }
+
+    .story-card p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    /* Feedback Section */
+    .feedback-section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .feedback-section h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--cyber-blue);
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .feedback-section p {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      color: var(--text-light);
+    }
+    /* ===== Live Placement Ticker ===== */
+.ticker {
+  margin:40px auto;
+  width:90%;
+  overflow:hidden;
+  border:1px solid var(--cyber-blue);
+  border-radius:10px;
+  background: rgba(6,182,255,0.05);
+}
+.ticker div {
+  display:inline-block;
+  white-space:nowrap;
+  padding:10px 0;
+  animation: scroll 15s linear infinite;
+}
+.ticker div span {
+  display:inline-block;
+  margin-right:50px;
+  font-weight:600;
+  color:var(--accent);
+}
+@keyframes scroll {
+  0%{ transform: translateX(100%); }
+  100%{ transform: translateX(-100%); }
+}
+
+    .feedback-form {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+#logo-carousel {
+  width:100%;
+  overflow:hidden;
+  background: rgba(2,8,23,0.7);
+  border:1px solid var(--cyber-blue);
+  border-radius:10px;
+  padding:20px 0;
+  margin:40px 0;
+}
+
+.logo-track {
+  display:flex;
+  width:calc(250px * 32); /* 16 logos x 2 for loop */
+  animation: logo-scroll 30s linear infinite;
+}
+
+.logo-item {
+  width:150px;
+  margin:0 20px;
+  transition:0.3s;
+}
+.logo-item:hover {
+  transform:scale(1.2);
+  box-shadow:0 0 15px var(--cyber-blue);
+}
+
+@keyframes logo-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .form-group label {
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--cyber-blue);
+      background-color: rgba(6,182,255,0.05);
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .submit-btn {
+      padding: 12px 20px;
+      background-color: var(--cyber-blue);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <div id="three-canvas"></div>
+
+  <!-- 🌐 About Section -->
+  <section class="about-section" id="about">
+    <h2>About Campus X</h2>
+    <p>
+      Campus X is India's most advanced college placement ecosystem — designed to connect ambitious students with top recruiters using next-gen AI and analytics. Our mission is to revolutionize how placements work by bringing automation, personalization, and data-driven insights into every step of the journey.
+    </p>
+    <p>
+      From AI-driven resume enhancement to skill-building programs and recruiter dashboards, Campus X is shaping the future of college hiring.
+    </p>
+    <!-- Live Placement Ticker -->
+<div class="ticker">
+  <div>
+    <span>Google: 120 Students Placed</span>
+    <span>Microsoft: 95 Students Placed</span>
+    <span>Amazon: 85 Students Placed</span>
+    <span>Infosys: 150 Students Placed</span>
+    <span>Flipkart: 75 Students Placed</span>
+  </div>
+</div>
+
+    <div class="about-stats">
+      <div class="stat-box">
+        <div class="stat-number">9505+</div>
+        <div class="stat-label">Students Placed</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">800+</div>
+        <div class="stat-label">Recruiting Companies</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">100+</div>
+        <div class="stat-label">Top Institutions</div>
+      </div>
+    </div>
+
+    <div class="success-stories">
+      <h3>Success Stories</h3>
+      <div class="stories-grid">
+        <div class="story-card">
+          <h4>Aman Sharma</h4>
+          <p>Placed at <strong>Google</strong> as a Software Engineer (2024 Batch)</p>
+        </div>
+        <div class="story-card">
+          <h4>Priya Verma</h4>
+          <p>Joined <strong>Microsoft</strong> as a Cloud Analyst (2024 Batch)</p>
+        </div>
+        <div class="story-card">
+          <h4>Rohit Singh</h4>
+          <p>Placed at <strong>Amazon</strong> as a Data Scientist (2024 Batch)</p>
+        </div>
+        <div class="story-card">
+          <h4>Neha Gupta</h4>
+          <p>Placed at <strong>Adobe</strong> as a UI/UX Designer (2024 Batch)</p>
+        </div>
+        <!-- Add more story-cards as needed -->
+      </div>
+    </div>
+  </section>
+  <div class="section-title">Top Recruiting Companies</div>
+<div id="logo-carousel">
+  <div class="logo-track">
+    <!-- 16 logos -->
+    <img src="https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVttoo4ucl7rsMASXW3Xr6GlXURCubE1tA=w3840-h2160-rw" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Indian-Oil-Company-Logo-Design-2-1.jpg" class="logo-item">
+    <img src="https://static.startuptalky.com/2022/06/Amazon-StartupTalky.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/LT-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Infosys-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Airtel-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Reliance-Industries-Limited-Company-Logo-1.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/HCL-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/CITI-Company-Logo.jpg" class="logo-item">
+    <img src="https://1000logos.net/wp-content/uploads/2021/04/Adobe-logo.png" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Wipro-Company-Logo.jpg" class="logo-item">
+    <img src="https://1000logos.net/wp-content/uploads/2021/04/Oracle-logo.png" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/BAJAJ-FIRSERV-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Tech-Mahindra-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Adani-Power-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/TITAN-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Reliance-Captial-Company-Logo.jpg" class="logo-item">
+    <img src="https://www.vusion.com/wp-content/uploads/2024/12/Image-de-retombee-Site-Web-9-768x511.png.webp" class="logo-item">
+
+    <!-- Duplicate logos for smooth infinite scroll -->
+    <img src="https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVttoo4ucl7rsMASXW3Xr6GlXURCubE1tA=w3840-h2160-rw" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Indian-Oil-Company-Logo-Design-2-1.jpg" class="logo-item">
+    <img src="https://static.startuptalky.com/2022/06/Amazon-StartupTalky.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/LT-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Infosys-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Airtel-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Reliance-Industries-Limited-Company-Logo-1.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/HCL-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/CITI-Company-Logo.jpg" class="logo-item">
+    <img src="https://1000logos.net/wp-content/uploads/2021/04/Adobe-logo.png" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Wipro-Company-Logo.jpg" class="logo-item">
+    <img src="https://1000logos.net/wp-content/uploads/2021/04/Oracle-logo.png" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/BAJAJ-FIRSERV-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Tech-Mahindra-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Adani-Power-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/TITAN-Company-Logo.jpg" class="logo-item">
+    <img src="https://logodesignco.in/wp-content/uploads/2021/10/Reliance-Captial-Company-Logo.jpg" class="logo-item">
+    <img src="https://www.vusion.com/wp-content/uploads/2024/12/Image-de-retombee-Site-Web-9-768x511.png.webp" class="logo-item">
+  </div>
+</div>
+
+
+
+  <!-- 💬 Feedback Form Section -->
+  <section class="feedback-section" id="feedback">
+    <h2>Share Your Feedback</h2>
+    <p>We value your opinion! Tell us how Campus X can improve your placement experience.</p>
+    <form class="feedback-form" onsubmit="event.preventDefault(); alert('Thank you for your feedback!')">
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="message">Your Feedback</label>
+        <textarea id="message" rows="5" placeholder="Share your thoughts..." required></textarea>
+      </div>
+      <button type="submit" class="submit-btn">
+        <i class="fa-solid fa-paper-plane"></i> Send Feedback
+      </button>
+    </form>
+  </section>
+  <div id="chatbot">
+<div id="chatbot-header" onclick="toggleChat()">💬 Chat with AI</div>
+<div id="chatbot-body" style="display:flex;flex-direction:column;"></div>
+<input type="text" id="chatbot-input" placeholder="Type your question..." onkeypress="if(event.key==='Enter'){sendChat();}">
+</div>
+
+  <!-- React and Dependencies -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Split Text Animation Script -->
+<script>
+const title = document.getElementById('campus-title');
+const text = title.textContent;
+title.textContent = '';
+
+text.split('').forEach((char, i) => {
+  const span = document.createElement('span');
+  span.textContent = char;
+  span.style.animationDelay = `${i * 0.15}s`;
+  title.appendChild(span);
+});
+</script>
+<script>
+  // AI Chatbot
+function toggleChat(){ 
+  const body = document.getElementById('chatbot-body'); 
+  body.style.display = body.style.display==='none'?'flex':'none'; 
+}
+function sendChat(){
+  const input = document.getElementById('chatbot-input');
+  const body = document.getElementById('chatbot-body');
+  const msg = input.value;
+  if(msg==='') return;
+  const userDiv = document.createElement('div'); userDiv.className='chat-message user-msg'; userDiv.innerText=msg; body.appendChild(userDiv);
+  input.value='';
+  // Demo bot response
+  setTimeout(()=>{ const botDiv = document.createElement('div'); botDiv.className='chat-message bot-msg'; botDiv.innerText='AI Bot: Thanks for your message! We are here to help.'; body.appendChild(botDiv); body.scrollTop = body.scrollHeight; },500);
+}
+</script>
+
+  <!-- Main Application -->
+  <script type="text/babel" src="app.js"></script>
+</body>
+</html>

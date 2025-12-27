@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus X  - Resume Builder & Optimizer | AI-Powered Career Tools</title>
+    <link rel="icon" type="image/png" href="logo campus.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f3ff;
+            --primary-cyan-dark: #00d9ff;
+            --secondary-purple: #9d00ff;
+            --secondary-purple-dark: #7b00ff;
+            --accent-pink: #ff00ff;
+            --accent-magenta: #ff0080;
+            --bg-dark: #0a0e27;
+            --bg-dark-secondary: #1a1f3a;
+            --bg-dark-tertiary: #252b4a;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --border-glow: rgba(0, 243, 255, 0.3);
+            --success: #00ff88;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 50%, var(--bg-dark) 100%);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .cyber-background::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 48%, var(--border-glow) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, var(--border-glow) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--border-glow);
+            z-index: 1000;
+            padding: 1rem 2%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Dashboard Section */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--primary-cyan));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Section Container */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Resume Builder Layout */
+        .builder-container {
+            display: grid;
+            grid-template-columns: 350px 1fr 400px;
+            gap: 2rem;
+            height: calc(100vh - 200px);
+        }
+
+        .builder-sidebar {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .builder-sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .builder-sidebar::-webkit-scrollbar-track {
+            background: var(--bg-dark-tertiary);
+        }
+
+        .builder-sidebar::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section h3 {
+            color: var(--primary-cyan);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .template-option {
+            background: rgba(37, 43, 74, 0.6);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .template-option:hover, .template-option.active {
+            border-color: var(--primary-cyan);
+            transform: scale(1.02);
+        }
+
+        .template-preview {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(157, 0, 255, 0.1));
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .template-name {
+            color: var(--text-light);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Resume Editor */
+        .resume-editor {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .resume-preview {
+            background: white;
+            color: #000;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            min-height: 800px;
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #333;
+        }
+
+        .resume-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a1f3a;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-title {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .resume-contact {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .resume-section {
+            margin-bottom: 2rem;
+        }
+
+        .resume-section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a1f3a;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #00f3ff;
+        }
+
+        .resume-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .resume-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-item-title {
+            font-weight: bold;
+            color: #1a1f3a;
+        }
+
+        .resume-item-date {
+            color: #666;
+            font-style: italic;
+        }
+
+        .resume-item-subtitle {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-item-description {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .resume-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: #e8f4f8;
+            color: #1a1f3a;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* Tools Panel */
+        .tools-panel {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .score-display {
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--success);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .score-svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 15;
+        }
+
+        .score-progress {
+            fill: none;
+            stroke: url(#scoreGradient);
+            stroke-width: 15;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .score-label {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        .suggestions-list {
+            background: rgba(37, 43, 74, 0.6);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .suggestions-list h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+        }
+
+        .suggestion-item {
+            color: var(--text-gray);
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .suggestion-item::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--warning);
+        }
+
+        /* Action Buttons */
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00cc70);
+            color: var(--bg-dark);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(37, 43, 74, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Skill Gap Analyzer */
+        .skill-gap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .skill-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .skill-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateY(-5px);
+        }
+
+        .skill-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .skill-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .skill-level {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .skill-level.expert {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .skill-level.intermediate {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .skill-level.beginner {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .skill-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .skill-resources {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .resource-tag {
+            background: rgba(157, 0, 255, 0.2);
+            color: var(--secondary-purple);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .resource-tag:hover {
+            background: var(--secondary-purple);
+            color: white;
+        }
+
+        /* Cover Letter Generator */
+        .cover-letter-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .cover-letter-form {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .cover-letter-preview {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .cover-letter-content {
+            background: white;
+            color: #000;
+            padding: 3rem;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        /* Analytics Dashboard */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            color: var(--primary-cyan);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Badges */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .badge-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .badge-card.unlocked {
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .badge-card.locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-name {
+            color: var(--text-light);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-description {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Application Tracker */
+        .applications-table {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-glow);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        th {
+            color: var(--primary-cyan);
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid var(--border-glow);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-glow);
+            color: var(--text-light);
+        }
+
+        tr:hover {
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-applied {
+            background: rgba(0, 243, 255, 0.2);
+            color: var(--primary-cyan);
+        }
+
+        .status-interview {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .status-offered {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-dark-secondary);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 2rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal h2 {
+            color: var(--primary-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(26, 31, 58, 0.95);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 3000;
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--error);
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .builder-container {
+                grid-template-columns: 300px 1fr 350px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .builder-container {
+                grid-template-columns: 1fr;
+            }
+
+            .builder-sidebar, .tools-panel {
+                max-height: 400px;
+            }
+
+            .cover-letter-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+
+            .dashboard-grid, .skill-gap-grid, .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-glow);
+            border-radius: 50%;
+            border-top-color: var(--primary-cyan);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Heatmap */
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 1rem;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .heatmap-cell.level-1 { background: rgba(0, 243, 255, 0.2); }
+        .heatmap-cell.level-2 { background: rgba(0, 243, 255, 0.4); }
+        .heatmap-cell.level-3 { background: rgba(0, 243, 255, 0.6); }
+        .heatmap-cell.level-4 { background: rgba(0, 243, 255, 0.8); }
+        .heatmap-cell.level-5 { background: rgba(0, 243, 255, 1); }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-background"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">CAMPUS X | RESUME BUILDER</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchSection('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="switchSection('builder')">Resume Builder</button>
+                <button class="nav-tab" onclick="switchSection('skill-gap')">Skill Gap</button>
+                <button class="nav-tab" onclick="switchSection('cover-letter')">Cover Letter</button>
+                <button class="nav-tab" onclick="switchSection('analytics')">Analytics</button>
+                <button class="nav-tab" onclick="switchSection('applications')">Applications</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="section-header">
+                <h2>Resume & Career Dashboard</h2>
+                <p>Build, optimize, and track your professional journey with AI-powered tools</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card" onclick="switchSection('builder')">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Resume Versions</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('analytics')">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">87/100</div>
+                    <div class="stat-label">Resume Score</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('applications')">
+                    <div class="stat-icon">📨</div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Applications Sent</div>
+                </div>
+                <div class="stat-card" onclick="switchSection('skill-gap')">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Skill Gaps</div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h2>Quick Actions</h2>
+            </div>
+
+            <div class="skill-gap-grid">
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">Create New Resume</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="switchSection('builder')">Start Building →</button>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">Analyze Skill Gaps</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="switchSection('skill-gap')">Analyze Now →</button>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">Generate Cover Letter</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="switchSection('cover-letter')">Generate →</button>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 3rem;">
+                <h2>Your Achievements</h2>
+            </div>
+
+            <div class="badges-grid">
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">📄</div>
+                    <div class="badge-name">Resume Master</div>
+                    <div class="badge-description">Created first resume</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">⭐</div>
+                    <div class="badge-name">Perfect Score</div>
+                    <div class="badge-description">Achieved 90+ resume score</div>
+                </div>
+                <div class="badge-card unlocked">
+                    <div class="badge-icon">🎯</div>
+                    <div class="badge-name">Skill Developer</div>
+                    <div class="badge-description">Filled 5 skill gaps</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">💼</div>
+                    <div class="badge-name">Job Hunter</div>
+                    <div class="badge-description">Apply to 50 jobs</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-name">Interview Pro</div>
+                    <div class="badge-description">Get 10 interview calls</div>
+                </div>
+                <div class="badge-card locked">
+                    <div class="badge-icon">👑</div>
+                    <div class="badge-name">Career Champion</div>
+                    <div class="badge-description">Accept a job offer</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resume Builder Section -->
+        <section class="section" id="builder">
+            <div class="section-header">
+                <h2>AI Resume Builder</h2>
+                <p>Create professional resumes optimized for ATS and recruiters</p>
+            </div>
+
+            <div class="builder-container">
+                <!-- Templates Sidebar -->
+                <div class="builder-sidebar">
+                    <div class="sidebar-section">
+                        <h3>Choose Template</h3>
+                        <div class="template-option active" onclick="selectTemplate('modern')">
+                            <div class="template-preview">📄</div>
+                            <div class="template-name">Modern Professional</div>
+                        </div>
+                        <div class="template-option" onclick="selectTemplate('classic')">
+                            <div class="template-preview">📋</div>
+                            <div class="template-name">Classic Traditional</div>
+                        </div>
+                        <div class="template-option" onclick="selectTemplate('creative')">
+                            <div class="template-preview">🎨</div>
+                            <div class="template-name">Creative Designer</div>
+                        </div>
+                        <div class="template-option" onclick="selectTemplate('minimal')">
+                            <div class="template-preview">📃</div>
+                            <div class="template-name">Minimal Clean</div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Target Role</h3>
+                        <select class="form-select" onchange="optimizeForRole()">
+                            <option>Software Engineer</option>
+                            <option>Data Scientist</option>
+                            <option>Product Manager</option>
+                            <option>Full Stack Developer</option>
+                            <option>DevOps Engineer</option>
+                            <option>UI/UX Designer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Resume Preview -->
+                <div class="resume-editor">
+                    <div class="resume-preview" id="resumePreview">
+                        <div class="resume-header">
+                            <div class="resume-name">John Doe</div>
+                            <div class="resume-title">Software Engineer</div>
+                            <div class="resume-contact">
+                                <span>📧 john.doe@email.com</span>
+                                <span>📱 +1 (555) 123-4567</span>
+                                <span>📍 San Francisco, CA</span>
+                                <span>💼 linkedin.com/in/johndoe</span>
+                            </div>
+                        </div>
+
+                        <div class="resume-section">
+                            <div class="resume-section-title">Summary</div>
+                            <p class="resume-item-description">
+                                Experienced Software Engineer with 5+ years of expertise in full-stack development. 
+                                Proficient in JavaScript, React, Node.js, and cloud technologies. Proven track record 
+                                of delivering scalable applications and leading cross-functional teams.
+                            </p>
+                        </div>
+
+                        <div class="resume-section">
+                            <div class="resume-section-title">Experience</div>
+                            
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">Senior Software Engineer</div>
+                                    <div class="resume-item-date">Jan 2022 - Present</div>
+                                </div>
+                                <div class="resume-item-subtitle">Tech Corp, San Francisco, CA</div>
+                                <ul class="resume-item-description">
+                                    <li>Led development of microservices architecture, improving system scalability by 40%</li>
+                                    <li>Implemented CI/CD pipeline reducing deployment time by 60%</li>
+                                    <li>Mentored team of 5 junior developers on best practices</li>
+                                </ul>
+                            </div>
+
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">Software Engineer</div>
+                                    <div class="resume-item-date">Jun 2019 - Dec 2021</div>
+                                </div>
+                                <div class="resume-item-subtitle">StartupXYZ, Mountain View, CA</div>
+                                <ul class="resume-item-description">
+                                    <li>Developed responsive web applications using React and TypeScript</li>
+                                    <li>Optimized database queries reducing response time by 50%</li>
+                                    <li>Collaborated with product team on feature specifications</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="resume-section">
+                            <div class="resume-section-title">Education</div>
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <div class="resume-item-title">Bachelor of Science in Computer Science</div>
+                                    <div class="resume-item-date">2015 - 2019</div>
+                                </div>
+                                <div class="resume-item-subtitle">University of California, Berkeley</div>
+                            </div>
+                        </div>
+
+                        <div class="resume-section">
+                            <div class="resume-section-title">Skills</div>
+                            <div class="resume-skills">
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">AWS</span>
+                                <span class="skill-tag">Docker</span>
+                                <span class="skill-tag">MongoDB</span>
+                                <span class="skill-tag">Git</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools Panel -->
+                <div class="tools-panel">
+                    <div class="score-display">
+                        <h3 style="color: var(--primary-cyan); margin-bottom: 1rem;">Resume Score</h3>
+                        <div class="score-circle">
+                            <svg class="score-svg" width="150" height="150">
+                                <defs>
+                                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: var(--primary-cyan)" />
+                                        <stop offset="100%" style="stop-color: var(--secondary-purple)" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="score-bg" cx="75" cy="75" r="65"></circle>
+                                <circle class="score-progress" cx="75" cy="75" r="65" 
+                                        stroke-dasharray="408" stroke-dashoffset="82"></circle>
+                            </svg>
+                            <div class="score-text" id="resumeScore">87</div>
+                        </div>
+                        <div class="score-label">ATS Optimized</div>
+                    </div>
+
+                    <div class="suggestions-list">
+                        <h4>💡 AI Suggestions</h4>
+                        <div class="suggestion-item">Add quantifiable achievements with numbers</div>
+                        <div class="suggestion-item">Include industry-specific keywords</div>
+                        <div class="suggestion-item">Expand on leadership experience</div>
+                        <div class="suggestion-item">Add relevant certifications</div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="optimizeResume()">🤖 AI Optimize</button>
+                    <button class="btn btn-secondary" onclick="downloadResume()">📥 Download PDF</button>
+                    <button class="btn btn-secondary" onclick="shareResume()">🔗 Share Link</button>
+                    <button class="btn btn-success" onclick="applyToJobs()">📨 Apply to Jobs</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skill Gap Analyzer Section -->
+        <section class="section" id="skill-gap">
+            <div class="section-header">
+                <h2>Skill Gap Analyzer</h2>
+                <p>Identify missing skills and get personalized learning recommendations</p>
+            </div>
+
+            <div class="skill-gap-grid">
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">React.js</div>
+                        <div class="skill-level expert">Expert</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="progress-label">
+                            <span>Your Level</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-resources">
+                        <span class="resource-tag">✓ Certified</span>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">System Design</div>
+                        <div class="skill-level intermediate">Intermediate</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="progress-label">
+                            <span>Your Level</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-resources">
+                        <span class="resource-tag">📚 Course</span>
+                        <span class="resource-tag">🎥 Tutorial</span>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">Kubernetes</div>
+                        <div class="skill-level beginner">Beginner</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="progress-label">
+                            <span>Your Level</span>
+                            <span>30%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-resources">
+                        <span class="resource-tag">📚 Course</span>
+                        <span class="resource-tag">💻 Practice</span>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">Machine Learning</div>
+                        <div class="skill-level beginner">Beginner</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="progress-label">
+                            <span>Your Level</span>
+                            <span>25%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-resources">
+                        <span class="resource-tag">📚 Course</span>
+                        <span class="resource-tag">🎯 Project</span>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">AWS Cloud</div>
+                        <div class="skill-level intermediate">Intermediate</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="progress-label">
+                            <span>Your Level</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-resources">
+                        <span class="resource-tag">📜 Certify</span>
+                        <span class="resource-tag">💻 Hands-on</span>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">GraphQL</div>
+                        <div class="skill-level beginner">Beginner</div>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="progress-label">
+                            <span>Your Level</span>
+                            <span>35%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 35%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-resources">
+                        <span class="resource-tag">📚 Tutorial</span>
+                        <span class="resource-tag">🎯 Build</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card" style="margin-top: 2rem;">
+                <h3 class="chart-title">Personalized Learning Roadmap</h3>
+                <div class="suggestions-list">
+                    <h4>🎯 Recommended Path</h4>
+                    <div class="suggestion-item">Week 1-2: Complete Kubernetes fundamentals course</div>
+                    <div class="suggestion-item">Week 3-4: Build a containerized microservices project</div>
+                    <div class="suggestion-item">Week 5-6: Study system design patterns and case studies</div>
+                    <div class="suggestion-item">Week 7-8: Get AWS Solutions Architect certification</div>
+                    <div class="suggestion-item">Week 9-10: Learn GraphQL and build API project</div>
+                    <div class="suggestion-item">Week 11-12: Start ML fundamentals with Python</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cover Letter Generator Section -->
+        <section class="section" id="cover-letter">
+            <div class="section-header">
+                <h2>AI Cover Letter Generator</h2>
+                <p>Create personalized cover letters tailored to each job application</p>
+            </div>
+
+            <div class="cover-letter-container">
+                <div class="cover-letter-form">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Letter Details</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-input" placeholder="e.g., Google" value="Google">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Position</label>
+                        <input type="text" class="form-input" placeholder="e.g., Senior Software Engineer" value="Senior Software Engineer">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tone</label>
+                        <select class="form-select">
+                            <option>Professional</option>
+                            <option>Enthusiastic</option>
+                            <option>Formal</option>
+                            <option>Creative</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Key Skills to Highlight</label>
+                        <textarea class="form-textarea" placeholder="Enter skills separated by commas">React, Node.js, System Design, Leadership, Agile</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Key Achievements</label>
+                        <textarea class="form-textarea" placeholder="Enter 2-3 relevant achievements">Led team of 5 engineers, Improved system performance by 40%, Implemented CI/CD pipeline</textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="generateCoverLetter()">✨ Generate Cover Letter</button>
+                    <button class="btn btn-secondary" onclick="saveCoverLetter()">💾 Save Draft</button>
+                </div>
+
+                <div class="cover-letter-preview">
+                    <h3 style="color: var(--primary-cyan); margin-bottom: 1.5rem;">Preview</h3>
+                    <div class="cover-letter-content" id="coverLetterContent">
+                        <p style="margin-bottom: 1rem;">
+                            <strong>John Doe</strong><br>
+                            john.doe@email.com<br>
+                            +1 (555) 123-4567<br>
+                            San Francisco, CA
+                        </p>
+
+                        <p style="margin-bottom: 1rem;">
+                            <strong>Hiring Manager</strong><br>
+                            Google<br>
+                            Mountain View, CA
+                        </p>
+
+                        <p style="margin-bottom: 1rem;">
+                            Dear Hiring Manager,
+                        </p>
+
+                        <p style="margin-bottom: 1rem;">
+                            I am writing to express my strong interest in the Senior Software Engineer position at Google. 
+                            With over 5 years of experience in full-stack development and a proven track record of delivering 
+                            scalable solutions, I am excited about the opportunity to contribute to your innovative team.
+                        </p>
+
+                        <p style="margin-bottom: 1rem;">
+                            In my current role at Tech Corp, I have led a team of 5 engineers in developing microservices 
+                            architecture that improved system performance by 40%. My expertise in React, Node.js, and system 
+                            design aligns perfectly with the requirements outlined in your job posting. Additionally, I 
+                            implemented a comprehensive CI/CD pipeline that reduced deployment time by 60%, demonstrating 
+                            my commitment to operational excellence.
+                        </p>
+
+                        <p style="margin-bottom: 1rem;">
+                            I am particularly drawn to Google's culture of innovation and technical excellence. Your commitment 
+                            to solving complex problems at scale resonates with my professional goals and values. I am eager 
+                            to bring my leadership experience and technical skills to contribute to Google's mission of 
+                            organizing the world's information.
+                        </p>
+
+                        <p style="margin-bottom: 1rem;">
+                            Thank you for considering my application. I look forward to the opportunity to discuss how my 
+                            experience and skills can contribute to your team's success.
+                        </p>
+
+                        <p style="margin-bottom: 1rem;">
+                            Sincerely,<br>
+                            <strong>John Doe</strong>
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <button class="btn btn-primary" onclick="downloadCoverLetter()">📥 Download</button>
+                        <button class="btn btn-secondary" onclick="copyCoverLetter()">📋 Copy Text</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="section" id="analytics">
+            <div class="section-header">
+                <h2>Resume Analytics</h2>
+                <p>Track your resume performance and engagement metrics</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-value">247</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💼</div>
+                    <div class="stat-value">38</div>
+                    <div class="stat-label">Recruiter Clicks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📧</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Interview Invites</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">+23%</div>
+                    <div class="stat-label">Week Over Week</div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Resume Views (Last 30 Days)</h3>
+                    <canvas id="viewsChart" width="400" height="250"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Section Engagement Heatmap</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 1rem;">
+                        Shows which sections recruiters spend most time viewing
+                    </p>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Summary</span>
+                            <span style="color: var(--primary-cyan);">High</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Experience</span>
+                            <span style="color: var(--primary-cyan);">Very High</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Skills</span>
+                            <span style="color: var(--warning);">Medium</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-gray);">Education</span>
+                            <span style="color: var(--warning);">Medium</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 55%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card" style="margin-top: 2rem;">
+                <h3 class="chart-title">Activity Heatmap (Last 3 Months)</h3>
+                <div class="heatmap" id="activityHeatmap"></div>
+            </div>
+
+            <div class="chart-card" style="margin-top: 2rem;">
+                <h3 class="chart-title">Peer Comparison</h3>
+                <p style="color: var(--text-gray); margin-bottom: 1.5rem;">
+                    See how your resume compares with peers in your field (anonymized)
+                </p>
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-gray);">Your Resume Score</span>
+                        <span style="color: var(--primary-cyan); font-weight: bold;">87/100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 87%; background: var(--primary-cyan);"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-gray);">Average Peer Score</span>
+                        <span style="color: var(--text-gray);">74/100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 74%; background: var(--text-gray);"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-gray);">Top 10% Score</span>
+                        <span style="color: var(--success);">92/100</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 92%; background: var(--success);"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Applications Tracker Section -->
+        <section class="section" id="applications">
+            <div class="section-header">
+                <h2>Application Tracker</h2>
+                <p>Manage and track all your job applications in one place</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📨</div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Total Applied</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👔</div>
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Interviews Scheduled</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎉</div>
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Offers Received</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Pending Response</div>
+                </div>
+            </div>
+
+            <div class="applications-table" style="margin-top: 2rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Position</th>
+                            <th>Applied Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Google</strong></td>
+                            <td>Senior Software Engineer</td>
+                            <td>Mar 15, 2024</td>
+                            <td><span class="status-badge status-interview">Interview</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; margin: 0;">View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Microsoft</strong></td>
+                            <td>Full Stack Developer</td>
+                            <td>Mar 12, 2024</td>
+                            <td><span class="status-badge status-offered">Offer</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; margin: 0;">View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Amazon</strong></td>
+                            <td>Software Development Engineer</td>
+                            <td>Mar 10, 2024</td>
+                            <td><span class="status-badge status-applied">Applied</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; margin: 0;">View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Meta</strong></td>
+                            <td>Frontend Engineer</td>
+                            <td>Mar 8, 2024</td>
+                            <td><span class="status-badge status-interview">Interview</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; margin: 0;">View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Apple</strong></td>
+                            <td>iOS Developer</td>
+                            <td>Mar 5, 2024</td>
+                            <td><span class="status-badge status-rejected">Rejected</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; margin: 0;">View</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <button class="btn btn-primary" style="max-width: 400px; margin: 0 auto;" onclick="openApplyModal()">
+                    🚀 Apply to New Jobs
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div id="toastMessage"></div>
+    </div>
+
+    <!-- Apply to Jobs Modal -->
+    <div class="modal" id="applyModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('applyModal')">×</button>
+            <h2>Apply to Multiple Jobs</h2>
+            <p style="color: var(--text-gray); margin-bottom: 1.5rem;">
+                Select companies and positions to apply. Your resume will be automatically customized for each.
+            </p>
+
+            <div class="skill-gap-grid">
+                <div class="skill-card">
+                    <input type="checkbox" style="margin-bottom: 1rem;">
+                    <div class="skill-name">Google - Senior SWE</div>
+                    <div style="color: var(--text-gray); font-size: 0.9rem;">Match: 92%</div>
+                </div>
+                <div class="skill-card">
+                    <input type="checkbox" style="margin-bottom: 1rem;">
+                    <div class="skill-name">Amazon - SDE III</div>
+                    <div style="color: var(--text-gray); font-size: 0.9rem;">Match: 88%</div>
+                </div>
+                <div class="skill-card">
+                    <input type="checkbox" style="margin-bottom: 1rem;">
+                    <div class="skill-name">Meta - E5 Engineer</div>
+                    <div style="color: var(--text-gray); font-size: 0.9rem;">Match: 85%</div>
+                </div>
+                <div class="skill-card">
+                    <input type="checkbox" style="margin-bottom: 1rem;">
+                    <div class="skill-name">Microsoft - Senior Dev</div>
+                    <div style="color: var(--text-gray); font-size: 0.9rem;">Match: 90%</div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="submitApplications()">📨 Submit Applications</button>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let currentSection = 'dashboard';
+        let resumeData = {
+            template: 'modern',
+            targetRole: 'Software Engineer'
+        };
+
+        // Initialize
+        function init() {
+            createCharts();
+            createHeatmap();
+        }
+
+        // Section Switching
+        function switchSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(sectionName).classList.add('active');
+            const activeTab = Array.from(document.querySelectorAll('.nav-tab')).find(
+                tab => tab.textContent.toLowerCase().includes(sectionName.replace('-', ' '))
+            );
+            if (activeTab) activeTab.classList.add('active');
+
+            currentSection = sectionName;
+            showToast(`Switched to ${sectionName.replace('-', ' ')} section`);
+        }
+
+        // Template Selection
+        function selectTemplate(template) {
+            document.querySelectorAll('.template-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            event.target.closest('.template-option').classList.add('active');
+            resumeData.template = template;
+            showToast(`Template changed to ${template}`);
+        }
+
+        // Role Optimization
+        function optimizeForRole() {
+            const role = event.target.value;
+            resumeData.targetRole = role;
+            showToast(`Optimizing resume for ${role}...`, 'success');
+            
+            setTimeout(() => {
+                const newScore = Math.floor(Math.random() * 10) + 85;
+                document.getElementById('resumeScore').textContent = newScore;
+                showToast(`Resume optimized! New score: ${newScore}/100`, 'success');
+            }, 2000);
+        }
+
+        // AI Optimize
+        function optimizeResume() {
+            showToast('AI analyzing and optimizing resume...', 'success');
+            
+            setTimeout(() => {
+                const newScore = Math.floor(Math.random() * 8) + 92;
+                document.getElementById('resumeScore').textContent = newScore;
+                showToast(`Optimization complete! Score improved to ${newScore}/100`, 'success');
+            }, 3000);
+        }
+
+        // Download Resume
+        function downloadResume() {
+            showToast('Generating PDF...', 'success');
+            setTimeout(() => {
+                showToast('Resume downloaded successfully!', 'success');
+            }, 1500);
+        }
+
+        // Share Resume
+        function shareResume() {
+            const link = 'https://campusx2.com/resume/john-doe-123';
+            navigator.clipboard.writeText(link);
+            showToast('Resume link copied to clipboard!', 'success');
+        }
+
+        // Apply to Jobs
+        function applyToJobs() {
+            openApplyModal();
+        }
+
+        // Generate Cover Letter
+        function generateCoverLetter() {
+            showToast('Generating personalized cover letter...', 'success');
+            setTimeout(() => {
+                showToast('Cover letter generated successfully!', 'success');
+            }, 2000);
+        }
+
+        // Save Cover Letter
+        function saveCoverLetter() {
+            showToast('Cover letter saved to drafts', 'success');
+        }
+
+        // Download Cover Letter
+        function downloadCoverLetter() {
+            showToast('Downloading cover letter...', 'success');
+            setTimeout(() => {
+                showToast('Cover letter downloaded!', 'success');
+            }, 1000);
+        }
+
+        // Copy Cover Letter
+        function copyCoverLetter() {
+            const content = document.getElementById('coverLetterContent').innerText;
+            navigator.clipboard.writeText(content);
+            showToast('Cover letter copied to clipboard!', 'success');
+        }
+
+        // Modal Management
+        function openApplyModal() {
+            document.getElementById('applyModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Submit Applications
+        function submitApplications() {
+            showToast('Submitting applications...', 'success');
+            setTimeout(() => {
+                closeModal('applyModal');
+                showToast('Applications submitted successfully!', 'success');
+            }, 2000);
+        }
+
+        // Create Charts
+        function createCharts() {
+            // Simple line chart for views
+            const canvas = document.getElementById('viewsChart');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.strokeStyle = '#00f3ff';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                const data = [12, 18, 15, 25, 30, 28, 35, 40, 38, 45, 50, 47];
+                const width = canvas.width;
+                const height = canvas.height;
+                const step = width / (data.length - 1);
+                
+                data.forEach((value, index) => {
+                    const x = index * step;
+                    const y = height - (value / 60 * height);
+                    if (index === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+                
+                ctx.stroke();
+
+                // Add points
+                ctx.fillStyle = '#00f3ff';
+                data.forEach((value, index) => {
+                    const x = index * step;
+                    const y = height - (value / 60 * height);
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+        }
+
+        // Create Heatmap
+        function createHeatmap() {
+            const heatmap = document.getElementById('activityHeatmap');
+            if (heatmap) {
+                for (let i = 0; i < 84; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'heatmap-cell';
+                    const level = Math.floor(Math.random() * 6);
+                    if (level > 0) {
+                        cell.classList.add(`level-${level}`);
+                    }
+                    heatmap.appendChild(cell);
+                }
+            }
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
